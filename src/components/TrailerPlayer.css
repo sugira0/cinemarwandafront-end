@@ -1,0 +1,129 @@
+﻿.trailer-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Poster stays in place as a safe fallback while embeds load or time out. */
+.trailer-poster {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: #050505;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.trailer-poster.show {
+  opacity: 1;
+}
+
+/* React-owned iframe/video layers for trailer playback. */
+.trailer-iframe,
+.trailer-native {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 56.25vw;
+  min-height: 100vh;
+  min-width: 177.78vh;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+
+.trailer-iframe {
+  border: none;
+}
+
+.trailer-native {
+  object-fit: cover;
+}
+
+.trailer-iframe.visible,
+.trailer-native.visible {
+  opacity: 1;
+}
+
+.trailer-login-wall {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to top, rgba(5, 5, 5, 0.97) 0%, rgba(5, 5, 5, 0.7) 60%, rgba(5, 5, 5, 0.3) 100%);
+  animation: fadeIn 0.5s ease both;
+}
+
+.trailer-login-card {
+  text-align: center;
+  padding: 2rem;
+  max-width: 380px;
+}
+
+.tlw-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.6rem;
+}
+
+.tlw-sub {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.tlw-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tlw-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tlw-btn.primary {
+  background: var(--green-dark);
+  color: #fff;
+  border: 2px solid var(--green);
+  box-shadow: 0 0 0 0 var(--green-glow);
+}
+
+.tlw-btn.primary:hover {
+  background: var(--green);
+  box-shadow: 0 0 0 8px var(--green-glow);
+}
+
+.tlw-btn.outline {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+.tlw-btn.outline:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+

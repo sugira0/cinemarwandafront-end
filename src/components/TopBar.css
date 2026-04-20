@@ -1,0 +1,100 @@
+﻿.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 201;
+  background: rgba(8,15,10,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(22, 101, 52, 0.12);
+  animation: fadeDown 0.4s ease both;
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  height: 34px;
+  gap: 1rem;
+}
+
+/* Left */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+.topbar-link {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.72rem; color: rgba(238,245,239,0.45);
+  text-decoration: none; transition: color 0.2s ease;
+  white-space: nowrap;
+}
+.topbar-link:hover { color: var(--green); }
+
+/* Center */
+.topbar-center {
+  font-size: 0.72rem;
+  color: rgba(238,245,239,0.3);
+  letter-spacing: 0.5px;
+  text-align: center;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Right */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.topbar-social {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(238,245,239,0.4); text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  background: transparent;
+}
+.topbar-social:hover { transform: translateY(-2px) scale(1.15); }
+.topbar-social.ig:hover { color: #e1306c; }
+.topbar-social.tt:hover { color: #69c9d0; }
+.topbar-social.tw:hover { color: #fff; }
+
+.topbar-divider {
+  width: 1px; height: 14px;
+  background: rgba(22, 101, 52, 0.15);
+  flex-shrink: 0;
+}
+
+.topbar-plans {
+  font-size: 0.7rem; font-weight: 700;
+  color: var(--green); text-decoration: none;
+  letter-spacing: 0.5px; white-space: nowrap;
+  padding: 3px 10px; border-radius: 10px;
+  background: var(--green-subtle);
+  border: 1px solid var(--green-border);
+  transition: all 0.2s ease;
+}
+.topbar-plans:hover {
+  background: var(--green-dark); color: #fff;
+  box-shadow: 0 0 0 4px var(--green-glow);
+}
+
+/* Hide on very small screens */
+@media (max-width: 768px) {
+  .topbar-left { display: none; }
+  .topbar-center { text-align: left; }
+}
+@media (max-width: 480px) {
+  .topbar-center { display: none; }
+  .topbar-inner { justify-content: flex-end; }
+}
+
+

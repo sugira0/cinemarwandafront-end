@@ -1,0 +1,71 @@
+.file-preview {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0d0d0d;
+  animation: fadeUp 0.3s ease both;
+}
+
+/* Clear button */
+.fp-clear {
+  position: absolute;
+  top: 8px; right: 8px;
+  z-index: 10;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(6px);
+}
+.fp-clear:hover { background: var(--red); border-color: var(--red); }
+
+/* Image preview */
+.fp-image {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Video preview */
+.fp-video {
+  width: 100%;
+  max-height: 220px;
+  display: block;
+  background: #000;
+}
+
+/* Placeholder */
+.fp-placeholder {
+  height: 120px;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.15);
+}
+
+/* File info bar */
+.fp-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.85rem;
+  background: rgba(255,255,255,0.03);
+  border-top: 1px solid var(--border);
+}
+.fp-name {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75%;
+}
+.fp-size {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}

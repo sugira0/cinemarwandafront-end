@@ -1,0 +1,333 @@
+﻿.movie-detail {
+  position: relative;
+  min-height: 100vh;
+  padding-top: 76px;
+  z-index: 1;
+}
+
+.detail-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 24% 16%, rgba(22, 101, 52, 0.16), transparent 28%),
+    radial-gradient(circle at 80% 90%, rgba(255, 255, 255, 0.04), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 16%);
+  pointer-events: none;
+}
+
+.detail-hero {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 3rem;
+  align-items: start;
+  padding: 3rem 2.75rem 2rem;
+  animation: fadeUp 0.55s ease both;
+}
+
+.detail-poster-wrap {
+  width: 100%;
+  max-width: 280px;
+}
+
+.detail-poster,
+.detail-poster-placeholder {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 26px 54px rgba(0, 0, 0, 0.42);
+}
+
+.detail-poster {
+  display: block;
+  object-fit: cover;
+}
+
+.detail-poster-placeholder {
+  background: linear-gradient(180deg, #1c1c1c, #0d0d0d);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.26);
+  font-size: 3rem;
+}
+
+.detail-poster-placeholder span {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.detail-info h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 4.2vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.8rem;
+}
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.description {
+  max-width: 720px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.8;
+  font-size: 1rem;
+  margin-bottom: 1.9rem;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.btn-watch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: #fff;
+  border: 1px solid #fff;
+  color: #000;
+  font-size: 0.96rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn-watch:hover {
+  background: rgba(255, 255, 255, 0.84);
+  transform: translateY(-1px);
+}
+
+.btn-watchlist {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  background: rgba(109, 109, 110, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-watchlist:hover {
+  background: rgba(109, 109, 110, 0.92);
+  transform: translateY(-1px);
+}
+
+.btn-coming-soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 26px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 0.92rem;
+  font-family: 'Inter', sans-serif;
+  cursor: not-allowed;
+}
+
+.detail-login-hint {
+  margin-top: 0.8rem;
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.detail-login-hint a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.detail-msg {
+  margin-top: 0.9rem;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.84rem;
+}
+
+.player-section {
+  position: relative;
+  z-index: 1;
+  padding: 0 2.75rem 4rem;
+  animation: fadeUp 0.55s 0.15s ease both;
+}
+
+.player-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.player-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+}
+
+.player-divider {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.video-player {
+  width: 100%;
+  max-width: 980px;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+}
+
+.no-video {
+  max-width: 980px;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.92rem;
+}
+
+.episode-list {
+  max-width: 980px;
+}
+
+.season-group {
+  margin-bottom: 1.5rem;
+}
+
+.season-label {
+  margin-bottom: 0.65rem;
+  padding-left: 0.4rem;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.ep-item {
+  margin-bottom: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.ep-item:hover,
+.ep-item.active {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ep-item-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  background: transparent;
+  border: none;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ep-badge {
+  padding: 4px 9px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.74);
+  white-space: nowrap;
+}
+
+.ep-item-title {
+  flex: 1;
+  font-size: 0.92rem;
+}
+
+.ep-item-dur {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ep-video {
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 860px) {
+  .detail-hero {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.8rem 1.2rem 1.6rem;
+  }
+
+  .detail-poster-wrap {
+    max-width: 220px;
+  }
+
+  .player-section {
+    padding: 0 1.2rem 3rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .movie-detail {
+    padding-top: 68px;
+  }
+
+  .detail-info h1 {
+    font-size: 1.85rem;
+  }
+
+  .description {
+    font-size: 0.94rem;
+  }
+
+  .btn-watch,
+  .btn-watchlist,
+  .btn-coming-soon {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ep-item-header {
+    padding: 0.8rem 0.9rem;
+  }
+}
+

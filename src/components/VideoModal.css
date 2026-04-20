@@ -1,0 +1,138 @@
+﻿.vmodal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease both;
+}
+
+.vmodal-container {
+  width: 100%;
+  max-width: 1080px;
+  animation: modalPop 0.28s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.93) translateY(24px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.vmodal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding: 0 0.25rem;
+}
+
+.vmodal-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 50px);
+}
+
+.vmodal-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  transition: all 0.2s;
+}
+.vmodal-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Force player to fill the modal */
+.vmodal-player-wrap {
+  width: 100%;
+}
+.vmodal-player-wrap .vp-native {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+  display: block;
+  background: #000;
+}
+.vmodal-player-wrap .vp-iframe-wrap {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+  background: #000;
+}
+.vmodal-player-wrap .vp-iframe-wrap iframe {
+  width: 100%; height: 100%;
+  border: none; display: block;
+}
+.vmodal-player-wrap .vp-empty {
+  max-width: 100%;
+  padding: 4rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.75rem;
+  color: rgba(255,255,255,0.3);
+}
+
+/* â”€â”€ Mobile modal â”€â”€ */
+@media (max-width: 768px) {
+  .vmodal-backdrop { padding: 0.5rem; align-items: flex-end; }
+  .vmodal-container { animation-name: modalSlideUp; }
+  @keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .vmodal-title { font-size: 0.9rem; }
+}
+
+/* Stream check states */
+.vmodal-checking {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 1rem; padding: 4rem 2rem; color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.vmodal-spinner {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 3px solid rgba(22, 101, 52, 0.15);
+  border-top-color: var(--green);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.vmodal-blocked {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.75rem; padding: 3rem 2rem; text-align: center;
+}
+.vmodal-blocked h3 { font-family: var(--font-display); font-size: 1.3rem; color: #f59e0b; }
+.vmodal-blocked p  { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; max-width: 320px; }
+.vmodal-close-btn {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-muted); padding: 10px 24px; border-radius: 8px;
+  font-family: 'Inter', sans-serif; font-size: 0.88rem; cursor: pointer;
+  transition: all 0.2s; margin-top: 0.5rem;
+}
+.vmodal-close-btn:hover { border-color: var(--green-border); color: var(--green); }
+
+
