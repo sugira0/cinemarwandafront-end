@@ -2,12 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://cinemarwanda-backend.vercel.app/api/$1"
+      "source": "/api/:path*",
+      "destination": "https://cinemarwanda-backend.vercel.app/api/:path*"
     },
     {
-      "source": "/uploads/(.*)",
-      "destination": "https://cinemarwanda-backend.vercel.app/uploads/$1"
+      "source": "/uploads/:path*",
+      "destination": "https://cinemarwanda-backend.vercel.app/uploads/:path*"
     },
     {
       "source": "/(.*)",
