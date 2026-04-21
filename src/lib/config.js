@@ -1,8 +1,8 @@
 const configuredOriginRaw = import.meta.env.VITE_API_ORIGIN?.trim().replace(/\/$/, '');
 const configuredOrigin = configuredOriginRaw?.replace(/\/api$/i, '');
-const defaultProdOrigin = 'https://cinemarwanda-backend.vercel.app';
-
-export const API_ORIGIN = configuredOrigin || (import.meta.env.DEV ? 'http://localhost:5000' : defaultProdOrigin);
+export const API_ORIGIN = import.meta.env.DEV
+  ? (configuredOrigin || 'http://localhost:5000')
+  : '';
 export const API_BASE_URL = API_ORIGIN ? `${API_ORIGIN}/api` : '/api';
 const UPLOADS_BASE_URL = API_ORIGIN
   ? `${API_ORIGIN}/uploads`
