@@ -5,7 +5,11 @@
       "handle": "filesystem"
     },
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
+      "dest": "/api/[...path].js"
+    },
+    {
+      "src": "/((?!api/).*)",
       "dest": "/index.html"
     }
   ]
