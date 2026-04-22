@@ -1,11 +1,12 @@
 const BACKEND_ORIGIN = 'https://cinemarwanda-backend.vercel.app';
 
 module.exports = async (req, res) => {
-  const path = Array.isArray(req.query.path)
-    ? req.query.path.join('/')
-    : (req.query.path || '');
+  const queryParams = req.query || {};
+  const path = Array.isArray(queryParams.path)
+    ? queryParams.path.join('/')
+    : (queryParams.path || '');
   const query = new URLSearchParams();
-  Object.entries(req.query || {}).forEach(([key, value]) => {
+  Object.entries(queryParams).forEach(([key, value]) => {
     if (key === 'path') return;
     if (Array.isArray(value)) {
       value.forEach((entry) => query.append(key, String(entry)));
