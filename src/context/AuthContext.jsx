@@ -67,7 +67,7 @@ export function AuthProvider({ children }) {
 
     return {
       ...data,
-      message: data.message || 'Your account was created with Firebase. We sent a verification link to your email.',
+      message: data.message || 'Your account was created. Firebase sent a verification link to your email.',
     };
   };
 

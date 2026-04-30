@@ -51,7 +51,7 @@ export default function Register() {
         <div className="auth-logo"><Film size={20} strokeWidth={1.5} /> CINEMA Rwanda</div>
         <h2>Create account</h2>
         <p className="auth-sub">Join and start watching today</p>
-        <p className="auth-note">Firebase will create your secure account and send an email verification link.</p>
+        <p className="auth-note">Firebase will create your secure account and send an email verification link, not a one-time password.</p>
         {error && <p className="error">{error}</p>}
         {notice && <div className="reset-success"><p>{notice}</p></div>}
 
