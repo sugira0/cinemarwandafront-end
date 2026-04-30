@@ -2,7 +2,7 @@ const configuredOriginRaw = import.meta.env.VITE_API_ORIGIN?.trim().replace(/\/$
 const configuredOrigin = configuredOriginRaw?.replace(/\/api$/i, '');
 export const API_ORIGIN = import.meta.env.DEV
   ? (configuredOrigin || 'http://localhost:5000')
-  : '';
+  : (configuredOrigin || '');
 export const API_BASE_URL = API_ORIGIN ? `${API_ORIGIN}/api` : '/api';
 const UPLOADS_BASE_URL = API_ORIGIN
   ? `${API_ORIGIN}/uploads`
