@@ -50,7 +50,7 @@ export function AuthProvider({ children }) {
 
   const requestRegisterOtp = async ({ name, email, phone, password, role = 'viewer' }) => {
     const deviceContext = await getDeviceContext();
-    const { data } = await api.post('/auth/firebase/register', {
+    const { data } = await api.post('/auth/firebase/register/request-otp', {
       name,
       email,
       phone,
@@ -59,21 +59,22 @@ export function AuthProvider({ children }) {
       ...deviceContext,
     });
 
+    return data;
+  };
+
+  const verifyRegisterOtp = async ({ email, otp }) => {
+    const { data } = await api.post('/auth/firebase/register/verify-otp', {
+      email,
+      otp,
+    });
+
     const freshUser = normalize(data.user);
     localStorage.setItem('token', data.token);
-    localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
+    localStorage.setItem('deviceId', data.deviceId);
     localStorage.setItem('user', JSON.stringify(freshUser));
     setUser(freshUser);
 
-    return {
-      ...data,
-      message: data.message || 'Your account was created. Firebase sent a verification link to your email.',
-    };
-  };
-
-  const verifyRegisterOtp = async () => {
-    const freshUser = user || normalize(JSON.parse(localStorage.getItem('user')));
-    return { user: freshUser };
+    return data;
   };
 
   const register = requestRegisterOtp;
