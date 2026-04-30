@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Film, Mail, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Film, Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import api from '../api/axios';
 import './Auth.css';
 
 export default function ForgotPassword() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
@@ -16,15 +16,10 @@ export default function ForgotPassword() {
     setError('');
 
     try {
-      const { data } = await api.post('/auth/forgot-password', { email });
-      navigate(`/reset-password?email=${encodeURIComponent(email.trim())}`, {
-        state: {
-          message: data.message,
-          maskedEmail: data.maskedEmail,
-        },
-      });
+      await api.post('/auth/firebase/forgot-password', { email });
+      setSent(true);
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong.');
+      setError(err.message || 'Something went wrong.');
     }
 
     setLoading(false);
@@ -35,13 +30,20 @@ export default function ForgotPassword() {
       <form className="auth-form" onSubmit={handleSubmit}>
         <div className="auth-logo"><Film size={20} strokeWidth={1.5} /> CINEMA Rwanda</div>
         <h2>Forgot password?</h2>
-        <p className="auth-sub">Enter your email and we'll send you a one-time password.</p>
+        <p className="auth-sub">Enter your email and Firebase will send a secure reset link.</p>
 
         {error && <p className="error">{error}</p>}
-        <div className="reset-success">
-          <Mail size={18} strokeWidth={1.5} />
-          <p>We will email a 6-digit OTP that you can use on the next screen to set a new password.</p>
-        </div>
+        {sent ? (
+          <div className="reset-success">
+            <CheckCircle size={18} strokeWidth={1.5} />
+            <p>Password reset email sent. Check your inbox.</p>
+          </div>
+        ) : (
+          <div className="reset-success">
+            <Mail size={18} strokeWidth={1.5} />
+            <p>We will email a reset link from Firebase Authentication.</p>
+          </div>
+        )}
 
         <div className="input-group">
           <label>Email</label>

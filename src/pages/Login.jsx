@@ -44,7 +44,7 @@ export default function Login() {
         setDevices(data.devices);
         setError(data.message);
       } else {
-        setError(data?.message || 'Login failed');
+        setError(data?.message || err.message || 'Login failed');
       }
     }
   };
@@ -98,7 +98,7 @@ export default function Login() {
         <div className="auth-logo"><Film size={20} strokeWidth={1.5} /> CINEMA Rwanda</div>
         <h2>Welcome back</h2>
         <p className="auth-sub">Sign in to continue watching</p>
-        <p className="auth-note">Use the same email address or Rwanda mobile number you registered with.</p>
+        <p className="auth-note">Use the email address you registered with.</p>
 
         {error && <p className="error">{error}</p>}
 
@@ -141,9 +141,10 @@ export default function Login() {
         )}
 
         <div className="input-group">
-          <label>Email or Mobile Number</label>
+          <label>Email</label>
           <input
-            placeholder="you@example.com or +2507XXXXXXXX"
+            placeholder="you@example.com"
+            type="email"
             value={form.identifier}
             onChange={(event) => updateForm('identifier', event.target.value)}
             required

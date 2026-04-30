@@ -19,8 +19,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => normalize(JSON.parse(localStorage.getItem('user'))));
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) return;
+    if (!localStorage.getItem('token')) return;
 
     api.get('/auth/me')
       .then((response) => {
@@ -35,14 +34,15 @@ export function AuthProvider({ children }) {
 
   const login = async (identifier, password) => {
     const deviceContext = await getDeviceContext();
-    const { data } = await api.post('/auth/login', {
-      identifier,
+    const { data } = await api.post('/auth/firebase/login', {
+      email: identifier,
       password,
       ...deviceContext,
     });
 
     const freshUser = normalize(data.user);
     localStorage.setItem('token', data.token);
+    localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
     localStorage.setItem('user', JSON.stringify(freshUser));
     setUser(freshUser);
     return data;
@@ -50,7 +50,7 @@ export function AuthProvider({ children }) {
 
   const requestRegisterOtp = async ({ name, email, phone, password, role = 'viewer' }) => {
     const deviceContext = await getDeviceContext();
-    const { data } = await api.post('/auth/register/request-otp', {
+    const { data } = await api.post('/auth/firebase/register', {
       name,
       email,
       phone,
@@ -59,20 +59,21 @@ export function AuthProvider({ children }) {
       ...deviceContext,
     });
 
-    return data;
-  };
-
-  const verifyRegisterOtp = async ({ email, otp }) => {
-    const { data } = await api.post('/auth/register/verify-otp', {
-      email,
-      otp,
-    });
-
     const freshUser = normalize(data.user);
     localStorage.setItem('token', data.token);
+    localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
     localStorage.setItem('user', JSON.stringify(freshUser));
     setUser(freshUser);
-    return data;
+
+    return {
+      ...data,
+      message: data.message || 'Your account was created with Firebase. We sent a verification link to your email.',
+    };
+  };
+
+  const verifyRegisterOtp = async () => {
+    const freshUser = user || normalize(JSON.parse(localStorage.getItem('user')));
+    return { user: freshUser };
   };
 
   const register = requestRegisterOtp;
@@ -98,6 +99,7 @@ export function AuthProvider({ children }) {
 
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('deviceId');
     setUser(null);
   };
 
