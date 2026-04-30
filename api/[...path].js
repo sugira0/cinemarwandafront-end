@@ -13,7 +13,7 @@ function getForwardHeaders(req) {
   return headers;
 }
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   applyCors(res);
 
   if (req.method === 'OPTIONS') {
@@ -45,9 +45,9 @@ module.exports = async (req, res) => {
       detail: error.message,
     });
   }
-};
+}
 
-module.exports.config = {
+export const config = {
   api: {
     bodyParser: false,
   },

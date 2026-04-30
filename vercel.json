@@ -1,13 +1,16 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/uploads/:path*",
-      "destination": "https://cinemarwanda-backend.vercel.app/uploads/:path*"
+      "handle": "filesystem"
     },
     {
-      "source": "/:path*",
-      "destination": "/index.html"
+      "src": "/uploads/(.*)",
+      "dest": "https://cinemarwanda-backend.vercel.app/uploads/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
