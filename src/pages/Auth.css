@@ -378,20 +378,47 @@
 
 @media (max-width: 480px) {
   .auth-page {
-    padding: 5.8rem 1rem 1.2rem;
+    min-height: 100dvh;
+    padding: 5.2rem 0.85rem calc(1.2rem + env(safe-area-inset-bottom, 0px));
     align-items: flex-start;
+    overflow-y: auto;
   }
 
   .auth-form {
-    padding: 1.8rem 1.3rem;
+    padding: 1.45rem 1rem;
+    max-width: 100%;
+    gap: 0.85rem;
   }
 
   .auth-form h2 {
-    font-size: 1.7rem;
+    font-size: 1.55rem;
+  }
+
+  .auth-logo {
+    font-size: 1.55rem;
+  }
+
+  .role-toggle {
+    flex-wrap: wrap;
+  }
+
+  .role-pill {
+    min-width: calc(50% - 2px);
+    padding: 10px 8px;
   }
 
   .auth-button-row {
     flex-direction: column;
+  }
+
+  .device-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .btn-remove-device {
+    justify-content: center;
+    min-height: 42px;
   }
 }
 

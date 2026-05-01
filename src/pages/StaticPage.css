@@ -89,4 +89,48 @@
   .cf-row { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 480px) {
+  .static-page {
+    padding: 5rem 1rem calc(3rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .static-hero {
+    margin-bottom: 2.4rem;
+  }
+
+  .static-hero p {
+    font-size: 0.94rem;
+  }
+
+  .static-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .static-stat,
+  .static-section,
+  .contact-success {
+    padding: 1.1rem;
+  }
+
+  .static-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 46px;
+  }
+
+  .contact-layout {
+    gap: 2rem;
+  }
+
+  .contact-item {
+    align-items: center;
+  }
+
+  .legal-body section {
+    padding: 1.1rem;
+  }
+}
+
 

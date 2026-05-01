@@ -36,7 +36,7 @@
   animation: fadeUp 0.5s 0.1s ease both;
 }
 
-/* â”€â”€ Circular actor card â”€â”€ */
+/* Circular actor card */
 .actor-card {
   display: flex; flex-direction: column; align-items: center;
   gap: 0.85rem; cursor: pointer; text-align: center;
@@ -176,10 +176,18 @@
 }
 @media (max-width: 480px) {
   .actors-header { flex-direction: column; gap: 1rem; }
-  .actors-grid { grid-template-columns: repeat(3, 1fr); gap: 1.2rem 0.75rem; }
+  .actors-search-wrap { max-width: none; }
+  .actors-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 0.8rem; }
   .actor-avatar-wrap, .actor-avatar, .actor-avatar-placeholder, .actor-sk-photo { width: 85px; height: 85px; }
   .actor-card-info h3 { font-size: 0.78rem; }
   .actor-form-row { grid-template-columns: 1fr; }
+  .btn-add-actor,
+  .btn-create-actor {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+  .actor-create-form { padding: 1rem; }
 }
 
 /* Social icons on actor card */

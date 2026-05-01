@@ -6,10 +6,10 @@ export default function TopBar() {
   return (
     <div className="topbar">
       <div className="topbar-inner">
-        {/* Left — contact */}
+        {/* Left contact */}
         <div className="topbar-left">
-          <a href="mailto:hello@cinemar wanda.rw" className="topbar-link">
-            <Mail size={12} strokeWidth={2} /> hello@cinemar wanda.rw
+          <a href="mailto:hello@cinemarwanda.rw" className="topbar-link">
+            <Mail size={12} strokeWidth={2} /> hello@cinemarwanda.rw
           </a>
           <span className="topbar-divider" />
           <a href="tel:+250788000000" className="topbar-link">
@@ -17,12 +17,12 @@ export default function TopBar() {
           </a>
         </div>
 
-        {/* Center — tagline */}
+        {/* Center tagline */}
         <div className="topbar-center">
-          🇷🇼 The home of Rwandan Cinema
+          The home of Rwandan Cinema
         </div>
 
-        {/* Right — social */}
+        {/* Right social */}
         <div className="topbar-right">
           <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="topbar-social ig" title="Instagram">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -42,7 +42,7 @@ export default function TopBar() {
             </svg>
           </a>
           <span className="topbar-divider" />
-          <Link to="/plans" className="topbar-plans">Subscribe →</Link>
+          <Link to="/plans" className="topbar-plans">Subscribe</Link>
         </div>
       </div>
     </div>

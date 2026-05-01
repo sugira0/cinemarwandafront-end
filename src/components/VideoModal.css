@@ -96,7 +96,7 @@
   color: rgba(255,255,255,0.3);
 }
 
-/* â”€â”€ Mobile modal â”€â”€ */
+/* Mobile modal */
 @media (max-width: 768px) {
   .vmodal-backdrop { padding: 0.5rem; align-items: flex-end; }
   .vmodal-container { animation-name: modalSlideUp; }
@@ -105,6 +105,38 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   .vmodal-title { font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .vmodal-backdrop {
+    padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .vmodal-header {
+    align-items: flex-start;
+  }
+
+  .vmodal-title {
+    max-width: calc(100% - 46px);
+    white-space: normal;
+  }
+
+  .vmodal-close {
+    width: 42px;
+    height: 42px;
+    border-radius: 0;
+  }
+
+  .vmodal-player-wrap .vp-empty,
+  .vmodal-checking,
+  .vmodal-blocked {
+    padding: 2rem 1rem;
+  }
+
+  .vmodal-close-btn {
+    width: 100%;
+    min-height: 44px;
+  }
 }
 
 /* Stream check states */

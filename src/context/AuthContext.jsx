@@ -34,11 +34,23 @@ export function AuthProvider({ children }) {
 
   const login = async (identifier, password) => {
     const deviceContext = await getDeviceContext();
-    const { data } = await api.post('/auth/firebase/login', {
-      email: identifier,
-      password,
-      ...deviceContext,
-    });
+    let data;
+
+    try {
+      const response = await api.post('/auth/firebase/login', {
+        email: identifier,
+        password,
+        ...deviceContext,
+      });
+      data = response.data;
+    } catch {
+      const response = await api.post('/auth/login', {
+        identifier,
+        password,
+        ...deviceContext,
+      });
+      data = response.data;
+    }
 
     const freshUser = normalize(data.user);
     localStorage.setItem('token', data.token);
@@ -50,7 +62,7 @@ export function AuthProvider({ children }) {
 
   const requestRegisterOtp = async ({ name, email, phone, password, role = 'viewer' }) => {
     const deviceContext = await getDeviceContext();
-    const { data } = await api.post('/auth/firebase/register/request-otp', {
+    const { data } = await api.post('/auth/register/request-otp', {
       name,
       email,
       phone,
@@ -63,7 +75,7 @@ export function AuthProvider({ children }) {
   };
 
   const verifyRegisterOtp = async ({ email, otp }) => {
-    const { data } = await api.post('/auth/firebase/register/verify-otp', {
+    const { data } = await api.post('/auth/register/verify-otp', {
       email,
       otp,
     });

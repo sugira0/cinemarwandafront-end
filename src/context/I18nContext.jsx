@@ -1,8 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { translateAppText } from '../lib/translations';
 
 const I18nContext = createContext(null);
-const LANGUAGE_STORAGE_KEY = 'cinema-rwanda-language';
+const LANGUAGE_STORAGE_KEY = 'cinema-rwanda-language-v2';
 const TRANSLATABLE_ATTRIBUTES = ['placeholder', 'title', 'aria-label'];
 
 function shouldSkipNode(element) {
@@ -85,13 +86,16 @@ function applyDomTranslations(language, textOriginals, attributeOriginals) {
 }
 
 export function I18nProvider({ children }) {
-  const [language, setLanguageState] = useState(() => localStorage.getItem(LANGUAGE_STORAGE_KEY) || 'rw');
+  const [hasLanguagePreference, setHasLanguagePreference] = useState(() => Boolean(localStorage.getItem(LANGUAGE_STORAGE_KEY)));
+  const [language, setLanguageState] = useState(() => localStorage.getItem(LANGUAGE_STORAGE_KEY) || 'en');
   const textOriginalsRef = useRef(new WeakMap());
   const attributeOriginalsRef = useRef(new WeakMap());
 
   useEffect(() => {
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
-  }, [language]);
+    if (hasLanguagePreference) {
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+    }
+  }, [hasLanguagePreference, language]);
 
   useLayoutEffect(() => {
     if (typeof document === 'undefined' || !document.body) return undefined;
@@ -128,10 +132,14 @@ export function I18nProvider({ children }) {
   }, [language]);
 
   const value = useMemo(() => ({
+    hasLanguagePreference,
     language,
-    setLanguage: setLanguageState,
+    setLanguage: (nextLanguage) => {
+      setLanguageState(nextLanguage);
+      setHasLanguagePreference(true);
+    },
     t: (text) => translateAppText(text, language),
-  }), [language]);
+  }), [hasLanguagePreference, language]);
 
   return (
     <I18nContext.Provider value={value}>

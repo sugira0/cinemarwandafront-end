@@ -14,8 +14,8 @@ export default function Privacy() {
         <section><h2>3. Data Storage</h2><p>Your data is stored securely on our servers in Rwanda. We use industry-standard encryption and security practices to protect your information.</p></section>
         <section><h2>4. Device Tracking</h2><p>We track registered devices to enforce our 2-device limit per account. Device IDs are stored securely and used only for account security purposes.</p></section>
         <section><h2>5. Third-Party Services</h2><p>We may use third-party services for payment processing and email delivery. These services have their own privacy policies.</p></section>
-        <section><h2>6. Your Rights</h2><p>You may request deletion of your account and data at any time by contacting us at hello@cinemar wanda.rw.</p></section>
-        <section><h2>7. Contact</h2><p>For privacy concerns, contact us at hello@cinemar wanda.rw or visit our <a href="/contact">Contact page</a>.</p></section>
+        <section><h2>6. Your Rights</h2><p>You may request deletion of your account and data at any time by contacting us at hello@cinemarwanda.rw.</p></section>
+        <section><h2>7. Contact</h2><p>For privacy concerns, contact us at hello@cinemarwanda.rw or visit our <a href="/contact">Contact page</a>.</p></section>
       </div>
     </div>
   );

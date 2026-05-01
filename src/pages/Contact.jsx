@@ -22,7 +22,7 @@ export default function Contact() {
 
       <div className="contact-layout">
         <div className="contact-info">
-          <div className="contact-item"><Mail size={18} strokeWidth={1.5} /><div><strong>Email</strong><span>hello@cinemar wanda.rw</span></div></div>
+          <div className="contact-item"><Mail size={18} strokeWidth={1.5} /><div><strong>Email</strong><span>hello@cinemarwanda.rw</span></div></div>
           <div className="contact-item"><Phone size={18} strokeWidth={1.5} /><div><strong>Phone</strong><span>+250 788 000 000</span></div></div>
           <div className="contact-item"><MapPin size={18} strokeWidth={1.5} /><div><strong>Location</strong><span>Kigali, Rwanda</span></div></div>
         </div>

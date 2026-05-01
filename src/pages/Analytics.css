@@ -72,8 +72,31 @@
   .analytics-grid  { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
-  .analytics-page { padding: 5.5rem 1.2rem 2rem; }
+  .analytics-page { padding: 5rem 1rem calc(2rem + env(safe-area-inset-bottom, 0px)); }
   .analytics-stats { grid-template-columns: repeat(2, 1fr); }
+  .an-card,
+  .an-stat {
+    padding: 1rem;
+  }
+  .an-num {
+    font-size: 1.45rem;
+  }
+  .an-label {
+    font-size: 0.64rem;
+  }
+  .an-movie-row,
+  .an-user-row,
+  .an-actor-row,
+  .an-paid-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .an-movie-title,
+  .an-user-info,
+  .an-actor-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
 }
 
 /* Transactions */
@@ -149,5 +172,41 @@
   font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
   letter-spacing: 0.5px; border: 1px solid; padding: 2px 8px; border-radius: 10px;
   white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .an-transactions-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .an-tx-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .an-tx-info,
+  .an-tx-plan,
+  .an-tx-amount,
+  .an-tx-status {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .an-tx-ref {
+    overflow-wrap: anywhere;
+  }
+
+  .an-tx-actions {
+    width: 100%;
+  }
+
+  .an-btn-confirm,
+  .an-btn-reject {
+    flex: 1;
+    min-height: 40px;
+  }
 }
 

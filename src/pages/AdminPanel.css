@@ -383,7 +383,7 @@
   margin-bottom: 0;
 }
 
-/* â”€â”€ Color overrides â”€â”€ */
+/* Color overrides */
 .form-actions button[type="submit"],
 .upload-form button[type="submit"] {
   background: var(--green-dark) !important;
@@ -411,7 +411,7 @@
 
 .upload-msg { color: var(--green) !important; border-color: rgba(22, 101, 52, 0.25) !important; background: rgba(22, 101, 52, 0.06) !important; }
 
-/* â”€â”€ Mobile admin â”€â”€ */
+/* Mobile admin */
 @media (max-width: 768px) {
   .admin-panel { padding: 5.5rem 1.2rem 2rem; }
   .movie-row { flex-wrap: wrap; gap: 0.5rem; }
@@ -423,6 +423,46 @@
   .admin-device-list { grid-template-columns: 1fr; }
   .admin-device-card-top { flex-direction: column; }
   .btn-refresh-devices { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .admin-panel { padding: 5rem 1rem calc(2rem + env(safe-area-inset-bottom, 0px)); }
+  .upload-form,
+  .admin-device-shell {
+    padding: 1rem;
+  }
+  .dash-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .dash-tabs::-webkit-scrollbar { display: none; }
+  .dash-tabs button {
+    flex: 0 0 auto;
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+  .type-toggle,
+  .form-actions {
+    flex-direction: column;
+  }
+  .movie-row {
+    padding: 0.85rem;
+  }
+  .movie-row > div:last-child,
+  .btn-edit,
+  .btn-delete,
+  .btn-cancel {
+    width: 100%;
+    justify-content: center;
+  }
+  .admin-device-stat,
+  .admin-device-card {
+    padding: 0.9rem;
+  }
+  .admin-device-lines p {
+    overflow-wrap: anywhere;
+  }
 }
 
 

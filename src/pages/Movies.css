@@ -57,7 +57,7 @@
 
 .nc-preview-genres { display: flex; flex-wrap: wrap; align-items: center; font-size: 0.78rem; color: rgba(240,245,241,0.5); }
 .nc-preview-genres span { white-space: nowrap; }
-.nc-preview-genres span + span::before { content: 'â€¢'; margin: 0 6px; color: rgba(22, 101, 52, 0.4); }
+.nc-preview-genres span + span::before { content: '-'; margin: 0 6px; color: rgba(22, 101, 52, 0.4); }
 
 .nc-search-results { padding: 0 2.5rem; }
 .nc-results-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
@@ -68,21 +68,54 @@
 
 @media (max-width: 768px) {
   .nc-browse { padding: 5rem 0 3rem; }
-  .nc-topbar { padding: 0 1.2rem 1rem; }
+  .nc-topbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 0 1rem 1rem;
+  }
   .nc-browse-title { font-size: 1.4rem; }
-  .nc-row-title { padding: 0 1.2rem; font-size: 0.95rem; }
-  .nc-row-track { padding: 0.5rem 1.2rem 3rem; }
-  .nc-card { width: 130px; }
-  .nc-card-thumb { width: 130px; }
+  .nc-search-wrap,
+  .nc-search-wrap.open {
+    width: 100%;
+    background: rgba(13,26,18,0.8);
+    border-color: rgba(22, 101, 52, 0.24);
+  }
+  .nc-search-input {
+    flex: 1;
+    width: 100%;
+    min-height: 42px;
+  }
+  .nc-search-btn {
+    min-width: 44px;
+    justify-content: center;
+  }
+  .nc-row { margin-bottom: 1.5rem; }
+  .nc-row-title { padding: 0 1rem; font-size: 1rem; }
+  .nc-row-track { gap: 0.7rem; padding: 0.5rem 1rem 2.25rem; }
+  .nc-card { width: min(36vw, 150px); }
+  .nc-card-thumb { width: 100%; }
   .nc-arrow { display: none; }
-  .nc-search-input { width: 160px; }
-  .nc-search-results { padding: 0 1.2rem; }
-  .nc-grid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 0.75rem; }
+  .nc-search-results { padding: 0 1rem; }
+  .nc-grid { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 0.85rem; }
 }
 @media (max-width: 480px) {
-  .nc-card { width: 110px; }
-  .nc-card-thumb { width: 110px; }
-  .nc-grid { grid-template-columns: repeat(2,1fr); }
+  .nc-browse { padding-top: 4.8rem; }
+  .nc-card { width: 42vw; max-width: 158px; }
+  .nc-card-title-bar {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .nc-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .nc-toast {
+    left: 1rem;
+    right: 1rem;
+    bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+    transform: none;
+    text-align: center;
+  }
 }
 
 

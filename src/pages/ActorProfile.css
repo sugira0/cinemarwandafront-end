@@ -14,7 +14,7 @@
 }
 .actor-back:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
 
-/* â”€â”€ Profile card â€” centered â”€â”€ */
+/* Profile card centered */
 .actor-profile-card {
   display: flex; flex-direction: column; align-items: center;
   text-align: center; margin-bottom: 3.5rem;
@@ -196,7 +196,7 @@
   .actor-stat-label { font-size: 0.62rem; }
 }
 
-/* â”€â”€ Social section â”€â”€ */
+/* Social section */
 .actor-social-section { margin-bottom: 1.5rem; }
 .actor-no-social { font-size: 0.8rem; color: var(--text-muted); }
 
@@ -271,7 +271,7 @@
 }
 .btn-social-cancel:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
 
-/* â”€â”€ Top bar â”€â”€ */
+/* Top bar */
 .actor-profile-topbar {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 2rem;
@@ -286,7 +286,7 @@
 }
 .btn-edit-profile:hover { border-color: rgba(255,255,255,0.35); color: #fff; background: var(--surface-hover); }
 
-/* â”€â”€ Edit panel â”€â”€ */
+/* Edit panel */
 .actor-edit-panel {
   background: rgba(255,255,255,0.03);
   border: 1px solid var(--border);
@@ -399,7 +399,7 @@
   .actor-profile-topbar { flex-wrap: wrap; gap: 0.75rem; }
 }
 
-/* â”€â”€ Redesigned actor buttons â”€â”€ */
+/* Redesigned actor buttons */
 .btn-follow {
   display: inline-flex; align-items: center; gap: 8px;
   background: #fff; color: #000;

@@ -110,7 +110,52 @@
   .sub-plans { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
-  .sub-history-row { flex-wrap: wrap; }
+  .sub-page {
+    padding: 5rem 1rem calc(2rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .sub-current,
+  .sub-instr-header,
+  .sub-history-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .sub-plan,
+  .sub-instructions {
+    padding: 1.1rem;
+  }
+
+  .sub-selected-badge {
+    position: static;
+    display: inline-flex;
+    margin-bottom: 0.75rem;
+  }
+
+  .sub-methods {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .sub-method-btn,
+  .btn-subscribe {
+    min-height: 46px;
+    width: 100%;
+  }
+
+  .sub-history-info {
+    min-width: 100%;
+  }
+
+  .sub-history-ref,
+  .sub-ref {
+    overflow-wrap: anywhere;
+  }
+
+  .sub-history-status {
+    min-width: 0;
+    text-align: left;
+  }
 }
 
 

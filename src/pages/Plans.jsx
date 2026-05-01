@@ -89,7 +89,7 @@ export default function Plans() {
   return (
     <div className="plans-page">
       <div className="plans-hero">
-        <div className="plans-hero-badge"><Shield size={13} /> Secure · Mobile money only</div>
+        <div className="plans-hero-badge"><Shield size={13} /> Secure - Mobile money only</div>
         <h1>Choose Your Plan</h1>
         <p>Stream the CINEMA Rwanda catalog with a plan that matches how many screens you need at the same time.</p>
       </div>

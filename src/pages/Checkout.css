@@ -160,4 +160,56 @@
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+@media (max-width: 480px) {
+  .checkout-page {
+    min-height: 100dvh;
+    align-items: flex-start;
+    padding: 5rem 0.85rem calc(1.4rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .checkout-card {
+    padding: 1.2rem 1rem;
+    border-radius: 0;
+  }
+
+  .checkout-header {
+    gap: 0.6rem;
+  }
+
+  .checkout-title h2 {
+    font-size: 1.2rem;
+  }
+
+  .checkout-plan,
+  .confirm-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .method-btn {
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem;
+  }
+
+  .method-radio {
+    margin-left: auto;
+  }
+
+  .phone-method-badge {
+    align-items: flex-start;
+  }
+
+  .phone-input {
+    font-size: 16px;
+    letter-spacing: 0.4px;
+  }
+
+  .checkout-pay-btn,
+  .checkout-back-link {
+    min-height: 46px;
+  }
+}
+
 

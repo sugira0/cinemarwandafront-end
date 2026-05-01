@@ -3,6 +3,7 @@ import { ChevronRight, Film, Globe, LogIn, Play, Plus, Star, UserPlus, Users } f
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/auth-context';
+import { useI18n } from '../context/I18nContext';
 import { mediaUrl } from '../lib/config';
 import './Home.css';
 
@@ -35,7 +36,7 @@ const FAQ_ITEMS = [
   {
     question: 'Do I need an account to browse?',
     answer:
-      'Yes. The landing page is public, but you need to sign in before opening the full catalog, actor pages, or protected movie detail pages.',
+      'Yes. Anyone can preview CINEMA Rwanda, but signing in opens the full catalog, actor pages, watchlist, and protected movie detail pages.',
   },
 ];
 
@@ -43,12 +44,12 @@ const REASON_CARDS = [
   {
     icon: Film,
     title: 'Rooted in Rwanda',
-    body: 'A landing page built around local posters, local voices, and stories that feel close to home instead of borrowed from somewhere else.',
+    body: 'Find posters, voices, and stories that feel close to home, with Rwandan creators placed at the center of the experience.',
   },
   {
     icon: Globe,
     title: 'Simple to start',
-    body: 'Start with the public landing page, then sign in to unlock the full catalog, actor pages, watchlist, and subscription flow.',
+    body: 'Create an account in minutes, choose a plan when you are ready, and keep your watchlist synced across your devices.',
   },
   {
     icon: Users,
@@ -58,23 +59,8 @@ const REASON_CARDS = [
   {
     icon: Play,
     title: 'Built for discovery',
-    body: 'Jump from trending films to actor pages, genre collections, and featured releases without losing the feeling of a cinematic homepage.',
+    body: 'Move from trending films to actor pages, genre collections, and featured releases without losing the cinematic mood.',
   },
-];
-
-const HERO_WORDS = [
-  'Local Films',
-  'Hit Series',
-  'Love Stories',
-  'Big Laughs',
-  'Family Nights',
-  'True Stories',
-  'Fresh Drama',
-  'Bold Thrills',
-  'Homegrown Talent',
-  'Weekend Picks',
-  'Cultural Classics',
-  'More to Watch',
 ];
 
 const FOOTER_GROUPS = [
@@ -210,39 +196,39 @@ function LandingPaymentBadges() {
 
 export default function Home() {
   const { user } = useAuth();
+  const { hasLanguagePreference, setLanguage } = useI18n();
   const navigate = useNavigate();
   const [featured, setFeatured] = useState([]);
   const [latest, setLatest] = useState([]);
   const [recommended, setRecommended] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFaq, setActiveFaq] = useState(0);
-  const [activeHeroWord, setActiveHeroWord] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
+    let isMounted = true;
+
     window.scrollTo(0, 0);
 
-    api.get('/movies/home')
+    api.get('/movies/home', { signal: controller.signal })
       .then((response) => {
+        if (!isMounted) return;
         setFeatured(response.data?.featured || []);
         setLatest(response.data?.latest || []);
         setRecommended(response.data?.recommended || []);
       })
-      .catch(() => {
+      .catch((error) => {
+        if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') return;
         // The landing page has visual fallbacks, so keep rendering even if the feed fails.
       })
-      .finally(() => setLoading(false));
-  }, []);
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
 
-  useEffect(() => {
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      return undefined;
-    }
-
-    const wordRotation = window.setInterval(() => {
-      setActiveHeroWord((current) => (current + 1) % HERO_WORDS.length);
-    }, 1500);
-
-    return () => window.clearInterval(wordRotation);
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, []);
 
   const catalog = buildUniqueMovies(featured, recommended, latest);
@@ -314,11 +300,6 @@ export default function Home() {
           </Link>
 
           <div className="landing-header-actions">
-            <div className="landing-language-pill">
-              <Globe size={16} strokeWidth={1.8} />
-              <span>English</span>
-            </div>
-
             {user ? (
               <>
                 <Link to="/movies" className="landing-header-btn ghost">Browse</Link>
@@ -340,19 +321,18 @@ export default function Home() {
         </header>
 
         <div className="landing-hero-content">
+          {!hasLanguagePreference && (
+            <div className="landing-language-choice" data-i18n-skip="true">
+              <span>Choose language</span>
+              <button type="button" onClick={() => setLanguage('en')}>English</button>
+              <button type="button" onClick={() => setLanguage('rw')}>Kinyarwanda</button>
+            </div>
+          )}
+
           <div className="landing-kicker">The home of Rwandan cinema</div>
           <h1 className="landing-hero-title">
             <span className="landing-hero-title-static">Watch</span>
-            <span className="landing-word-slider" aria-live="polite" aria-atomic="true">
-              <span
-                className="landing-word-track"
-                style={{ transform: `translateY(-${activeHeroWord * 100}%)` }}
-              >
-                {HERO_WORDS.map((word) => (
-                  <span key={word} className="landing-word-slide">{word}</span>
-                ))}
-              </span>
-            </span>
+            <span className="landing-hero-title-accent">Rwandan Stories</span>
           </h1>
           <p className="landing-subtitle">
             Short stories. Big feeling. All from Rwanda.
@@ -428,7 +408,7 @@ export default function Home() {
         <div className="landing-section-head">
           <div>
             <p className="landing-section-kicker">Why join</p>
-            <h2>A landing page with a local point of view</h2>
+            <h2>Streaming shaped around Rwandan stories</h2>
           </div>
         </div>
 
@@ -453,10 +433,10 @@ export default function Home() {
         <div className="landing-story-card">
           <div className="landing-story-copy">
             <p className="landing-section-kicker">Built for discovery</p>
-            <h2>From the landing page to the full catalog in one smooth step.</h2>
+            <h2>Preview the mood, then step into the full catalog.</h2>
             <p>
-              Keep the cinematic first impression on the homepage, then hand viewers off to a richer signed-in browsing
-              experience once they are ready to explore more.
+              Start with featured releases and trending picks, then sign in for actor pages, saved titles,
+              subscriptions, and a richer browsing experience.
             </p>
             <div className="landing-story-actions">
               <Link to={browseTarget} className="landing-story-btn primary">
@@ -565,12 +545,8 @@ export default function Home() {
         <LandingPaymentBadges />
 
         <div className="landing-footer-bottom">
-          <div className="landing-language-pill footer">
-            <Globe size={16} strokeWidth={1.8} />
-            <span>English</span>
-          </div>
           <p>CINEMA Rwanda</p>
-          <small>This page highlights your Rwandan catalog, your plans, and your own creator ecosystem.</small>
+          <small>Rwandan films, flexible plans, and creator profiles in one place.</small>
         </div>
       </footer>
     </main>

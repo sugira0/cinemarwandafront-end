@@ -46,6 +46,8 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 /* Ambient background */
@@ -59,6 +61,27 @@ body::before {
 }
 
 a { text-decoration: none; color: inherit; }
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+input,
+select,
+textarea {
+  min-width: 0;
+}
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -87,6 +110,29 @@ a { text-decoration: none; color: inherit; }
   font-size: 0.9rem; letter-spacing: 2px; animation: pulse 1.5s ease-in-out infinite;
 }
 
+.route-loading {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 6rem 1rem 2rem;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.route-loading-mark {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(74, 222, 128, 0.18);
+  border-top-color: var(--green-light);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
 /* Animations */
 @keyframes fadeUp    { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 @keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
@@ -100,15 +146,31 @@ a { text-decoration: none; color: inherit; }
 @keyframes slideRight{ from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
 @keyframes borderGlow{ 0%,100% { border-color:var(--green-border); } 50% { border-color:var(--green); } }
 @keyframes countUp   { from { opacity:0; transform:translateY(10px) scale(0.9); } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes spin      { to { transform: rotate(360deg); } }
 
 .animate-fadeUp  { animation: fadeUp  0.6s var(--transition) both; }
 .animate-fadeIn  { animation: fadeIn  0.5s ease both; }
 .animate-scaleIn { animation: scaleIn 0.4s ease both; }
 
 @media (max-width: 768px) { .movies-grid { grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap:1rem; } }
-@media (max-width: 480px) { .movies-grid { grid-template-columns: repeat(2,1fr); gap:0.75rem; } }
+@media (max-width: 480px) {
+  body {
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+  }
 
-/* â”€â”€ Scroll reveal â”€â”€ */
+  .movies-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap:0.75rem;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Scroll reveal */
 .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -135,9 +197,7 @@ a { text-decoration: none; color: inherit; }
 /* Account for topbar + navbar height */
 .page-offset { padding-top: 76px; }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   GLOBAL BUTTON SYSTEM
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* Global button system */
 
 /* Base */
 .btn {
@@ -164,9 +224,9 @@ a { text-decoration: none; color: inherit; }
 .btn-xl  { padding: 16px 36px; font-size: 1.05rem; border-radius: 12px; }
 .btn-full { width: 100%; }
 
-/* â”€â”€ Variants â”€â”€ */
+/* Variants */
 
-/* Primary â€” solid red */
+/* Primary */
 .btn-primary {
   background: var(--green); color: #fff;
   border: 1px solid var(--green);
@@ -178,7 +238,7 @@ a { text-decoration: none; color: inherit; }
   transform: translateY(-1px);
 }
 
-/* Secondary â€” dark streaming surface */
+/* Secondary dark streaming surface */
 .btn-secondary {
   background: rgba(255,255,255,0.08); color: #fff;
   border: 1.5px solid rgba(255,255,255,0.18);
@@ -202,7 +262,7 @@ a { text-decoration: none; color: inherit; }
   transform: translateY(-1px);
 }
 
-/* Ghost â€” no border */
+/* Ghost, no border */
 .btn-ghost {
   background: transparent; color: var(--text-muted); border: none;
 }

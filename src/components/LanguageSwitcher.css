@@ -54,10 +54,12 @@
 
 @media (max-width: 640px) {
   .language-switcher {
+    left: 12px;
     right: 12px;
-    bottom: 12px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    justify-content: space-between;
     gap: 0.55rem;
-    padding: 0.62rem 0.7rem;
+    padding: 0.55rem 0.6rem;
   }
 
   .language-switcher-label {
@@ -65,7 +67,22 @@
   }
 
   .language-switcher-btn {
-    min-width: 40px;
-    padding: 0.46rem 0.55rem;
+    min-width: 44px;
+    min-height: 40px;
+    padding: 0.44rem 0.55rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .language-switcher-label span {
+    display: none;
+  }
+
+  .language-switcher-actions {
+    width: 100%;
+  }
+
+  .language-switcher-btn {
+    flex: 1;
   }
 }

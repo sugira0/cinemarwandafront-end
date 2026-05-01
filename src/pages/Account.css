@@ -104,9 +104,34 @@
 .btn-signout-all:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
 
 @media (max-width: 480px) {
-  .account-page { padding: 5.5rem 1.2rem 2rem; }
-  .device-item { flex-wrap: wrap; }
+  .account-page { padding: 5rem 1rem calc(2rem + env(safe-area-inset-bottom, 0px)); }
+  .account-card,
+  .account-section {
+    padding: 1rem;
+  }
+  .account-info-row {
+    align-items: flex-start;
+  }
+  .account-email {
+    overflow-wrap: anywhere;
+  }
+  .account-section-header {
+    flex-wrap: wrap;
+  }
+  .device-count {
+    margin-left: auto;
+  }
+  .device-item { flex-wrap: wrap; padding: 0.85rem; }
+  .device-name {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
   .btn-remove-device { width: 100%; justify-content: center; }
+  .btn-signout-all {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 

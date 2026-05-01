@@ -212,20 +212,39 @@
 
 @media (max-width: 480px) {
   .footer-inner {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    padding: 2rem 1.2rem 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+    padding: 2rem 1rem 1.5rem;
   }
 
   .footer-brand {
-    grid-column: span 2;
+    grid-column: auto;
+  }
+
+  .footer-logo {
+    font-size: 1.55rem;
+  }
+
+  .footer-social-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .footer-col {
+    gap: 0.65rem;
+  }
+
+  .footer-col a {
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .footer-bottom {
     flex-direction: column;
     gap: 0.4rem;
     text-align: center;
-    padding: 1rem 1.2rem 1.4rem;
+    padding: 1rem 1rem calc(1.4rem + env(safe-area-inset-bottom, 0px));
   }
 
   .footer-payments-row {

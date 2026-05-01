@@ -77,10 +77,10 @@ export default function AdminPanel() {
     try {
       if (editId) {
         await api.put(`/movies/${editId}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-        setMsg('✓ Film updated');
+        setMsg('Film updated');
       } else {
         await api.post('/movies', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-        setMsg('✓ Film uploaded');
+        setMsg('Film uploaded');
       }
       setEditId(null); setForm(EMPTY); setFiles({ poster: null, video: null });
       fetchMovies();
@@ -156,7 +156,7 @@ export default function AdminPanel() {
             </>
           )}
           <div className="or-divider"><span>trailer</span></div>
-          <input placeholder="Trailer URL (YouTube, Vimeo) — shown in hero" value={form.trailerUrl} onChange={e => setForm({ ...form, trailerUrl: e.target.value })} />
+          <input placeholder="Trailer URL (YouTube, Vimeo) - shown in hero" value={form.trailerUrl} onChange={e => setForm({ ...form, trailerUrl: e.target.value })} />
 
           <div className="form-actions">
             <button type="submit"><Upload size={14} /> {editId ? 'Save Changes' : 'Upload Film'}</button>

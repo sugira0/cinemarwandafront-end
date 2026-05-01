@@ -82,7 +82,11 @@ export default function Register() {
 
   return (
     <div className="auth-page">
-      <form className="auth-form" onSubmit={step === 'details' ? handleRequestOtp : handleVerifyOtp}>
+      <form
+        key={step}
+        className="auth-form"
+        onSubmit={step === 'details' ? handleRequestOtp : handleVerifyOtp}
+      >
         <div className="auth-logo"><Film size={20} strokeWidth={1.5} /> CINEMA Rwanda</div>
         <span className="auth-step-pill">{step === 'details' ? 'Step 1 of 2' : 'Step 2 of 2'}</span>
         <h2>{step === 'details' ? 'Create account' : 'Verify your email'}</h2>

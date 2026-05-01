@@ -54,10 +54,10 @@ export default function AuthorDashboard() {
     try {
       if (editId) {
         await api.put(`/movies/${editId}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-        setMsg('✓ Film updated');
+        setMsg('Film updated');
       } else {
         await api.post('/movies', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-        setMsg('✓ Film uploaded');
+        setMsg('Film uploaded');
       }
       setEditId(null); setForm(EMPTY_FORM); setFiles({ poster: null, video: null });
       fetchMyMovies();
@@ -248,7 +248,7 @@ export default function AuthorDashboard() {
           )}
           <div className="or-divider"><span>trailer</span></div>
           <input
-            placeholder="Trailer URL (YouTube, Vimeo) — shown in hero section"
+            placeholder="Trailer URL (YouTube, Vimeo) - shown in hero section"
             value={form.trailerUrl}
             onChange={e => setForm({ ...form, trailerUrl: e.target.value })}
           />
