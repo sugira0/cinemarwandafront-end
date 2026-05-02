@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../lib/config';
-import { firebaseAuth } from '../lib/firebase';
 
 const API_TIMEOUT_MS = 15000;
 
@@ -13,9 +12,7 @@ api.interceptors.request.use(async config => {
   config.headers = config.headers || {};
   config.headers.Accept = config.headers.Accept || 'application/json';
 
-  const token = firebaseAuth?.currentUser
-    ? await firebaseAuth.currentUser.getIdToken()
-    : localStorage.getItem('token');
+  const token = localStorage.getItem('token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
 
   const deviceId = localStorage.getItem('deviceId');

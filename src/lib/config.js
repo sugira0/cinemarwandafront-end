@@ -22,3 +22,26 @@ export function mediaUrl(filename) {
   if (isAbsoluteUrl(filename)) return filename;
   return filename ? `${UPLOADS_BASE_URL}/${filename}` : '';
 }
+
+export function imageUrl(filename, options = {}) {
+  const url = mediaUrl(filename);
+  if (!url || !url.includes('res.cloudinary.com') || !url.includes('/upload/')) {
+    return url;
+  }
+
+  const width = Number(options.width || 0);
+  const height = Number(options.height || 0);
+  const crop = options.crop || 'fill';
+  const quality = options.quality || 'auto';
+  const format = options.format || 'auto';
+  const transforms = [
+    width ? `w_${width}` : '',
+    height ? `h_${height}` : '',
+    crop ? `c_${crop}` : '',
+    `q_${quality}`,
+    `f_${format}`,
+    'dpr_auto',
+  ].filter(Boolean).join(',');
+
+  return url.replace('/upload/', `/upload/${transforms}/`);
+}

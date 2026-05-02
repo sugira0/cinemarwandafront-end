@@ -4,7 +4,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, Play, Plus, Search, ThumbsDown,
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/auth-context';
-import { mediaUrl } from '../lib/config';
+import { imageUrl } from '../lib/config';
 import LoginModal from '../components/LoginModal';
 import { SkeletonRow } from '../components/Skeleton';
 import './Movies.css';
@@ -33,7 +33,7 @@ function Preview({ movie, rect, onWatchlist, onClose, onKeepOpen }) {
     >
       <div className="nc-preview-thumb" onClick={() => navigate(`/movies/${movie._id}`)}>
         {movie.poster
-          ? <img src={mediaUrl(movie.poster)} alt={movie.title} />
+          ? <img src={imageUrl(movie.poster, { width: 480, height: 270 })} alt={movie.title} loading="lazy" decoding="async" />
           : <div className="nc-no-poster"><span>{movie.title[0]}</span></div>}
         <div className="nc-preview-thumb-title">{movie.title}</div>
       </div>
@@ -109,7 +109,7 @@ function Card({ movie, onWatchlist }) {
       >
         <div className="nc-card-thumb">
           {movie.poster
-            ? <img src={mediaUrl(movie.poster)} alt={movie.title} />
+            ? <img src={imageUrl(movie.poster, { width: 360, height: 203 })} alt={movie.title} loading="lazy" decoding="async" />
             : <div className="nc-no-poster"><span>{movie.title[0]}</span></div>}
           <div className="nc-card-title-bar">{movie.title}</div>
         </div>
@@ -209,9 +209,9 @@ export default function Movies() {
     setTimeout(() => setWlMsg(''), 2500);
   };
 
-  const byGenre = (genre) => all.filter((movie) => movie.genre?.includes(genre));
-  const series = all.filter((movie) => movie.type === 'series');
-  const movies = all.filter((movie) => movie.type !== 'series');
+  const byGenre = (genre) => all.filter((movie) => movie.genre?.includes(genre)).slice(0, 20);
+  const series = all.filter((movie) => movie.type === 'series').slice(0, 20);
+  const movies = all.filter((movie) => movie.type !== 'series').slice(0, 24);
   const recent = [...all].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 12);
 
   return (

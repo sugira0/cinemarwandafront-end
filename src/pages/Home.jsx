@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/auth-context';
 import { useI18n } from '../context/I18nContext';
-import { mediaUrl } from '../lib/config';
+import { imageUrl } from '../lib/config';
 import './Home.css';
 
 const FAQ_ITEMS = [
@@ -157,7 +157,13 @@ function PosterTile({ movie, priority = false }) {
   return (
     <article className="landing-poster-tile">
       {movie.poster ? (
-        <img src={mediaUrl(movie.poster)} alt={movie.title} loading={priority ? 'eager' : 'lazy'} />
+        <img
+          src={imageUrl(movie.poster, { width: 240, height: 360 })}
+          alt={movie.title}
+          loading={priority ? 'eager' : 'lazy'}
+          fetchPriority={priority ? 'high' : 'auto'}
+          decoding={priority ? 'sync' : 'async'}
+        />
       ) : (
         <div className="landing-poster-fallback">
           <span>{movie.title}</span>
@@ -390,7 +396,7 @@ export default function Home() {
               <span className="landing-rank-number">{index + 1}</span>
               <div className="landing-rank-poster">
                 {movie.poster ? (
-                  <img src={mediaUrl(movie.poster)} alt={movie.title} loading="lazy" />
+                  <img src={imageUrl(movie.poster, { width: 220, height: 330 })} alt={movie.title} loading="lazy" decoding="async" />
                 ) : (
                   <div className="landing-rank-fallback">{movie.title}</div>
                 )}
@@ -463,7 +469,7 @@ export default function Home() {
                   onClick={() => openMovie(movie._id)}
                 >
                   <div className="landing-story-poster">
-                    {movie.poster ? <img src={mediaUrl(movie.poster)} alt={movie.title} loading="lazy" /> : <span>{movie.title[0]}</span>}
+                    {movie.poster ? <img src={imageUrl(movie.poster, { width: 96, height: 144 })} alt={movie.title} loading="lazy" decoding="async" /> : <span>{movie.title[0]}</span>}
                   </div>
                   <div>
                     <strong>{movie.title}</strong>
