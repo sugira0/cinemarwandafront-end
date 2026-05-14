@@ -104,15 +104,15 @@
 }
 
 .tlw-btn.primary {
-  background: var(--green-dark);
+  background: var(--gold-dark);
   color: #fff;
-  border: 2px solid var(--green);
-  box-shadow: 0 0 0 0 var(--green-glow);
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 0 0 var(--gold-glow);
 }
 
 .tlw-btn.primary:hover {
-  background: var(--green);
-  box-shadow: 0 0 0 8px var(--green-glow);
+  background: var(--gold);
+  box-shadow: 0 0 0 8px var(--gold-glow);
 }
 
 .tlw-btn.outline {

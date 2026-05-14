@@ -1,8 +1,8 @@
 ﻿.landing-page {
   position: relative;
   background:
-    radial-gradient(circle at top, rgba(22, 101, 52, 0.08), transparent 34%),
-    linear-gradient(180deg, #020603 0%, #050a06 22%, #07110a 100%);
+    radial-gradient(circle at top, rgba(245,158,11,0.06), transparent 34%),
+    linear-gradient(180deg, #080600 0%, #0e0b02 22%, #141005 100%);
   color: #fff;
   overflow: hidden;
 }
@@ -44,8 +44,8 @@
 }
 
 .landing-brand svg {
-  color: var(--green);
-  filter: drop-shadow(0 0 18px rgba(22, 101, 52, 0.35));
+  color: var(--gold);
+  filter: drop-shadow(0 0 18px rgba(245,158,11,0.3));
 }
 
 .landing-brand-wordmark {
@@ -79,7 +79,7 @@
 }
 
 .landing-language-pill {
-  background: rgba(7, 16, 10, 0.62);
+  background: rgba(8,6,0, 0.62);
   color: rgba(255, 255, 255, 0.82);
 }
 
@@ -89,10 +89,10 @@
 }
 
 .landing-header-btn.solid {
-  background: linear-gradient(135deg, var(--green-dark), var(--green));
-  color: #031006;
-  border-color: rgba(22, 101, 52, 0.7);
-  box-shadow: 0 18px 32px rgba(22, 101, 52, 0.22);
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: #000;
+  border-color: rgba(245,158,11,0.65);
+  box-shadow: 0 18px 32px rgba(245,158,11,0.18);
 }
 
 .landing-poster-wall {
@@ -126,7 +126,7 @@
   aspect-ratio: 2 / 3;
   overflow: hidden;
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(23, 38, 27, 0.95), rgba(6, 12, 8, 0.98));
+  background: linear-gradient(180deg, rgba(20,15,5, 0.95), rgba(8,6,0, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 26px 54px rgba(0, 0, 0, 0.38);
 }
@@ -157,8 +157,8 @@
   padding: 1rem;
   color: rgba(255, 255, 255, 0.95);
   background:
-    linear-gradient(180deg, rgba(22, 101, 52, 0.12), transparent 35%),
-    linear-gradient(135deg, rgba(8, 19, 12, 0.94), rgba(17, 33, 20, 0.98));
+    linear-gradient(180deg, rgba(245,158,11,0.09), transparent 35%),
+    linear-gradient(135deg, rgba(8, 19, 12, 0.94), rgba(20,15,5, 0.98));
 }
 
 .landing-poster-fallback span,
@@ -172,8 +172,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(3, 7, 4, 0.42) 0%, rgba(3, 7, 4, 0.72) 22%, rgba(3, 7, 4, 0.88) 58%, #040905 100%),
-    radial-gradient(circle at center, rgba(5, 14, 8, 0.18), rgba(4, 9, 5, 0.84) 78%);
+    linear-gradient(180deg, rgba(8,6,0, 0.42) 0%, rgba(8,6,0, 0.72) 22%, rgba(8,6,0, 0.88) 58%, #040905 100%),
+    radial-gradient(circle at center, rgba(5, 14, 8, 0.18), rgba(8,6,0, 0.84) 78%);
 }
 
 .landing-hero-content {
@@ -191,9 +191,9 @@
   gap: 0.45rem;
   padding: 0.38rem 0.8rem;
   border-radius: 0;
-  background: rgba(22, 101, 52, 0.1);
-  border: 1px solid rgba(22, 101, 52, 0.24);
-  color: var(--green-light);
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.18);
+  color: var(--gold-light);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -218,7 +218,7 @@
 .landing-hero-title-accent {
   display: block;
   max-width: min(100%, 11ch);
-  color: var(--green-light);
+  color: var(--gold-light);
   overflow-wrap: normal;
   text-wrap: balance;
 }
@@ -231,8 +231,8 @@
   max-width: 100%;
   height: 1.05em;
   overflow: hidden;
-  color: var(--green-light);
-  text-shadow: 0 0 22px rgba(74, 222, 128, 0.12);
+  color: var(--gold-light);
+  text-shadow: 0 0 22px rgba(245,158,11,0.1);
 }
 
 .landing-language-choice {
@@ -242,7 +242,7 @@
   gap: 0.5rem;
   margin-bottom: 1rem;
   padding: 0.45rem;
-  background: rgba(5, 12, 8, 0.82);
+  background: rgba(8,6,0, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -269,8 +269,8 @@
 }
 
 .landing-language-choice button:hover {
-  background: rgba(22, 101, 52, 0.34);
-  border-color: rgba(74, 222, 128, 0.38);
+  background: rgba(245,158,11,0.34);
+  border-color: rgba(245,158,11,0.35);
 }
 
 .landing-word-track {
@@ -323,7 +323,7 @@
   padding: 0 1.15rem;
   border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(5, 12, 8, 0.8);
+  background: rgba(8,6,0, 0.8);
   color: #fff;
   font-size: 1rem;
   outline: none;
@@ -335,8 +335,8 @@
 }
 
 .landing-lead-field input:focus {
-  border-color: rgba(22, 101, 52, 0.65);
-  box-shadow: 0 0 0 4px rgba(22, 101, 52, 0.12);
+  border-color: rgba(245,158,11,0.6);
+  box-shadow: 0 0 0 4px rgba(245,158,11,0.09);
 }
 
 .landing-lead-btn,
@@ -356,15 +356,15 @@
 }
 
 .landing-lead-btn {
-  background: linear-gradient(135deg, var(--green-dark), var(--green));
-  color: #031006;
-  box-shadow: 0 20px 40px rgba(22, 101, 52, 0.2);
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: #000;
+  box-shadow: 0 20px 40px rgba(245,158,11,0.2);
 }
 
 .landing-lead-btn:hover,
 .landing-story-btn.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 24px 48px rgba(22, 101, 52, 0.26);
+  box-shadow: 0 24px 48px rgba(245,158,11,0.22);
 }
 
 .landing-cta-links {
@@ -439,9 +439,9 @@
   width: min(1040px, calc(100% - 3rem));
   height: 110px;
   transform: translateX(-50%);
-  border-top: 3px solid rgba(22, 101, 52, 0.55);
+  border-top: 3px solid rgba(245,158,11,0.5);
   border-radius: 8px 8px 0 0;
-  box-shadow: 0 -16px 40px rgba(22, 101, 52, 0.16);
+  box-shadow: 0 -16px 40px rgba(245,158,11,0.12);
   opacity: 0.9;
 }
 
@@ -510,7 +510,7 @@
   font-size: clamp(4.8rem, 9vw, 6.4rem);
   line-height: 0.82;
   font-weight: 900;
-  color: rgba(4, 9, 5, 0.96);
+  color: rgba(8,6,0, 0.96);
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.75);
   text-shadow: 0 10px 30px rgba(0, 0, 0, 0.46);
 }
@@ -519,7 +519,7 @@
   overflow: hidden;
   border-radius: 8px;
   aspect-ratio: 2 / 3;
-  background: linear-gradient(180deg, rgba(20, 31, 22, 0.94), rgba(4, 8, 5, 0.96));
+  background: linear-gradient(180deg, rgba(20,15,5, 0.94), rgba(8,6,0, 0.96));
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 24px 44px rgba(0, 0, 0, 0.28);
 }
@@ -559,8 +559,8 @@
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background:
-    radial-gradient(circle at bottom right, rgba(22, 101, 52, 0.14), transparent 34%),
-    linear-gradient(180deg, rgba(16, 28, 19, 0.95), rgba(8, 12, 10, 0.98));
+    radial-gradient(circle at bottom right, rgba(245,158,11,0.1), transparent 34%),
+    linear-gradient(180deg, rgba(20,15,5, 0.95), rgba(8, 12, 10, 0.98));
   box-shadow: 0 26px 50px rgba(0, 0, 0, 0.24);
 }
 
@@ -572,9 +572,9 @@
   height: 52px;
   border-radius: 8px;
   margin-bottom: 1rem;
-  background: rgba(22, 101, 52, 0.1);
-  border: 1px solid rgba(22, 101, 52, 0.24);
-  color: var(--green-light);
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.18);
+  color: var(--gold-light);
 }
 
 .landing-reason-card h3,
@@ -596,8 +596,8 @@
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background:
-    radial-gradient(circle at top left, rgba(22, 101, 52, 0.08), transparent 28%),
-    linear-gradient(135deg, rgba(10, 17, 12, 0.98), rgba(6, 10, 7, 0.98));
+    radial-gradient(circle at top left, rgba(245,158,11,0.06), transparent 28%),
+    linear-gradient(135deg, rgba(14,11,2, 0.98), rgba(8,6,0, 0.98));
 }
 
 .landing-story-copy,
@@ -626,8 +626,8 @@
 }
 
 .landing-story-btn.primary {
-  background: linear-gradient(135deg, var(--green-dark), var(--green));
-  color: #031006;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: #000;
 }
 
 .landing-story-btn.secondary {
@@ -688,7 +688,7 @@
   aspect-ratio: 2 / 3;
   overflow: hidden;
   border-radius: 6px;
-  background: linear-gradient(180deg, rgba(20, 31, 22, 0.94), rgba(6, 10, 7, 0.98));
+  background: linear-gradient(180deg, rgba(20,15,5, 0.94), rgba(8,6,0, 0.98));
 }
 
 .landing-story-poster span {
@@ -697,7 +697,7 @@
   height: 100%;
   align-items: center;
   justify-content: center;
-  color: var(--green-light);
+  color: var(--gold-light);
   font-weight: 800;
   font-size: 1.35rem;
 }

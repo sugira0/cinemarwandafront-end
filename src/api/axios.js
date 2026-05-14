@@ -30,6 +30,13 @@ api.interceptors.response.use(
       error.userMessage = 'The server took too long to respond. Please try again.';
     }
 
+    // Auto-clear session on 401 so user is redirected to login
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('deviceId');
+    }
+
     return Promise.reject(error);
   },
 );

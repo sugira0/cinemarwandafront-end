@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Film, Monitor, Trash2 } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/auth-context';
 import api from '../api/axios';
 import DeviceRemovalVerification from '../components/DeviceRemovalVerification';
@@ -8,13 +9,14 @@ import { buildPostAuthPath, normalizeRedirectPath } from '../lib/authRedirect';
 import './Auth.css';
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const requestedRedirect = params.get('redirect');
   const redirect = normalizeRedirectPath(requestedRedirect || '/subscription');
   const [form, setForm] = useState({ identifier: '', password: '' });
   const [error, setError] = useState('');
+  const [googleBusy, setGoogleBusy] = useState(false);
   const [devices, setDevices] = useState(null);
   const [requesting, setRequesting] = useState(null);
   const [verifying, setVerifying] = useState(false);
@@ -25,6 +27,19 @@ export default function Login() {
   const updateForm = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const updateCodes = (key, value) => {
     setCodes((current) => ({ ...current, [key]: value.replace(/\D/g, '').slice(0, 6) }));
+  };
+
+  const handleGoogleSuccess = async ({ credential }) => {
+    setGoogleBusy(true);
+    setError('');
+    try {
+      const data = await loginWithGoogle(credential);
+      const nextTarget = !requestedRedirect && data?.user?.role === 'admin' ? '/admin' : redirect;
+      navigate(buildPostAuthPath(nextTarget), { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Google sign-in failed.');
+    }
+    setGoogleBusy(false);
   };
 
   const handleSubmit = async (event) => {
@@ -167,6 +182,24 @@ export default function Login() {
           <Link to="/forgot-password" style={{ fontSize: '0.82rem' }}>Forgot password?</Link>
         </p>
         <p className="auth-link">No account? <Link to="/register">Create one</Link></p>
+
+        <div className="auth-divider"><span>or</span></div>
+
+        <div className="auth-google">
+          {googleBusy ? (
+            <p className="auth-google-loading">Signing in with Google...</p>
+          ) : (
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google sign-in was cancelled or failed.')}
+              theme="filled_black"
+              shape="rectangular"
+              size="large"
+              width="100%"
+              text="continue_with"
+            />
+          )}
+        </div>
       </form>
     </div>
   );

@@ -1,0 +1,192 @@
+/* ── Staff Auth Page ─────────────────────────────────────────────────────────── */
+.staff-auth-page {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem 1.5rem;
+  position: relative; overflow: hidden;
+  background: var(--bg);
+}
+
+/* Subtle diagonal pattern background */
+.staff-auth-bg {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(245,158,11,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 20% 80%, rgba(99,102,241,0.05) 0%, transparent 60%);
+}
+
+.staff-auth-card {
+  position: relative; z-index: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-2xl);
+  padding: 2.2rem 2rem;
+  width: 100%; max-width: 460px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,158,11,0.06);
+  animation: scaleIn 0.35s var(--ease-spring) both;
+}
+
+.staff-register-card { max-width: 520px; }
+
+/* Top links row (Home + Back) */
+.staff-auth-top-links {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.staff-home-link {
+  font-size: 0.78rem; font-weight: 600; color: var(--text-3);
+  text-decoration: none; transition: color 0.2s;
+}
+.staff-home-link:hover { color: var(--gold); }
+
+/* Back link */
+.staff-back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; color: var(--text-3); text-decoration: none;
+  transition: color 0.2s;
+}
+.staff-back-link:hover { color: var(--gold); }
+
+/* Logo */
+.staff-auth-logo {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1.5rem;
+}
+.staff-auth-logo-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: rgba(245,158,11,0.12); border: 1.5px solid rgba(245,158,11,0.3);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); flex-shrink: 0;
+}
+.staff-auth-logo-title { display: block; font-size: 1rem; font-weight: 800; color: var(--text); }
+.staff-auth-logo-sub   { display: block; font-size: 0.72rem; color: var(--gold); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 1px; }
+
+/* Role badges row */
+.staff-role-badges {
+  display: flex; gap: 8px; margin-bottom: 1.4rem;
+}
+.staff-role-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: var(--r-full);
+  font-size: 0.75rem; font-weight: 700;
+}
+.staff-role-badge.author {
+  background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); color: #a5b4fc;
+}
+.staff-role-badge.actor {
+  background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: var(--gold);
+}
+
+/* Title */
+.staff-auth-title {
+  font-family: 'Playfair Display', serif; font-size: 1.7rem;
+  color: var(--text); margin-bottom: 0.4rem;
+}
+.staff-auth-sub { color: var(--text-3); font-size: 0.85rem; margin-bottom: 1.6rem; line-height: 1.5; }
+
+/* Error */
+.staff-auth-error {
+  background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3);
+  color: #fca5a5; font-size: 0.82rem; padding: 10px 12px;
+  border-radius: var(--r-md); text-align: center; margin-bottom: 1rem;
+}
+
+/* Form */
+.staff-auth-form { display: flex; flex-direction: column; gap: 0.9rem; }
+
+.staff-input-group { display: flex; flex-direction: column; gap: 5px; }
+.staff-input-group label { font-size: 0.78rem; color: var(--text-3); font-weight: 500; letter-spacing: 0.3px; }
+.staff-input-group input {
+  padding: 12px 14px;
+  background: rgba(245,158,11,0.06); border: 1.5px solid var(--border-2);
+  border-radius: var(--r-md); color: var(--text);
+  font-size: 0.9rem; font-family: 'Inter', sans-serif;
+  transition: all var(--t-base) var(--ease);
+}
+.staff-input-group input::placeholder { color: var(--text-4); }
+.staff-input-group input:focus {
+  outline: none; border-color: var(--gold);
+  background: rgba(245,158,11,0.09);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.staff-auth-forgot { text-align: right; margin-top: -4px; }
+.staff-auth-forgot a { font-size: 0.78rem; color: var(--text-3); text-decoration: none; }
+.staff-auth-forgot a:hover { color: var(--gold); }
+
+/* Submit button */
+.staff-auth-submit {
+  width: 100%; padding: 13px; margin-top: 0.4rem;
+  background: var(--gold-dark); color: #fff;
+  border: 1.5px solid var(--gold); border-radius: var(--r-md);
+  font-size: 0.92rem; font-weight: 700; font-family: 'Inter', sans-serif;
+  cursor: pointer; transition: all var(--t-base) var(--ease);
+  box-shadow: 0 2px 14px rgba(245,158,11,0.2);
+}
+.staff-auth-submit:hover:not(:disabled) {
+  background: var(--gold); transform: translateY(-1px);
+  box-shadow: 0 0 0 4px rgba(245,158,11,0.15), 0 8px 22px rgba(245,158,11,0.25);
+}
+.staff-auth-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.staff-auth-link { text-align: center; color: var(--text-3); font-size: 0.82rem; margin-top: 0.5rem; }
+.staff-auth-link a { color: var(--gold); font-weight: 500; text-decoration: none; }
+.staff-auth-link a:hover { color: var(--gold-light); }
+
+/* ── Role selection cards ─────────────────────────────────────────────────── */
+.staff-role-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.4rem; }
+
+.staff-role-card {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--r-xl); padding: 1.2rem;
+  cursor: pointer; text-align: left; width: 100%;
+  transition: all 0.2s ease;
+}
+.staff-role-card:hover { border-color: var(--border-2); background: var(--surface-2); }
+.staff-role-card.selected {
+  border-color: var(--gold);
+  background: rgba(245,158,11,0.06);
+  box-shadow: 0 0 0 1px rgba(245,158,11,0.15);
+}
+
+.staff-role-card-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+}
+.staff-role-card-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.staff-role-card-icon.author { background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); color: #a5b4fc; }
+.staff-role-card-icon.actor  { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); color: var(--gold); }
+
+.staff-role-card-title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.staff-role-card-selected-badge {
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gold); background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3);
+  padding: 2px 8px; border-radius: var(--r-full); margin-top: 3px; display: inline-block;
+}
+.staff-role-card-desc { font-size: 0.82rem; color: var(--text-3); line-height: 1.5; margin-bottom: 10px; }
+.staff-role-card-perks { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.staff-role-card-perks li {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.78rem; color: var(--text-3);
+}
+.staff-role-card-perks li svg { color: var(--gold); flex-shrink: 0; }
+
+/* Step header */
+.staff-step-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+.staff-step-back {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: none; border: none; color: var(--text-3);
+  font-size: 0.8rem; cursor: pointer; padding: 0;
+  transition: color 0.2s;
+}
+.staff-step-back:hover { color: var(--gold); }
+
+@media (max-width: 480px) {
+  .staff-auth-card { padding: 1.8rem 1.2rem; border-radius: var(--r-xl); }
+  .staff-auth-title { font-size: 1.5rem; }
+}

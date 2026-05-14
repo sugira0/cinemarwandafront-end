@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Monitor, Trash2, Shield, LogOut } from 'lucide-react';
+import { Monitor, Trash2, Shield, LogOut, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import { useI18n } from '../context/I18nContext';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,13 @@ export default function Account() {
   const [codes, setCodes] = useState({ emailCode: '', whatsappCode: '' });
   const [msg, setMsg] = useState('');
   const [verificationError, setVerificationError] = useState('');
+
+  // Password change state
+  const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
+  const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false });
+  const [pwBusy, setPwBusy] = useState(false);
+  const [pwMsg, setPwMsg] = useState('');
+  const [pwErr, setPwErr] = useState('');
 
   const currentDeviceId = localStorage.getItem('deviceId');
   const contact = user?.email || user?.phone || 'No contact information';
@@ -80,6 +87,24 @@ export default function Account() {
       setVerificationError(error.response?.data?.message || 'Verification failed');
     }
     setVerifying(false);
+  };
+
+  const changePassword = async (e) => {
+    e.preventDefault();
+    setPwErr(''); setPwMsg('');
+    if (!pwForm.current) { setPwErr('Enter your current password.'); return; }
+    if (pwForm.next.length < 8) { setPwErr('New password must be at least 8 characters.'); return; }
+    if (pwForm.next !== pwForm.confirm) { setPwErr('Passwords do not match.'); return; }
+    setPwBusy(true);
+    try {
+      await api.patch('/auth/change-password', { currentPassword: pwForm.current, newPassword: pwForm.next });
+      setPwMsg('Password changed successfully.');
+      setPwForm({ current: '', next: '', confirm: '' });
+      setTimeout(() => setPwMsg(''), 3000);
+    } catch (err) {
+      setPwErr(err.response?.data?.message || 'Failed to change password.');
+    }
+    setPwBusy(false);
   };
 
   return (
@@ -153,6 +178,46 @@ export default function Account() {
           submitting={verifying}
           error={verificationError}
         />
+      </div>
+
+      {/* Security — change password */}
+      <div className="account-section">
+        <div className="account-section-header">
+          <Lock size={16} strokeWidth={1.5} />
+          <h2>Security</h2>
+        </div>
+        <p className="account-section-sub">Change your account password. You need your current password to make this change.</p>
+
+        <form className="account-pw-form" onSubmit={changePassword}>
+          {[
+            { key: 'current', label: 'Current Password', placeholder: 'Enter current password' },
+            { key: 'next',    label: 'New Password',     placeholder: 'Min 8 characters' },
+            { key: 'confirm', label: 'Confirm Password', placeholder: 'Repeat new password' },
+          ].map(field => (
+            <div className="account-pw-field" key={field.key}>
+              <label>{field.label}</label>
+              <div className="account-pw-input-wrap">
+                <input
+                  type={showPw[field.key] ? 'text' : 'password'}
+                  placeholder={field.placeholder}
+                  value={pwForm[field.key]}
+                  onChange={e => setPwForm(f => ({ ...f, [field.key]: e.target.value }))}
+                  required
+                />
+                <button type="button" className="account-pw-eye" onClick={() => setShowPw(s => ({ ...s, [field.key]: !s[field.key] }))}>
+                  {showPw[field.key] ? <EyeOff size={15} strokeWidth={1.5} /> : <Eye size={15} strokeWidth={1.5} />}
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {pwErr && <p className="account-pw-error">{pwErr}</p>}
+          {pwMsg && <p className="account-pw-success">{pwMsg}</p>}
+
+          <button type="submit" className="account-pw-submit" disabled={pwBusy}>
+            {pwBusy ? 'Changing...' : 'Change Password'}
+          </button>
+        </form>
       </div>
 
       {/* Sign out */}

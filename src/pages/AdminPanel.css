@@ -264,8 +264,8 @@
 .admin-device-stat {
   padding: 1rem;
   border-radius: 14px;
-  background: rgba(22, 101, 52, 0.08);
-  border: 1px solid rgba(22, 101, 52, 0.18);
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.18);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -354,7 +354,7 @@
 }
 
 .admin-device-lines svg {
-  color: var(--green-light);
+  color: var(--gold-light);
   flex-shrink: 0;
 }
 
@@ -386,16 +386,16 @@
 /* Color overrides */
 .form-actions button[type="submit"],
 .upload-form button[type="submit"] {
-  background: var(--green-dark) !important;
+  background: var(--gold-dark) !important;
   color: #fff !important;
-  border: 2px solid var(--green) !important;
-  box-shadow: 0 0 0 0 var(--green-glow);
+  border: 2px solid var(--gold) !important;
+  box-shadow: 0 0 0 0 var(--gold-glow);
   transition: all 0.2s ease !important;
 }
 .form-actions button[type="submit"]:hover,
 .upload-form button[type="submit"]:hover {
-  background: var(--green) !important;
-  box-shadow: 0 0 0 6px var(--green-glow) !important;
+  background: var(--gold) !important;
+  box-shadow: 0 0 0 6px var(--gold-glow) !important;
 }
 
 .btn-delete {
@@ -409,7 +409,7 @@
   color: var(--red) !important;
 }
 
-.upload-msg { color: var(--green) !important; border-color: rgba(22, 101, 52, 0.25) !important; background: rgba(22, 101, 52, 0.06) !important; }
+.upload-msg { color: var(--gold) !important; border-color: rgba(245,158,11,0.25) !important; background: rgba(245,158,11,0.06) !important; }
 
 /* Mobile admin */
 @media (max-width: 768px) {

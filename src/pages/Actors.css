@@ -122,16 +122,16 @@
 /* Add actor button */
 .btn-add-actor {
   display: flex; align-items: center; gap: 7px;
-  background: var(--green-dark); color: #fff;
-  border: 2px solid var(--green);
+  background: var(--gold-dark); color: #fff;
+  border: 2px solid var(--gold);
   padding: 9px 18px; border-radius: 8px;
   font-size: 0.85rem; font-weight: 600;
   font-family: 'Inter', sans-serif; cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 0 0 0 var(--green-glow);
+  box-shadow: 0 0 0 0 var(--gold-glow);
   white-space: nowrap;
 }
-.btn-add-actor:hover { background: var(--green); box-shadow: 0 0 0 6px var(--green-glow); }
+.btn-add-actor:hover { background: var(--gold); box-shadow: 0 0 0 6px var(--gold-glow); }
 
 /* Create form */
 .actor-create-form {
@@ -153,14 +153,14 @@
 .actor-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
 
 .btn-create-actor {
-  background: var(--green-dark); color: #fff;
-  border: 2px solid var(--green); padding: 12px;
+  background: var(--gold-dark); color: #fff;
+  border: 2px solid var(--gold); padding: 12px;
   border-radius: 8px; font-size: 0.9rem; font-weight: 700;
   font-family: 'Inter', sans-serif; cursor: pointer;
   transition: all 0.2s ease;
 }
-.btn-create-actor:hover { background: var(--green); }
-.actor-form-msg { color: var(--green); font-size: 0.85rem; }
+.btn-create-actor:hover { background: var(--gold); }
+.actor-form-msg { color: var(--gold); font-size: 0.85rem; }
 
 .file-label {
   display: flex; flex-direction: column; gap: 5px;

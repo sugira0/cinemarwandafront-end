@@ -27,8 +27,15 @@ export function AuthProvider({ children }) {
         localStorage.setItem('user', JSON.stringify(freshUser));
         setUser(freshUser);
       })
-      .catch(() => {
-        // Keep the cached session if the refresh request fails.
+      .catch((err) => {
+        // If token is expired or invalid, clear the session so user is logged out
+        if (err.response?.status === 401) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('deviceId');
+          setUser(null);
+        }
+        // For network errors, keep the cached session so offline users stay logged in
       });
   }, []);
 
@@ -116,12 +123,27 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const loginWithGoogle = async (credential) => {
+    const deviceContext = await getDeviceContext();
+    const { data } = await api.post('/auth/google', {
+      credential,
+      ...deviceContext,
+    });
+    const freshUser = normalize(data.user);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
+    localStorage.setItem('user', JSON.stringify(freshUser));
+    setUser(freshUser);
+    return data;
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         login,
         logout,
+        loginWithGoogle,
         refreshUser,
         register,
         requestRegisterOtp,

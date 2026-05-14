@@ -14,8 +14,8 @@
 .um-broadcast-btn:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
 
 .um-flash {
-  background: rgba(22, 101, 52, 0.1); border: 1px solid rgba(22, 101, 52, 0.3);
-  color: var(--green); padding: 10px 16px; border-radius: 8px;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+  color: var(--gold); padding: 10px 16px; border-radius: 8px;
   font-size: 0.85rem; margin-bottom: 1rem; animation: fadeUp 0.2s ease both;
 }
 
@@ -45,11 +45,11 @@
 
 .um-send-btn {
   display: flex; align-items: center; gap: 7px;
-  background: var(--green-dark); color: #fff; border: 2px solid var(--green);
+  background: var(--gold-dark); color: #fff; border: 2px solid var(--gold);
   padding: 9px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
   font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.2s; align-self: flex-start;
 }
-.um-send-btn:hover { background: var(--green); }
+.um-send-btn:hover { background: var(--gold); }
 
 /* Filters */
 .um-filters { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; animation: fadeUp 0.5s 0.05s ease both; }
@@ -99,8 +99,8 @@
 }
 .um-btn.red   { border-color: rgba(229,57,53,0.3); color: rgba(229,57,53,0.7); }
 .um-btn.red:hover   { background: rgba(229,57,53,0.1); border-color: var(--red); color: var(--red); }
-.um-btn.green { border-color: rgba(22, 101, 52, 0.3); color: rgba(22, 101, 52, 0.7); }
-.um-btn.green:hover { background: rgba(22, 101, 52, 0.1); border-color: var(--green); color: var(--green); }
+.um-btn.green { border-color: rgba(245,158,11,0.3); color: rgba(245,158,11,0.7); }
+.um-btn.green:hover { background: rgba(245,158,11,0.1); border-color: var(--gold); color: var(--gold); }
 
 /* Pagination */
 .um-pagination { display: flex; gap: 5px; margin-top: 1rem; flex-wrap: wrap; }
@@ -128,7 +128,7 @@
 
 .um-detail-meta { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 .um-status-badge { font-size: 0.72rem; font-weight: 600; text-transform: capitalize; padding: 2px 10px; border-radius: 10px; }
-.um-status-badge.active    { background: rgba(22, 101, 52, 0.1); color: var(--green); border: 1px solid rgba(22, 101, 52, 0.3); }
+.um-status-badge.active    { background: rgba(245,158,11,0.1); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
 .um-status-badge.suspended { background: rgba(229,57,53,0.1); color: var(--red);   border: 1px solid rgba(229,57,53,0.3); }
 .um-joined { font-size: 0.72rem; color: var(--text-muted); }
 
@@ -148,8 +148,8 @@
 }
 .um-full-btn.red     { background: rgba(229,57,53,0.1); border: 1px solid rgba(229,57,53,0.4); color: var(--red); }
 .um-full-btn.red:hover { background: rgba(229,57,53,0.2); }
-.um-full-btn.green   { background: rgba(22, 101, 52, 0.1); border: 1px solid rgba(22, 101, 52, 0.4); color: var(--green); }
-.um-full-btn.green:hover { background: rgba(22, 101, 52, 0.2); }
+.um-full-btn.green   { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.4); color: var(--gold); }
+.um-full-btn.green:hover { background: rgba(245,158,11,0.2); }
 .um-full-btn.outline { background: transparent; }
 
 .um-film-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.82rem; }

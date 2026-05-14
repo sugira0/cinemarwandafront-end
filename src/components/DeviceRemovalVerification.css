@@ -1,120 +1,38 @@
 ﻿.drv-panel {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 0.95rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  background: var(--gold-subtle); border: 1px solid var(--border-2);
+  border-radius: var(--r-lg); padding: 0.95rem;
+  display: flex; flex-direction: column; gap: 0.75rem;
 }
-
 .drv-title {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: rgba(240,245,241,0.8);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  display: flex; align-items: center; gap: 0.45rem;
+  color: var(--text-2); font-size: 0.8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
 }
+.drv-sub { color: var(--text-3); font-size: 0.82rem; line-height: 1.5; }
 
-.drv-sub {
-  color: rgba(240,245,241,0.64);
-  font-size: 0.82rem;
-  line-height: 1.5;
-}
-
-.drv-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.7rem;
-}
-
-.drv-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.drv-field span {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: rgba(240,245,241,0.55);
-  font-size: 0.74rem;
-  letter-spacing: 0.03em;
-}
-
+.drv-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0.7rem; }
+.drv-field { display: flex; flex-direction: column; gap: 0.45rem; }
+.drv-field span { display: flex; align-items: center; gap: 0.4rem; color: var(--text-3); font-size: 0.74rem; letter-spacing: 0.03em; }
 .drv-panel .drv-field input {
-  width: 100%;
-  padding: 11px 12px;
-  background: rgba(22, 101, 52, 0.05);
-  border: 1px solid rgba(22, 101, 52, 0.15);
-  color: var(--text);
-  font-size: 0.94rem;
-  font-family: 'Inter', sans-serif;
+  width: 100%; padding: 11px 12px;
+  background: var(--gold-subtle); border: 1.5px solid var(--border-2);
+  border-radius: var(--r-md); color: var(--text); font-size: 0.94rem; font-family: var(--font-body);
+  transition: border-color 0.2s;
 }
+.drv-panel .drv-field input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
 
-.drv-expiry {
-  color: rgba(240,245,241,0.46);
-  font-size: 0.74rem;
+.drv-expiry { color: var(--text-4); font-size: 0.74rem; }
+.drv-error { color: #fca5a5; font-size: 0.8rem; }
+
+.drv-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
+.drv-cancel, .drv-confirm {
+  min-height: 40px; padding: 0 14px; font-size: 0.8rem; font-weight: 700;
+  font-family: var(--font-body); border-radius: var(--r-md); cursor: pointer; transition: all 0.2s;
 }
+.drv-cancel { background: transparent; border: 1px solid var(--border-2); color: var(--text-3); }
+.drv-cancel:hover:not(:disabled) { border-color: var(--border-3); color: var(--text); }
+.drv-confirm { background: var(--gold-dark); border: 1.5px solid var(--gold); color: #fff; }
+.drv-confirm:hover:not(:disabled) { background: var(--gold); }
+.drv-cancel:disabled, .drv-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.drv-error {
-  color: #fca5a5;
-  font-size: 0.8rem;
-}
-
-.drv-actions {
-  display: flex;
-  gap: 0.6rem;
-  justify-content: flex-end;
-}
-
-.drv-cancel,
-.drv-confirm {
-  min-height: 40px;
-  padding: 0 14px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  font-family: 'Inter', sans-serif;
-}
-
-.drv-cancel {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.18);
-  color: rgba(240,245,241,0.65);
-}
-
-.drv-cancel:hover:not(:disabled) {
-  border-color: rgba(255,255,255,0.32);
-  color: #fff;
-}
-
-.drv-confirm {
-  background: var(--green-dark);
-  border: 1px solid var(--green);
-  color: #fff;
-}
-
-.drv-confirm:hover:not(:disabled) {
-  background: var(--green);
-}
-
-.drv-cancel:disabled,
-.drv-confirm:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-@media (max-width: 560px) {
-  .drv-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .drv-actions {
-    flex-direction: column;
-  }
-}
-
-
+@media (max-width: 560px) { .drv-grid { grid-template-columns: 1fr; } .drv-actions { flex-direction: column; } }

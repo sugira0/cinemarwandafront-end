@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(circle at top center, rgba(22, 101, 52, 0.12), transparent 24%),
+    radial-gradient(circle at top center, rgba(245,158,11,0.12), transparent 24%),
     linear-gradient(180deg, #111 0%, #0a0a0a 100%);
   color: #f7f7f8;
 }

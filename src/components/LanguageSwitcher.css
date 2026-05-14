@@ -1,88 +1,33 @@
 .language-switcher {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.7rem 0.8rem;
-  background: rgba(8, 15, 10, 0.94);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+  position: fixed; right: 18px; bottom: 18px; z-index: 1000;
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.7rem 0.8rem; background: rgba(14,11,2,0.96);
+  border: 1px solid var(--border-2); border-radius: var(--r-xl);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,158,11,0.06);
   backdrop-filter: blur(16px);
 }
-
 .language-switcher-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: rgba(238, 245, 239, 0.82);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  color: var(--text-3); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
 }
-
-.language-switcher-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
+.language-switcher-actions { display: inline-flex; align-items: center; gap: 0.35rem; }
 .language-switcher-btn {
-  min-width: 44px;
-  padding: 0.5rem 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(238, 245, 239, 0.72);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  min-width: 44px; padding: 0.5rem 0.7rem;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-3); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.08em; border-radius: var(--r-md);
+  transition: all var(--transition); cursor: pointer;
 }
-
-.language-switcher-btn:hover {
-  border-color: rgba(255, 255, 255, 0.28);
-  color: #fff;
-}
-
-.language-switcher-btn.active {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.42);
-  color: #fff;
-}
+.language-switcher-btn:hover { border-color: var(--border-2); color: var(--text); }
+.language-switcher-btn.active { background: var(--gold-subtle-2); border-color: var(--gold); color: var(--gold-light); }
 
 @media (max-width: 640px) {
-  .language-switcher {
-    left: 12px;
-    right: 12px;
-    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-    justify-content: space-between;
-    gap: 0.55rem;
-    padding: 0.55rem 0.6rem;
-  }
-
-  .language-switcher-label {
-    font-size: 0.72rem;
-  }
-
-  .language-switcher-btn {
-    min-width: 44px;
-    min-height: 40px;
-    padding: 0.44rem 0.55rem;
-  }
+  .language-switcher { left: 12px; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom,0px)); justify-content: space-between; gap: 0.55rem; padding: 0.55rem 0.6rem; }
+  .language-switcher-label { font-size: 0.72rem; }
+  .language-switcher-btn { min-width: 44px; min-height: 40px; padding: 0.44rem 0.55rem; }
 }
-
 @media (max-width: 380px) {
-  .language-switcher-label span {
-    display: none;
-  }
-
-  .language-switcher-actions {
-    width: 100%;
-  }
-
-  .language-switcher-btn {
-    flex: 1;
-  }
+  .language-switcher-label span { display: none; }
+  .language-switcher-actions { width: 100%; }
+  .language-switcher-btn { flex: 1; }
 }

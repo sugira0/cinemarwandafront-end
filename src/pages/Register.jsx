@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Film } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/auth-context';
 import { buildPostAuthPath, normalizeRedirectPath } from '../lib/authRedirect';
 import './Auth.css';
 
 export default function Register() {
-  const { requestRegisterOtp, verifyRegisterOtp } = useAuth();
+  const { requestRegisterOtp, verifyRegisterOtp, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const redirect = normalizeRedirectPath(params.get('redirect') || '/subscription');
@@ -23,6 +24,7 @@ export default function Register() {
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState('details');
   const [resending, setResending] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
 
   const updateForm = (key, value) => setForm((current) => ({ ...current, [key]: value }));
 
@@ -209,6 +211,38 @@ export default function Register() {
         )}
 
         <p className="auth-link">Already have an account? <Link to="/login">Sign in</Link></p>
+
+        {step === 'details' && (
+          <>
+            <div className="auth-divider"><span>or</span></div>
+            <div className="auth-google">
+              {googleBusy ? (
+                <p className="auth-google-loading">Signing in with Google...</p>
+              ) : (
+                <GoogleLogin
+                  onSuccess={async ({ credential }) => {
+                    setGoogleBusy(true);
+                    setError('');
+                    try {
+                      const data = await loginWithGoogle(credential);
+                      const nextTarget = data?.user?.role === 'admin' ? '/admin' : redirect;
+                      navigate(buildPostAuthPath(nextTarget), { replace: true });
+                    } catch (err) {
+                      setError(err.response?.data?.message || err.message || 'Google sign-in failed.');
+                    }
+                    setGoogleBusy(false);
+                  }}
+                  onError={() => setError('Google sign-in was cancelled or failed.')}
+                  theme="filled_black"
+                  shape="rectangular"
+                  size="large"
+                  width="100%"
+                  text="continue_with"
+                />
+              )}
+            </div>
+          </>
+        )}
       </form>
     </div>
   );

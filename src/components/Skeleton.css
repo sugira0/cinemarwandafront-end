@@ -1,14 +1,19 @@
 .sk-shine {
-  background: linear-gradient(90deg, var(--bg-2) 25%, var(--bg-3) 50%, var(--bg-2) 75%);
-  background-size: 400px 100%;
-  animation: shimmer 1.4s ease infinite;
-  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    rgba(245,158,11,0.06) 50%,
+    var(--bg-card) 75%
+  );
+  background-size: 600px 100%;
+  animation: shimmer 1.6s ease infinite;
+  border-radius: var(--r-md);
 }
 .sk-hero { height: 90vh; min-height: 560px; border-radius: 0; }
 .sk-row { margin-bottom: 2.5rem; padding: 0 2.5rem; }
 .sk-row-title { height: 18px; width: 160px; margin-bottom: 0.9rem; }
 .sk-row-track { display: flex; gap: 6px; overflow: hidden; }
 .sk-card { flex-shrink: 0; width: 180px; }
-.sk-poster { width: 180px; aspect-ratio: 2/3; border-radius: 6px; }
+.sk-poster { width: 180px; aspect-ratio: 2/3; border-radius: var(--r-md); }
 .sk-info { padding: 0.6rem 0; display: flex; flex-direction: column; gap: 6px; }
-.sk-line { height: 10px; border-radius: 4px; }
+.sk-line { height: 10px; border-radius: var(--r-sm); }

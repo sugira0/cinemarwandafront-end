@@ -11,8 +11,8 @@
   border-radius: 10px; padding: 1rem 1.4rem; margin-bottom: 2rem;
 }
 .sub-phone-note {
-  background: rgba(22, 101, 52, 0.08);
-  border-color: rgba(22, 101, 52, 0.28);
+  background: rgba(245,158,11,0.08);
+  border-color: rgba(245,158,11,0.28);
 }
 .sub-current p { font-size: 0.9rem; color: #fff; }
 .sub-current strong { color: #f59e0b; }
@@ -38,12 +38,12 @@
 
 .sub-features { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
 .sub-features li { display: flex; align-items: center; gap: 7px; font-size: 0.82rem; color: rgba(255,255,255,0.65); }
-.sub-features li svg { color: var(--green); flex-shrink: 0; }
+.sub-features li svg { color: var(--gold); flex-shrink: 0; }
 
 .sub-selected-badge {
   position: absolute; top: 12px; right: 12px;
-  background: var(--green-dark); border: 1px solid var(--green);
-  color: var(--green); font-size: 0.68rem; font-weight: 700;
+  background: var(--gold-dark); border: 1px solid var(--gold);
+  color: var(--gold); font-size: 0.68rem; font-weight: 700;
   padding: 2px 10px; border-radius: 10px; letter-spacing: 0.5px;
 }
 
@@ -63,21 +63,21 @@
 /* Subscribe button */
 .btn-subscribe {
   width: 100%; padding: 14px;
-  background: var(--green-dark); color: #fff;
-  border: 2px solid var(--green); border-radius: 10px;
+  background: var(--gold-dark); color: #fff;
+  border: 2px solid var(--gold); border-radius: 10px;
   font-size: 1rem; font-weight: 700; font-family: 'Inter', sans-serif;
   cursor: pointer; transition: all 0.2s ease;
-  box-shadow: 0 0 0 0 var(--green-glow);
+  box-shadow: 0 0 0 0 var(--gold-glow);
   animation: fadeUp 0.5s 0.15s ease both;
 }
-.btn-subscribe:hover:not(:disabled) { background: var(--green); box-shadow: 0 0 0 8px var(--green-glow); }
+.btn-subscribe:hover:not(:disabled) { background: var(--gold); box-shadow: 0 0 0 8px var(--gold-glow); }
 .btn-subscribe:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn-subscribe.outline { background: transparent; border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); margin-top: 1rem; }
 .btn-subscribe.outline:hover { border-color: #fff; color: #fff; box-shadow: none; }
 
 /* Instructions */
 .sub-instructions {
-  background: rgba(22, 101, 52, 0.06); border: 1px solid rgba(22, 101, 52, 0.25);
+  background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25);
   border-radius: 14px; padding: 1.8rem; animation: fadeUp 0.3s ease both;
 }
 .sub-instr-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
