@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { Film, Monitor, Trash2 } from 'lucide-react';
+import { Monitor, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import api from '../api/axios';
 import DeviceRemovalVerification from '../components/DeviceRemovalVerification';
+import Logo from '../components/Logo';
 import { buildPostAuthPath, normalizeRedirectPath } from '../lib/authRedirect';
 import './Auth.css';
 
@@ -108,7 +109,7 @@ export default function Login() {
   return (
     <div className="auth-page">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <div className="auth-logo"><Film size={20} strokeWidth={1.5} /> CINEMA Rwanda</div>
+        <Logo size="sm" as="div" className="auth-logo-wrap" />
         <h2>Welcome back</h2>
         <p className="auth-sub">Sign in to continue watching</p>
         <p className="auth-note">Use the email address you registered with.</p>

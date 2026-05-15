@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Film } from 'lucide-react';
+import Logo from './Logo';
 import './Footer.css';
 
 function MTNBadge() {
@@ -53,10 +53,7 @@ export default function Footer() {
 
       <div className="footer-inner">
         <div className="footer-brand">
-          <Link to="/" className="footer-logo">
-            <Film size={22} strokeWidth={1.5} />
-            CINEMA <span>Rwanda</span>
-          </Link>
+          <Logo size="lg" to="/" />
           <p>The home of Rwandan cinema. Watch, discover and support local filmmakers and storytellers.</p>
 
           <div className="footer-social">

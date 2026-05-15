@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Video, Star, ArrowLeft, Clapperboard } from 'lucide-react';
+import { Video, Star, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import api from '../api/axios';
 import DeviceRemovalVerification from '../components/DeviceRemovalVerification';
+import Logo from '../components/Logo';
 import './StaffAuth.css';
 
 export default function StaffLogin() {
@@ -86,13 +87,7 @@ export default function StaffLogin() {
 
         {/* Logo */}
         <div className="staff-auth-logo">
-          <div className="staff-auth-logo-icon">
-            <Clapperboard size={24} strokeWidth={1.5} />
-          </div>
-          <div>
-            <span className="staff-auth-logo-title">CINEMA Rwanda</span>
-            <span className="staff-auth-logo-sub">Staff Portal</span>
-          </div>
+          <Logo size="md" as="div" subtitle="Staff Portal" />
         </div>
 
         {/* Role badges */}

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { mediaUrl } from '../lib/config';
 import MovieCard from '../components/MovieCard';
+import Logo from '../components/Logo';
 import './ActorPortal.css';
 
 const NAV = [
@@ -103,11 +104,7 @@ export default function ActorPortal() {
       {/* ── Sidebar ── */}
       <aside className="portal-sidebar">
         <div className="portal-brand">
-          <div className="portal-brand-icon"><Star size={18} strokeWidth={1.5} /></div>
-          <div>
-            <strong>CINEMA Rwanda</strong>
-            <small>Actor Portal</small>
-          </div>
+          <Logo size="sm" as="div" subtitle="Actor Portal" />
         </div>
 
         <nav className="portal-nav">

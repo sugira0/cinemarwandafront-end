@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { Film, CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import api from '../api/axios';
+import Logo from '../components/Logo';
 import './Auth.css';
 
 export default function ResetPassword() {
@@ -74,7 +75,7 @@ export default function ResetPassword() {
   return (
     <div className="auth-page">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <div className="auth-logo"><Film size={20} strokeWidth={1.5} /> CINEMA Rwanda</div>
+        <Logo size="sm" as="div" className="auth-logo-wrap" />
         <h2>{token ? 'Set new password' : 'Reset with OTP'}</h2>
         <p className="auth-sub">
           {token

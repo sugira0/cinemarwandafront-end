@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Film, Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import api from '../api/axios';
+import Logo from '../components/Logo';
 import './Auth.css';
 
 export default function ForgotPassword() {
@@ -28,7 +29,7 @@ export default function ForgotPassword() {
   return (
     <div className="auth-page">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <div className="auth-logo"><Film size={20} strokeWidth={1.5} /> CINEMA Rwanda</div>
+        <Logo size="sm" as="div" className="auth-logo-wrap" />
         <h2>Forgot password?</h2>
         <p className="auth-sub">Enter your email and Firebase will send a secure reset link.</p>
 

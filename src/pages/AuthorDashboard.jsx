@@ -8,6 +8,7 @@ import { useAuth } from '../context/auth-context';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import FilePreview from '../components/FilePreview';
+import Logo from '../components/Logo';
 import './AuthorDashboard.css';
 
 const EMPTY_FORM = {
@@ -151,11 +152,7 @@ export default function AuthorDashboard() {
       {/* ── Sidebar ── */}
       <aside className="portal-sidebar">
         <div className="portal-brand">
-          <div className="portal-brand-icon"><Clapperboard size={18} strokeWidth={1.5} /></div>
-          <div>
-            <strong>CINEMA Rwanda</strong>
-            <small>Author Portal</small>
-          </div>
+          <Logo size="sm" as="div" subtitle="Author Portal" />
         </div>
 
         <nav className="portal-nav">

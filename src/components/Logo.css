@@ -1,0 +1,90 @@
+/* ── CINEMA Rwanda Logo ─────────────────────────────────────────────────────── */
+
+.cinema-logo-link {
+  text-decoration: none;
+  display: inline-flex;
+}
+
+.cinema-logo-wrap {
+  display: inline-flex;
+}
+
+.cinema-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.cinema-logo-link:hover .cinema-logo {
+  opacity: 0.85;
+}
+
+/* ── Icon ── */
+.cinema-logo__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
+  transition: filter 0.2s ease;
+}
+
+.cinema-logo-link:hover .cinema-logo__icon {
+  filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.65));
+}
+
+/* ── Text block ── */
+.cinema-logo__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  gap: 1px;
+}
+
+.cinema-logo__cinema {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.cinema-logo__rwanda {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: 0.28em;
+  color: var(--text);
+  text-transform: uppercase;
+  line-height: 1;
+  font-size: 0.72em !important; /* always smaller than CINEMA */
+}
+
+.cinema-logo__sub {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  text-transform: uppercase;
+  margin-top: 3px;
+  line-height: 1;
+}
+
+/* ── Size variants ── */
+.cinema-logo--sm { gap: 0.35rem; }
+.cinema-logo--lg { gap: 0.65rem; }
+.cinema-logo--xl { gap: 0.8rem; }
+
+/* ── Icon-only: center the icon ── */
+.cinema-logo--icon .cinema-logo__icon {
+  padding: 0;
+}
+
+/* ── Inline variant for auth forms ── */
+.cinema-logo--inline {
+  flex-direction: row;
+  align-items: center;
+}

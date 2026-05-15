@@ -1,8 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/auth-context';
 import { useEffect, useState } from 'react';
-import { Film, Bookmark, LayoutDashboard, LogOut, LogIn, UserPlus, Menu, X, Users, TrendingUp, Crown } from 'lucide-react';
+import { Bookmark, LayoutDashboard, LogOut, LogIn, UserPlus, Menu, X, Users, TrendingUp, Crown } from 'lucide-react';
 import NotificationBell from './NotificationBell';
+import Logo from './Logo';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -19,16 +20,13 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close menu on route change
   const go = (path) => { setMenuOpen(false); navigate(path); };
   const handleLogout = () => { logout(); setMenuOpen(false); navigate('/'); };
 
   return (
     <>
       <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
-        <Link to="/" className="navbar-brand">
-          <Film size={20} strokeWidth={1.5} /> CINEMA <span>Rwanda</span>
-        </Link>
+        <Logo size="sm" />
 
         {/* Desktop links */}
         <div className="navbar-links desktop-links">

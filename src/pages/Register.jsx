@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Film } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
+import Logo from '../components/Logo';
 import { buildPostAuthPath, normalizeRedirectPath } from '../lib/authRedirect';
 import './Auth.css';
 
@@ -88,7 +88,7 @@ export default function Register() {
         className="auth-form"
         onSubmit={step === 'details' ? handleRequestOtp : handleVerifyOtp}
       >
-        <div className="auth-logo"><Film size={20} strokeWidth={1.5} /> CINEMA Rwanda</div>
+        <Logo size="sm" as="div" className="auth-logo-wrap" />
         <span className="auth-step-pill">{step === 'details' ? 'Step 1 of 2' : 'Step 2 of 2'}</span>
         <h2>{step === 'details' ? 'Create account' : 'Verify your email'}</h2>
         <p className="auth-sub">
