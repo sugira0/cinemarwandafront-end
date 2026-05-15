@@ -1,5 +1,5 @@
 ﻿.account-page {
-  padding: 7rem 2.5rem 3rem;
+  padding: calc(var(--header-h) + 1.5rem) 2.5rem 3rem;
   max-width: 640px;
   margin: 0 auto;
   position: relative; z-index: 1;

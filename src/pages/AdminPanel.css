@@ -1,5 +1,5 @@
 ﻿.admin-panel {
-  padding: 7rem 2.5rem 3rem;
+  padding: calc(var(--header-h) + 1.5rem) 2.5rem 3rem;
   max-width: 1120px;
   margin: 0 auto;
   position: relative;

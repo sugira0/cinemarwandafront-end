@@ -1,5 +1,5 @@
 ﻿.actor-profile {
-  padding: 6rem 2.5rem 3rem;
+  padding: calc(var(--header-h) + 1.5rem) 2.5rem 3rem;
   position: relative; z-index: 1;
   max-width: 1100px; margin: 0 auto;
 }

@@ -1,7 +1,7 @@
 ﻿.movie-detail {
   position: relative;
   min-height: 100vh;
-  padding-top: 76px;
+  padding-top: calc(var(--header-h) + 10px);
   z-index: 1;
 }
 
