@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ChevronRight, Film, Globe, LogIn, Play, Plus, Star, UserPlus, Users } from 'lucide-react';
+import { ChevronRight, Globe, LogIn, Play, Plus, Star, UserPlus, Users } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/auth-context';
+import Logo from '../components/Logo';
 import { useI18n } from '../context/I18nContext';
 import { imageUrl } from '../lib/config';
 import './Home.css';
@@ -300,10 +301,7 @@ export default function Home() {
         </div>
 
         <header className="landing-header">
-          <Link to="/" className="landing-brand">
-            <Film size={22} strokeWidth={1.8} />
-            <span className="landing-brand-wordmark">CINEMA Rwanda</span>
-          </Link>
+          <Logo size="md" to="/" />
 
           <div className="landing-header-actions">
             {user ? (
@@ -551,7 +549,7 @@ export default function Home() {
         <LandingPaymentBadges />
 
         <div className="landing-footer-bottom">
-          <p>CINEMA Rwanda</p>
+          <Logo size="sm" as="div" />
           <small>Rwandan films, flexible plans, and creator profiles in one place.</small>
         </div>
       </footer>
