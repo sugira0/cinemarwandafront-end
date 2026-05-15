@@ -85,6 +85,7 @@ export default function Logo({
       {variant !== 'icon' && (
         <span className="cinema-logo__text">
           <span className="cinema-logo__cinema" style={{ fontSize: s.fontSize }}>CINEMA</span>
+          {' '}
           <span className="cinema-logo__rwanda" style={{ fontSize: s.fontSize }}>Rwanda</span>
           {subtitle && (
             <span className="cinema-logo__sub" style={{ fontSize: s.subSize }}>{subtitle}</span>

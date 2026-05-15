@@ -32,38 +32,47 @@
   transition: filter 0.2s ease;
 }
 
+.cinema-logo__icon svg {
+  color: var(--gold);
+  display: block;
+}
+
 .cinema-logo-link:hover .cinema-logo__icon {
   filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.65));
 }
 
 /* ── Text block ── */
 .cinema-logo__text {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
   line-height: 1;
-  gap: 1px;
+  flex-wrap: nowrap;
 }
 
 .cinema-logo__cinema {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: var(--gold);
   text-transform: uppercase;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .cinema-logo__rwanda {
   font-family: var(--font-display);
   font-weight: 300;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.2em;
   color: var(--text);
   text-transform: uppercase;
   line-height: 1;
-  font-size: 0.72em !important; /* always smaller than CINEMA */
+  white-space: nowrap;
+  font-size: 0.72em !important;
 }
 
 .cinema-logo__sub {
+  display: block;
   font-family: var(--font-body);
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -71,6 +80,7 @@
   text-transform: uppercase;
   margin-top: 3px;
   line-height: 1;
+  white-space: nowrap;
 }
 
 /* ── Size variants ── */
