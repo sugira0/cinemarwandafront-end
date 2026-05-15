@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { AuthContext } from './auth-context';
 import { getDeviceContext } from '../lib/deviceContext';
-import { authClient } from '../lib/auth-client';
+import { auth, googleProvider, signInWithPopup, signOut as firebaseSignOut } from '../lib/firebase';
 
 function normalize(user) {
   if (!user) return null;
@@ -20,19 +20,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => normalize(JSON.parse(localStorage.getItem('user'))));
 
   useEffect(() => {
-    if (!localStorage.getItem('token')) {
-      // Check for Better Auth session (Google OAuth users)
-      authClient.getSession().then(({ data: session }) => {
-        if (session?.user) {
-          api.get('/auth/me').then(res => {
-            const freshUser = normalize(res.data.user);
-            localStorage.setItem('user', JSON.stringify(freshUser));
-            setUser(freshUser);
-          }).catch(() => {});
-        }
-      }).catch(() => {});
-      return;
-    }
+    if (!localStorage.getItem('token')) return;
 
     api.get('/auth/me')
       .then((response) => {
@@ -78,12 +66,26 @@ export function AuthProvider({ children }) {
     return data;
   };
 
-  // ── Google Sign-In via Better Auth ────────────────────────────────────────
+  // ── Google Sign-In via Firebase popup ─────────────────────────────────────
   const loginWithGoogle = async () => {
-    await authClient.signIn.social({
-      provider: 'google',
-      callbackURL: window.location.origin + '/movies',
+    const deviceContext = await getDeviceContext();
+
+    // Open Google popup via Firebase
+    const result = await signInWithPopup(auth, googleProvider);
+    const idToken = await result.user.getIdToken();
+
+    // Send Firebase ID token to our backend
+    const { data } = await api.post('/auth/google', {
+      credential: idToken,
+      ...deviceContext,
     });
+
+    const freshUser = normalize(data.user);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
+    localStorage.setItem('user', JSON.stringify(freshUser));
+    setUser(freshUser);
+    return data;
   };
 
   const requestRegisterOtp = async ({ name, email, phone, password, role = 'viewer' }) => {
@@ -121,7 +123,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try { await api.post('/auth/logout'); } catch {}
-    try { await authClient.signOut(); } catch {}
+    try { await firebaseSignOut(auth); } catch {}
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('deviceId');
