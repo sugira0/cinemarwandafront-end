@@ -465,3 +465,24 @@
   text-align: center;
   padding: 0.75rem;
 }
+
+/* ── Google Button ────────────────────────────────────────────────────────── */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  background: #fff;
+  color: #1f1f1f;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-google:hover { opacity: 0.9; }
+.btn-google:disabled { opacity: 0.6; cursor: not-allowed; }
