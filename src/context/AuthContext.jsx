@@ -3,6 +3,7 @@ import api from '../api/axios';
 import { AuthContext } from './auth-context';
 import { getDeviceContext } from '../lib/deviceContext';
 import { auth, googleProvider, signInWithPopup, signOut as firebaseSignOut } from '../lib/firebase';
+import { registerWebPush } from '../lib/pushNotifications';
 
 function normalize(user) {
   if (!user) return null;
@@ -63,6 +64,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
     localStorage.setItem('user', JSON.stringify(freshUser));
     setUser(freshUser);
+    registerWebPush().catch(() => {});
     return data;
   };
 
@@ -85,6 +87,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
     localStorage.setItem('user', JSON.stringify(freshUser));
     setUser(freshUser);
+    registerWebPush().catch(() => {});
     return data;
   };
 
