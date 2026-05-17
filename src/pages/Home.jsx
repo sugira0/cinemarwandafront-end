@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ChevronRight, Globe, LogIn, Play, Plus, Star, UserPlus, Users } from 'lucide-react';
+import { ChevronRight, Film, Globe, LogIn, Play, Plus, Star, UserPlus, Users } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/auth-context';

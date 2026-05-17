@@ -70,6 +70,9 @@ export function AuthProvider({ children }) {
 
   // ── Google Sign-In via Firebase popup ─────────────────────────────────────
   const loginWithGoogle = async () => {
+    if (!auth || !googleProvider) {
+      throw new Error('Google Sign-In is not configured. Please check Firebase settings.');
+    }
     const deviceContext = await getDeviceContext();
 
     // Open Google popup via Firebase
