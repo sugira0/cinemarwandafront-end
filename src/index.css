@@ -221,7 +221,20 @@ input, select, textarea { min-width: 0; }
 .stagger > *:nth-child(5) { transition-delay: 0.28s; }
 .stagger > *:nth-child(6) { transition-delay: 0.35s; }
 
-/* ── Page offset (topbar + navbar) ─────────────────────────────────────────── */
+/* ── Page offset for logged-in sidebar layout ── */
+.app-shell-content .nc-browse { padding-top: 2rem; }
+.app-shell-content .account-layout { padding-top: 2rem; }
+.app-shell-content .actors-page { padding-top: 2rem; }
+.app-shell-content .actor-profile { padding-top: 2rem; }
+.app-shell-content .sub-page { padding-top: 2rem; }
+.app-shell-content .analytics-page { padding-top: 2rem; }
+.app-shell-content .admin-panel { padding-top: 2rem; }
+.app-shell-content .um-page { padding-top: 2rem; }
+.app-shell-content .checkout-page { padding-top: 2rem; }
+.app-shell-content .static-page { padding-top: 2rem; }
+.app-shell-content .plans-hero { padding-top: 3rem; }
+
+/* ── Page offset ─────────────────────────────────────────────────────────── */
 .page-offset { padding-top: 76px; }
 
 /* ═══════════════════════════════════════════════════════════════════════════

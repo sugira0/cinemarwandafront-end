@@ -1,16 +1,17 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Navigate, Routes, Route, useLocation } from 'react-router-dom';
-import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import TopBar from './components/TopBar';
+import Navbar from './components/Navbar';
+import AppSidebar from './components/AppSidebar';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import PrivateRoute from './components/PrivateRoute';
 import { useAuth } from './context/auth-context';
 import usePresence from './hooks/usePresence';
 
 // ── Eagerly loaded (critical path) ──────────────────────────────────────────
-import Home    from './pages/Home';
-import Login   from './pages/Login';
+import Home     from './pages/Home';
+import Login    from './pages/Login';
 import Register from './pages/Register';
 
 // ── Lazy loaded ──────────────────────────────────────────────────────────────
@@ -46,59 +47,80 @@ function RouteLoading() {
   );
 }
 
-// Pages where we hide the nav chrome entirely
-const NO_CHROME = ['/', '/login', '/register', '/staff/login', '/staff/register', '/who-is-watching'];
-// Pages where we hide the topbar (auth pages, staff portal)
-const NO_TOPBAR = ['/', '/login', '/register', '/staff/login', '/staff/register', '/who-is-watching', '/forgot-password', '/reset-password'];
+// Pages that never show any chrome (landing, auth, special)
+const NO_CHROME_PATHS = ['/', '/login', '/register', '/staff/login', '/staff/register', '/who-is-watching', '/forgot-password', '/reset-password'];
 
 export default function App() {
   const { user } = useAuth();
   const location = useLocation();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const hideChrome = NO_CHROME.includes(location.pathname) && !user;
-  const hideTopBar = NO_TOPBAR.includes(location.pathname);
-  // '/' has its own inline landing footer; '/who-is-watching' has no footer at all
-  const hideFooter = location.pathname === '/who-is-watching' || (location.pathname === '/' && !user);
-
-  // Presence heartbeat — pings every 30s while logged in
+  // Presence heartbeat
   usePresence(user);
 
+  const isNoChromeRoute = NO_CHROME_PATHS.includes(location.pathname);
+
+  // Logged-in users get sidebar layout
+  // Logged-out users on protected pages get top navbar
+  // No-chrome routes get nothing
+  const showSidebar = !!user && !isNoChromeRoute;
+  const showTopNavbar = !user && !isNoChromeRoute;
+  const showTopBar = showTopNavbar; // TopBar only with top navbar
+  const hideFooter = location.pathname === '/who-is-watching' || (location.pathname === '/' && !user);
+
+  const routes = (
+    <Suspense fallback={<RouteLoading />}>
+      <Routes>
+        <Route path="/"               element={user ? <Navigate to="/movies" replace /> : <Home />} />
+        <Route path="/login"          element={<Login />} />
+        <Route path="/register"       element={<Register />} />
+        <Route path="/staff/login"    element={<StaffLogin />} />
+        <Route path="/staff/register" element={<StaffRegister />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password"  element={<ResetPassword />} />
+        <Route path="/about"   element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms"   element={<Terms />} />
+        <Route path="/plans"   element={<Plans />} />
+
+        <Route path="/who-is-watching" element={<PrivateRoute><WhoIsWatching /></PrivateRoute>} />
+        <Route path="/movies"          element={<PrivateRoute><Movies /></PrivateRoute>} />
+        <Route path="/movies/:id"      element={<PrivateRoute><MovieDetail /></PrivateRoute>} />
+        <Route path="/actors"          element={<PrivateRoute><Actors /></PrivateRoute>} />
+        <Route path="/actors/:id"      element={<PrivateRoute><ActorProfile /></PrivateRoute>} />
+        <Route path="/watchlist"       element={<PrivateRoute><Watchlist /></PrivateRoute>} />
+        <Route path="/account"         element={<PrivateRoute><Account /></PrivateRoute>} />
+        <Route path="/subscription"    element={<PrivateRoute><Subscription /></PrivateRoute>} />
+        <Route path="/checkout"        element={<PrivateRoute><Checkout /></PrivateRoute>} />
+        <Route path="/dashboard"       element={<PrivateRoute authorOnly><AuthorDashboard /></PrivateRoute>} />
+        <Route path="/admin"           element={<PrivateRoute adminOnly><AdminPanel /></PrivateRoute>} />
+        <Route path="/analytics"       element={<PrivateRoute adminOnly><Analytics /></PrivateRoute>} />
+        <Route path="/users"           element={<PrivateRoute adminOnly><UserManagement /></PrivateRoute>} />
+      </Routes>
+    </Suspense>
+  );
+
+  // ── Logged-in: sidebar shell ──────────────────────────────────────────────
+  if (showSidebar) {
+    return (
+      <div className="app-shell">
+        <AppSidebar onCollapse={setSidebarCollapsed} />
+        <div className={`app-shell-content${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
+          {routes}
+          {!hideFooter && <Footer />}
+        </div>
+        <LanguageSwitcher />
+      </div>
+    );
+  }
+
+  // ── Logged-out / public: top navbar ──────────────────────────────────────
   return (
     <>
-      {!hideTopBar && <TopBar />}
-      {!hideChrome && <Navbar />}
-
-      <Suspense fallback={<RouteLoading />}>
-        <Routes>
-          <Route path="/"               element={user ? <Navigate to="/movies" replace /> : <Home />} />
-          <Route path="/login"          element={<Login />} />
-          <Route path="/register"       element={<Register />} />
-          <Route path="/staff/login"    element={<StaffLogin />} />
-          <Route path="/staff/register" element={<StaffRegister />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password"  element={<ResetPassword />} />
-          <Route path="/about"   element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms"   element={<Terms />} />
-          <Route path="/plans"   element={<Plans />} />
-
-          <Route path="/who-is-watching" element={<PrivateRoute><WhoIsWatching /></PrivateRoute>} />
-          <Route path="/movies"          element={<PrivateRoute><Movies /></PrivateRoute>} />
-          <Route path="/movies/:id"      element={<PrivateRoute><MovieDetail /></PrivateRoute>} />
-          <Route path="/actors"          element={<PrivateRoute><Actors /></PrivateRoute>} />
-          <Route path="/actors/:id"      element={<PrivateRoute><ActorProfile /></PrivateRoute>} />
-          <Route path="/watchlist"       element={<PrivateRoute><Watchlist /></PrivateRoute>} />
-          <Route path="/account"         element={<PrivateRoute><Account /></PrivateRoute>} />
-          <Route path="/subscription"    element={<PrivateRoute><Subscription /></PrivateRoute>} />
-          <Route path="/checkout"        element={<PrivateRoute><Checkout /></PrivateRoute>} />
-          <Route path="/dashboard"       element={<PrivateRoute authorOnly><AuthorDashboard /></PrivateRoute>} />
-          <Route path="/admin"           element={<PrivateRoute adminOnly><AdminPanel /></PrivateRoute>} />
-          <Route path="/analytics"       element={<PrivateRoute adminOnly><Analytics /></PrivateRoute>} />
-          <Route path="/users"           element={<PrivateRoute adminOnly><UserManagement /></PrivateRoute>} />
-        </Routes>
-      </Suspense>
-
+      {showTopBar && <TopBar />}
+      {showTopNavbar && <Navbar />}
+      {routes}
       {!hideFooter && <Footer />}
       <LanguageSwitcher />
     </>
