@@ -1,179 +1,565 @@
-﻿.account-page {
-  padding: calc(var(--header-h) + 1.5rem) 2.5rem 3rem;
-  max-width: 640px;
+﻿/* ── Account page — sidebar layout ──────────────────────────────────────────── */
+.account-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  padding: calc(var(--header-h) + 2rem) 2.5rem 3rem;
+  max-width: 1100px;
   margin: 0 auto;
-  position: relative; z-index: 1;
-  animation: fadeUp 0.5s ease both;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.4s var(--ease) both;
 }
 
-.account-page h1 {
-  font-family: var(--font-display);
-  font-size: 2rem; margin-bottom: 0.3rem;
+/* ── Sidebar ── */
+.account-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: sticky;
+  top: calc(var(--header-h) + 2rem);
+  height: fit-content;
 }
-.account-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; }
 
-/* User card */
-.account-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.4rem;
-  margin-bottom: 2rem;
+/* User card in sidebar */
+.account-sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(245, 158, 11, 0.1);
+  border-radius: var(--r-xl);
+  margin-bottom: 0.5rem;
 }
-.account-info-row { display: flex; align-items: center; gap: 1rem; }
+
 .account-avatar {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-  border: 2px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 1.4rem;
-  color: rgba(255,255,255,0.5); flex-shrink: 0;
-}
-.account-name  { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
-.account-email { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; }
-.account-role  {
-  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
-  background: rgba(255,255,255,0.08); border: 1px solid var(--border);
-  padding: 2px 10px; border-radius: 20px; color: rgba(255,255,255,0.5);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(180,83,9,0.3));
+  border: 2px solid rgba(245, 158, 11, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--gold-light);
+  flex-shrink: 0;
 }
 
-/* Section */
-.account-section {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.4rem; margin-bottom: 1.5rem;
+.account-sidebar-info {
+  min-width: 0;
+  flex: 1;
 }
-.account-section-header {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 0.4rem;
-  color: rgba(255,255,255,0.7);
-}
-.account-section-header h2 { font-size: 1rem; font-weight: 600; flex: 1; }
-.device-count {
-  font-size: 0.75rem; color: var(--text-muted);
-  background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-  padding: 2px 8px; border-radius: 10px;
-}
-.account-section-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem; }
-.account-msg     { font-size: 0.82rem; color: var(--gold); margin-bottom: 0.75rem; }
-.account-loading { font-size: 0.85rem; color: var(--text-muted); }
-.account-empty   { font-size: 0.85rem; color: var(--text-muted); }
 
-/* Device list */
-.devices-list { display: flex; flex-direction: column; gap: 0.6rem; }
-.account-section .drv-panel { margin-top: 1rem; }
-
-.device-item {
-  display: flex; align-items: center; gap: 0.9rem;
-  padding: 0.9rem 1rem;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border); border-radius: 8px;
-  transition: border-color var(--transition);
+.account-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
 }
-.device-item.current { border-color: rgba(245,158,11,0.3); }
-.device-item:hover   { border-color: var(--border-hover); }
 
-.device-icon { color: rgba(255,255,255,0.4); flex-shrink: 0; }
+.account-email {
+  font-size: 0.75rem;
+  color: var(--text-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+}
 
-.device-details { flex: 1; display: flex; flex-direction: column; gap: 3px; }
-.device-name {
-  font-size: 0.88rem; color: #fff; font-weight: 500;
-  display: flex; align-items: center; gap: 8px;
+.account-role {
+  display: inline-block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  color: var(--gold);
+  padding: 2px 8px;
+  border-radius: var(--r-full);
 }
-.device-current-badge {
-  font-size: 0.68rem; background: rgba(245,158,11,0.15);
-  border: 1px solid rgba(245,158,11,0.3); color: var(--gold);
-  padding: 1px 8px; border-radius: 10px; font-weight: 400;
-}
-.device-seen { font-size: 0.75rem; color: var(--text-muted); }
 
-.btn-remove-device {
-  display: flex; align-items: center; gap: 5px;
-  background: transparent; border: 1px solid rgba(229,57,53,0.25);
-  color: rgba(229,57,53,0.65); padding: 6px 12px; border-radius: 6px;
-  font-size: 0.78rem; font-family: 'Inter', sans-serif;
-  cursor: pointer; transition: all 0.2s ease; white-space: nowrap; flex-shrink: 0;
+/* Nav items */
+.account-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--r-xl);
+  padding: 0.5rem;
 }
-.btn-remove-device:hover { background: rgba(229,57,53,0.1); border-color: var(--red); color: var(--red); }
-.btn-remove-device:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.account-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--r-lg);
+  border: none;
+  background: transparent;
+  color: var(--text-3);
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.account-nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.account-nav-item.active {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--gold-light);
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  font-weight: 600;
+}
+
+.account-nav-item.active svg {
+  color: var(--gold);
+}
 
 /* Sign out */
-.btn-signout-all {
-  display: flex; align-items: center; gap: 8px;
-  background: transparent; border: 1px solid var(--border);
-  color: var(--text-muted); padding: 11px 20px; border-radius: 8px;
-  font-size: 0.88rem; font-family: 'Inter', sans-serif; cursor: pointer;
+.account-signout {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  margin-top: 0.25rem;
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  background: transparent;
+  color: rgba(239, 68, 68, 0.7);
+  font-size: 0.88rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
   transition: all 0.2s ease;
-}
-.btn-signout-all:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
-
-@media (max-width: 480px) {
-  .account-page { padding: 5rem 1rem calc(2rem + env(safe-area-inset-bottom, 0px)); }
-  .account-card,
-  .account-section {
-    padding: 1rem;
-  }
-  .account-info-row {
-    align-items: flex-start;
-  }
-  .account-email {
-    overflow-wrap: anywhere;
-  }
-  .account-section-header {
-    flex-wrap: wrap;
-  }
-  .device-count {
-    margin-left: auto;
-  }
-  .device-item { flex-wrap: wrap; padding: 0.85rem; }
-  .device-name {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .btn-remove-device { width: 100%; justify-content: center; }
-  .btn-signout-all {
-    width: 100%;
-    justify-content: center;
-  }
+  width: 100%;
 }
 
+.account-signout:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
 
+/* ── Main content panels ── */
+.account-main {
+  min-width: 0;
+}
 
-/* ── Password / Security section ─────────────────────────────────────────── */
+.account-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-xl);
+  padding: 2rem;
+  animation: fadeUp 0.3s var(--ease) both;
+}
+
+.account-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.4rem;
+  color: var(--text);
+}
+
+.account-panel-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  flex: 1;
+}
+
+.account-panel-header svg {
+  color: var(--gold);
+}
+
+.account-panel-sub {
+  font-size: 0.88rem;
+  color: var(--text-3);
+  margin-bottom: 1.75rem;
+  line-height: 1.6;
+}
+
+/* ── Profile info grid ── */
+.account-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.account-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--r-lg);
+}
+
+.account-info-item label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-4);
+}
+
+.account-info-item p {
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.account-role-text {
+  text-transform: capitalize;
+  color: var(--gold-light) !important;
+}
+
+/* ── Device count badge ── */
+.device-count {
+  font-size: 0.72rem;
+  color: var(--text-3);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2px 10px;
+  border-radius: var(--r-full);
+  font-weight: 600;
+}
+
+.account-msg     { font-size: 0.85rem; color: var(--gold); margin-bottom: 1rem; }
+.account-loading { font-size: 0.85rem; color: var(--text-3); }
+.account-empty   { font-size: 0.85rem; color: var(--text-3); }
+
+/* ── Device list ── */
+.devices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.device-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-lg);
+  transition: border-color 0.2s ease;
+}
+
+.device-item.current {
+  border-color: rgba(245, 158, 11, 0.25);
+  background: rgba(245, 158, 11, 0.03);
+}
+
+.device-icon { color: var(--text-4); flex-shrink: 0; }
+
+.device-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.device-name {
+  font-size: 0.9rem;
+  color: var(--text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.device-current-badge {
+  font-size: 0.65rem;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: var(--gold);
+  padding: 1px 8px;
+  border-radius: var(--r-full);
+  font-weight: 600;
+}
+
+.device-seen { font-size: 0.75rem; color: var(--text-4); }
+
+.btn-remove-device {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: rgba(239, 68, 68, 0.7);
+  padding: 6px 14px;
+  border-radius: var(--r-md);
+  font-size: 0.78rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-remove-device:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.btn-remove-device:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Password form ── */
 .account-pw-form {
-  display: flex; flex-direction: column; gap: 0.85rem; margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 480px;
 }
-.account-pw-field { display: flex; flex-direction: column; gap: 5px; }
-.account-pw-field label { font-size: 0.78rem; color: var(--text-3); font-weight: 500; letter-spacing: 0.3px; }
+
+.account-pw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.account-pw-field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .account-pw-input-wrap {
-  position: relative; display: flex; align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
+
 .account-pw-input-wrap input {
-  width: 100%; padding: 12px 44px 12px 14px;
-  background: var(--gold-subtle); border: 1.5px solid var(--border);
-  border-radius: var(--r-md); color: var(--text); font-size: 0.9rem;
-  font-family: var(--font-body); transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  padding: 0.8rem 2.8rem 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-md);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-family: var(--font-body);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+
 .account-pw-input-wrap input:focus {
-  outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow);
+  outline: none;
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
 }
+
 .account-pw-input-wrap input::placeholder { color: var(--text-4); }
+
 .account-pw-eye {
-  position: absolute; right: 12px; background: none; border: none;
-  color: var(--text-3); cursor: pointer; padding: 4px; display: flex; align-items: center;
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-3);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
   transition: color 0.2s;
 }
+
 .account-pw-eye:hover { color: var(--gold); }
 
 .account-pw-error {
-  background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3);
-  color: #fca5a5; font-size: 0.82rem; padding: 9px 12px; border-radius: var(--r-md);
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--r-md);
+  color: #fca5a5;
+  font-size: 0.82rem;
+  padding: 0.65rem 0.9rem;
 }
+
 .account-pw-success {
-  background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25);
-  color: #4ade80; font-size: 0.82rem; padding: 9px 12px; border-radius: var(--r-md);
+  background: rgba(34, 197, 94, 0.07);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: var(--r-md);
+  color: #4ade80;
+  font-size: 0.82rem;
+  padding: 0.65rem 0.9rem;
 }
+
 .account-pw-submit {
-  padding: 13px; background: var(--gold-dark); border: 1.5px solid var(--gold);
-  color: #fff; font-size: 0.92rem; font-weight: 700; font-family: var(--font-body);
-  border-radius: var(--r-md); cursor: pointer; transition: all 0.2s ease; margin-top: 0.3rem;
+  padding: 0.8rem 1.5rem;
+  background: var(--gold-dark);
+  border: 1.5px solid var(--gold);
+  border-radius: var(--r-full);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
 }
-.account-pw-submit:hover:not(:disabled) { background: var(--gold); transform: translateY(-1px); }
+
+.account-pw-submit:hover:not(:disabled) {
+  background: var(--gold);
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.3);
+  transform: translateY(-1px);
+}
+
 .account-pw-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Subscription card ── */
+.account-sub-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-xl);
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.account-sub-card.active {
+  border-color: rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.04);
+}
+
+.account-sub-plan,
+.account-sub-expiry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.account-sub-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-4);
+}
+
+.account-sub-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+  text-transform: capitalize;
+}
+
+.account-sub-status {
+  margin-left: auto;
+  padding: 0.3rem 0.9rem;
+  border-radius: var(--r-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-3);
+}
+
+.account-sub-status.active {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.25);
+  color: #4ade80;
+}
+
+.account-upgrade-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--gold-dark);
+  border: 1.5px solid var(--gold);
+  border-radius: var(--r-full);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+  transition: all 0.2s ease;
+}
+
+.account-upgrade-btn:hover {
+  background: var(--gold);
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .account-layout {
+    grid-template-columns: 1fr;
+    padding: calc(var(--header-h) + 1.5rem) 1.25rem 3rem;
+    gap: 1.25rem;
+  }
+
+  .account-sidebar {
+    position: static;
+  }
+
+  .account-sidebar-user {
+    flex-direction: row;
+  }
+
+  .account-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .account-nav-item {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .account-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .account-panel {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .account-layout {
+    padding: calc(var(--header-h) + 1rem) 1rem calc(2rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .account-nav-item span { display: none; }
+  .account-nav-item { min-width: 0; flex: 1; justify-content: center; }
+
+  .device-item { flex-wrap: wrap; }
+  .btn-remove-device { width: 100%; justify-content: center; }
+}
