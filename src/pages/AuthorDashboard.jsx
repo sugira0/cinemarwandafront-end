@@ -148,84 +148,34 @@ export default function AuthorDashboard() {
   const handleLogout = async () => { await logout(); navigate('/'); };
 
   return (
-    <div className="portal-shell">
-      {/* ── Sidebar ── */}
-      <aside className="portal-sidebar">
-        <div className="portal-brand">
-          <Logo size="sm" as="div" subtitle="Author Portal" />
+    <div className="portal-page">
+      {/* ── Tab bar ── */}
+      <div className="portal-tabbar">
+        <div className="portal-tabbar-left">
+          <h1 className="portal-page-title">Author Dashboard</h1>
         </div>
-
-        <nav className="portal-nav">
+        <nav className="portal-tabs">
           {NAV.map(({ id, icon: Icon, label }) => (
             <button
               key={id}
-              className={`portal-nav-btn${tab === id ? ' active' : ''}`}
+              className={`portal-tab${tab === id ? ' active' : ''}`}
               onClick={() => { setTab(id); if (id !== 'upload') cancelEdit(); }}
             >
-              <Icon size={17} strokeWidth={1.6} />
+              <Icon size={15} strokeWidth={1.6} />
               <span>{label}</span>
             </button>
           ))}
         </nav>
-
-        <div className="portal-sidebar-footer">
-          <div className="portal-user-chip">
-            <div className="portal-user-avatar">{user?.name?.[0]}</div>
-            <div>
-              <div className="portal-user-name">{user?.name}</div>
-              <div className="portal-user-role">Author</div>
-            </div>
-          </div>
-          <button className="portal-logout-btn" onClick={handleLogout}>
-            <LogOut size={15} strokeWidth={1.5} /> Sign out
+        <div className="portal-tabbar-right">
+          {msg && <div className="portal-toast">{msg}</div>}
+          <button className="portal-refresh-btn" onClick={fetchMyMovies} disabled={loading}>
+            <RefreshCw size={14} className={loading ? 'spin' : ''} />
           </button>
         </div>
-      </aside>
+      </div>
 
-      {/* ── Main ── */}
-      <div className="portal-main">
-        {/* Topbar */}
-        <header className="portal-topbar">
-          <div className="portal-topbar-left">
-            <h1>{NAV.find(n => n.id === tab)?.label || 'Dashboard'}</h1>
-          </div>
-          <div className="portal-topbar-right">
-            {msg && <div className="portal-toast">{msg}</div>}
-            <button className="portal-refresh-btn" onClick={fetchMyMovies} disabled={loading}>
-              <RefreshCw size={14} className={loading ? 'spin' : ''} />
-            </button>
-            {/* Notification bell */}
-            <div className="portal-notif-wrap">
-              <button className="portal-notif-btn" onClick={() => setShowNotifs(s => !s)}>
-                <Bell size={18} strokeWidth={1.5} />
-                {unread > 0 && <span className="portal-notif-badge">{unread > 9 ? '9+' : unread}</span>}
-              </button>
-              {showNotifs && (
-                <div className="portal-notif-dropdown">
-                  <div className="portal-notif-header">
-                    <span>Notifications</span>
-                    {unread > 0 && <button onClick={markAllRead}>Mark all read</button>}
-                  </div>
-                  <div className="portal-notif-list">
-                    {notifications.length === 0 && <p className="portal-notif-empty">No notifications.</p>}
-                    {notifications.map(n => (
-                      <div key={n._id} className={`portal-notif-item${n.read ? '' : ' unread'}`}>
-                        <div className="portal-notif-dot" />
-                        <div>
-                          <p className="portal-notif-title">{n.title}</p>
-                          {n.message && <p className="portal-notif-msg">{n.message}</p>}
-                          <p className="portal-notif-time">{new Date(n.createdAt).toLocaleDateString()}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
-
-        <div className="portal-content">
+      {/* ── Content ── */}
+      <div className="portal-content">
 
           {/* ── Overview ── */}
           {tab === 'overview' && (
@@ -521,7 +471,6 @@ export default function AuthorDashboard() {
             </div>
           )}
 
-        </div>
       </div>
     </div>
   );

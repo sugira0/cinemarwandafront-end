@@ -108,7 +108,6 @@ export default function App() {
         <AppSidebar onCollapse={setSidebarCollapsed} />
         <div className={`app-shell-content${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
           {routes}
-          {!hideFooter && <Footer />}
         </div>
         <LanguageSwitcher />
       </div>
