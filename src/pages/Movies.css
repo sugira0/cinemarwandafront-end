@@ -1,21 +1,21 @@
 ﻿.nc-browse { padding: var(--header-h) 0 4rem; padding-top: calc(var(--header-h) + 1.5rem); min-height: 100vh; position: relative; z-index: 1; }
 
 .nc-topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem 1.5rem; }
-.nc-browse-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; }
+.nc-browse-title { font-family: var(--font-display); font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
 
-.nc-search-wrap { display: flex; align-items: center; border: 1px solid transparent; border-radius: 6px; transition: all 0.3s ease; overflow: hidden; }
+.nc-search-wrap { display: flex; align-items: center; border: 1px solid transparent; border-radius: var(--r-full); transition: all 0.3s ease; overflow: hidden; }
 .nc-search-wrap.open { border-color: rgba(245,158,11,0.35); background: rgba(8,6,0,0.8); backdrop-filter: blur(10px); }
-.nc-search-input { background: transparent; border: none; color: var(--text); font-size: 0.9rem; font-family: 'Inter', sans-serif; padding: 8px 12px; width: 220px; outline: none; }
-.nc-search-input::placeholder { color: var(--text-muted); }
-.nc-search-btn { background: none; border: none; color: rgba(240,245,241,0.6); padding: 8px 10px; cursor: pointer; display: flex; align-items: center; transition: color 0.2s; }
+.nc-search-input { background: transparent; border: none; color: var(--text); font-size: 0.9rem; font-family: var(--font-body); padding: 8px 12px; width: 220px; outline: none; }
+.nc-search-input::placeholder { color: var(--text-4); }
+.nc-search-btn { background: none; border: none; color: var(--text-3); padding: 8px 10px; cursor: pointer; display: flex; align-items: center; transition: color 0.2s; }
 .nc-search-btn:hover { color: var(--gold); }
 
-.nc-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: rgba(245,158,11,0.09); backdrop-filter: blur(16px); border: 1px solid rgba(245,158,11,0.3); color: var(--gold); padding: 10px 24px; border-radius: 30px; font-size: 0.88rem; z-index: 999; animation: fadeUp 0.3s ease both; font-family: 'Inter', sans-serif; font-weight: 500; }
+.nc-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: rgba(8,6,0,0.92); backdrop-filter: blur(16px); border: 1px solid rgba(245,158,11,0.3); color: var(--gold); padding: 10px 24px; border-radius: var(--r-full); font-size: 0.88rem; z-index: 999; animation: fadeUp 0.3s ease both; font-family: var(--font-body); font-weight: 600; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 
 .nc-row { margin-bottom: 2.5rem; position: relative; }
-.nc-row-title { font-size: 1.1rem; font-weight: 600; padding: 0 2.5rem; margin-bottom: 0.75rem; color: rgba(240,245,241,0.85); letter-spacing: 0.3px; }
+.nc-row-title { font-size: 1.15rem; font-weight: 700; padding: 0 2.5rem; margin-bottom: 0.85rem; color: var(--text); letter-spacing: -0.01em; }
 .nc-row-wrap { position: relative; }
-.nc-row-track { display: flex; gap: 6px; overflow-x: auto; padding: 0.5rem 2.5rem 5rem; scrollbar-width: none; scroll-snap-type: x mandatory; }
+.nc-row-track { display: flex; gap: 8px; overflow-x: auto; padding: 0.5rem 2.5rem 5rem; scrollbar-width: none; scroll-snap-type: x mandatory; }
 .nc-row-track::-webkit-scrollbar { display: none; }
 
 .nc-arrow { position: absolute; top: 0; bottom: 5rem; width: 54px; border: none; color: #fff; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s, width 0.2s; }
@@ -26,8 +26,8 @@
 
 .nc-card { position: relative; flex-shrink: 0; width: 180px; scroll-snap-align: start; cursor: pointer; z-index: 1; }
 .nc-card:hover { z-index: 200; }
-.nc-card-thumb { width: 180px; aspect-ratio: 2/3; border-radius: 6px; overflow: hidden; cursor: pointer; background: var(--bg-3); position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-.nc-card:hover .nc-card-thumb { transform: scale(1.06); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+.nc-card-thumb { width: 180px; aspect-ratio: 2/3; border-radius: var(--r-lg); overflow: hidden; cursor: pointer; background: var(--bg-3); position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.nc-card:hover .nc-card-thumb { transform: scale(1.06); box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(245,158,11,0.15); }
 .nc-card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nc-no-poster { width: 100%; height: 100%; background: linear-gradient(135deg, var(--bg-2), var(--bg-3)); display: flex; align-items: center; justify-content: center; }
 .nc-no-poster span { font-family: var(--font-display); font-size: 3rem; color: rgba(245,158,11,0.15); }
