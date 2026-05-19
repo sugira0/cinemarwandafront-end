@@ -21,8 +21,16 @@
   width: 320px; background: var(--bg-card);
   border: 1px solid var(--border-2); border-radius: var(--r-xl);
   box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(245,158,11,0.06);
-  z-index: 500; overflow: hidden;
+  z-index: 9999; overflow: hidden;
   animation: fadeUp 0.2s ease both;
+}
+
+/* When inside the sidebar, open to the right instead of left */
+.app-sidebar .notif-dropdown {
+  right: auto;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .notif-header {

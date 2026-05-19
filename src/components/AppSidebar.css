@@ -133,6 +133,8 @@
   padding: 0.6rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   flex-shrink: 0;
+  overflow: visible;
+  position: relative;
 }
 
 /* Notifications row */
@@ -145,6 +147,8 @@
   color: var(--text-3);
   font-size: 0.85rem;
   transition: background 0.18s ease;
+  position: relative;
+  overflow: visible;
 }
 
 .app-sidebar-notif:hover {
