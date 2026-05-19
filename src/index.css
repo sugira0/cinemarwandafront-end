@@ -1,9 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    CINEMA Rwanda — Design System
-   Matches mobile app theme.js exactly
    ═══════════════════════════════════════════════════════════════════════════ */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&family=Playfair+Display:wght@700;800;900&display=swap');
 
 :root {
   /* ── Backgrounds (warm dark — from mobile C.*) ── */
