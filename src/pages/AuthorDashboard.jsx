@@ -98,7 +98,11 @@ export default function AuthorDashboard() {
       setEditId(null); setForm(EMPTY_FORM); setFiles({ poster: null, video: null });
       fetchMyMovies();
       setTimeout(() => setTab('films'), 1200);
-    } catch (err) { flash(err.response?.data?.message || 'Save failed.'); }
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Save failed.';
+      console.error('publish error:', err.response?.status, msg);
+      flash(msg);
+    }
   };
 
   const deleteMovie = async id => {
