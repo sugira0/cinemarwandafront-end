@@ -107,16 +107,13 @@ export default function Register() {
         {step === 'details' ? (
           <>
             <div className="role-toggle">
-              {['viewer', 'author'].map((entryRole) => (
-                <button
-                  key={entryRole}
-                  type="button"
-                  className={`role-pill${form.role === entryRole ? ' active' : ''}`}
-                  onClick={() => updateForm('role', entryRole)}
-                >
-                  {entryRole === 'viewer' ? 'Viewer' : 'Author'}
-                </button>
-              ))}
+              <button
+                type="button"
+                className="role-pill active"
+                disabled
+              >
+                Viewer
+              </button>
             </div>
 
             <div className="input-group">
