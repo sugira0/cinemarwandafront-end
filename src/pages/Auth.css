@@ -8,8 +8,8 @@
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245,158,11,0.14), transparent 60%),
-    radial-gradient(ellipse 40% 30% at 85% 80%, rgba(180,83,9,0.08), transparent 50%),
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245, 158, 11, 0.14), transparent 60%),
+    radial-gradient(ellipse 40% 30% at 85% 80%, rgba(180, 83, 9, 0.08), transparent 50%),
     linear-gradient(160deg, #060400 0%, #0a0800 50%, #0e0b02 100%);
 }
 
@@ -245,7 +245,9 @@
   gap: 0.65rem;
 }
 
-.auth-button-row > * { flex: 1; }
+.auth-button-row>* {
+  flex: 1;
+}
 
 .auth-button-secondary {
   display: flex;
@@ -469,4 +471,32 @@
   .auth-form h2 {
     font-size: 1.5rem;
   }
+}
+
+/* ── Password show/hide toggle ── */
+.pw-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pw-wrap input {
+  padding-right: 2.8rem;
+}
+
+.pw-eye {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--text-4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.18s ease;
+}
+
+.pw-eye:hover {
+  color: var(--amber, #f59e0b);
 }

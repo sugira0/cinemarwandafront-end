@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import Logo from '../components/Logo';
 import { buildPostAuthPath, normalizeRedirectPath } from '../lib/authRedirect';
@@ -24,6 +25,7 @@ export default function Register() {
   const [step, setStep] = useState('details');
   const [resending, setResending] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
+  const [showPw, setShowPw] = useState(false);
 
   const updateForm = (key, value) => setForm((current) => ({ ...current, [key]: value }));
 
@@ -148,14 +150,19 @@ export default function Register() {
 
             <div className="input-group">
               <label>Password</label>
-              <input
-                placeholder="Password"
-                type="password"
-                minLength={6}
-                value={form.password}
-                onChange={(event) => updateForm('password', event.target.value)}
-                required
-              />
+              <div className="pw-wrap">
+                <input
+                  placeholder="Password"
+                  type={showPw ? 'text' : 'password'}
+                  minLength={6}
+                  value={form.password}
+                  onChange={(event) => updateForm('password', event.target.value)}
+                  required
+                />
+                <button type="button" className="pw-eye" onClick={() => setShowPw(v => !v)} tabIndex={-1}>
+                  {showPw ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
+                </button>
+              </div>
             </div>
 
             <button type="submit" disabled={loading}>
