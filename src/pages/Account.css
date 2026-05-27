@@ -563,3 +563,106 @@
   .device-item { flex-wrap: wrap; }
   .btn-remove-device { width: 100%; justify-content: center; }
 }
+
+/* ── Danger Zone ── */
+.account-danger-zone {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--r-lg, 12px);
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.account-danger-zone h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ef4444;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.account-danger-zone > p {
+  font-size: 0.85rem;
+  color: var(--text-3, rgba(253,248,238,0.46));
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.account-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1.5px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #fca5a5;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.account-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+  color: #fff;
+}
+
+.account-delete-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.account-delete-confirm > p {
+  font-size: 0.85rem;
+  color: #fca5a5;
+  line-height: 1.5;
+}
+
+.account-delete-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.account-delete-cancel {
+  padding: 9px 18px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: var(--text-3, rgba(253,248,238,0.46));
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.account-delete-cancel:hover:not(:disabled) {
+  border-color: rgba(255,255,255,0.3);
+  color: var(--text, #fdf8ee);
+}
+
+.account-delete-confirm-btn {
+  padding: 9px 18px;
+  background: #ef4444;
+  border: 1.5px solid #ef4444;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.account-delete-confirm-btn:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.account-delete-confirm-btn:disabled,
+.account-delete-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

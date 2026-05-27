@@ -8,9 +8,9 @@ import DeviceRemovalVerification from '../components/DeviceRemovalVerification';
 import './Account.css';
 
 const NAV_ITEMS = [
-  { id: 'profile',   icon: User,       label: 'Profile' },
-  { id: 'devices',   icon: Monitor,    label: 'Devices' },
-  { id: 'security',  icon: Lock,       label: 'Security' },
+  { id: 'profile', icon: User, label: 'Profile' },
+  { id: 'devices', icon: Monitor, label: 'Devices' },
+  { id: 'security', icon: Lock, label: 'Security' },
   { id: 'subscription', icon: CreditCard, label: 'Subscription' },
 ];
 
@@ -33,6 +33,10 @@ export default function Account() {
   const [pwBusy, setPwBusy] = useState(false);
   const [pwMsg, setPwMsg] = useState('');
   const [pwErr, setPwErr] = useState('');
+
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const [deleteErr, setDeleteErr] = useState('');
 
   const currentDeviceId = localStorage.getItem('deviceId');
   const contact = user?.email || user?.phone || 'No contact information';
@@ -82,6 +86,20 @@ export default function Account() {
       setVerificationError(error.response?.data?.message || 'Verification failed');
     }
     setVerifying(false);
+  };
+
+  const deleteAccount = async () => {
+    setDeleteBusy(true);
+    setDeleteErr('');
+    try {
+      await api.delete('/auth/me');
+      await logout();
+      navigate('/');
+    } catch (err) {
+      setDeleteErr(err.response?.data?.message || 'Failed to delete account. Please try again.');
+      setDeleteBusy(false);
+      setDeleteConfirm(false);
+    }
   };
 
   const changePassword = async (e) => {
@@ -178,6 +196,31 @@ export default function Account() {
                 <p>{user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}</p>
               </div>
             </div>
+
+            {/* Delete account */}
+            <div className="account-danger-zone">
+              <h3>Danger Zone</h3>
+              <p>Permanently delete your account and all associated data. This action cannot be undone.</p>
+              {deleteErr && <p className="account-pw-error">{deleteErr}</p>}
+              {!deleteConfirm ? (
+                <button className="account-delete-btn" onClick={() => setDeleteConfirm(true)}>
+                  <Trash2 size={15} strokeWidth={1.5} />
+                  Delete My Account
+                </button>
+              ) : (
+                <div className="account-delete-confirm">
+                  <p>Are you sure? This will permanently delete your account, watchlist, and all data.</p>
+                  <div className="account-delete-actions">
+                    <button className="account-delete-cancel" onClick={() => setDeleteConfirm(false)} disabled={deleteBusy}>
+                      Cancel
+                    </button>
+                    <button className="account-delete-confirm-btn" onClick={deleteAccount} disabled={deleteBusy}>
+                      {deleteBusy ? 'Deleting...' : 'Yes, Delete My Account'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -246,9 +289,9 @@ export default function Account() {
 
             <form className="account-pw-form" onSubmit={changePassword}>
               {[
-                { key: 'current', label: 'Current Password',  placeholder: 'Enter current password' },
-                { key: 'next',    label: 'New Password',      placeholder: 'Min 8 characters' },
-                { key: 'confirm', label: 'Confirm Password',  placeholder: 'Repeat new password' },
+                { key: 'current', label: 'Current Password', placeholder: 'Enter current password' },
+                { key: 'next', label: 'New Password', placeholder: 'Min 8 characters' },
+                { key: 'confirm', label: 'Confirm Password', placeholder: 'Repeat new password' },
               ].map(field => (
                 <div className="account-pw-field" key={field.key}>
                   <label>{field.label}</label>
