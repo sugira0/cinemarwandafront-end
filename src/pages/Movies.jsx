@@ -219,29 +219,29 @@ export default function Movies() {
       <div className="nc-topbar">
         <h1 className="nc-browse-title">Browse</h1>
         <div className={`nc-search-wrap${searching ? ' open' : ''}`}>
-          {searching && (
+          <div className="nc-search-bar">
+            <Search size={16} strokeWidth={1.8} className="nc-search-icon" />
             <input
               className="nc-search-input"
-              placeholder="Titles, genres..."
+              placeholder="Search films, genres, series..."
               value={search}
               onChange={(event) => {
                 const value = event.target.value;
                 setSearch(value);
-                if (!value.trim()) setResults([]);
+                setSearching(true);
+                if (!value.trim()) { setResults([]); setSearching(false); }
               }}
-              autoFocus
+              onFocus={() => setSearching(true)}
             />
-          )}
-          <button
-            className="nc-search-btn"
-            onClick={() => {
-              setSearching((current) => !current);
-              setSearch('');
-              setResults([]);
-            }}
-          >
-            {searching ? <X size={18} strokeWidth={1.5} /> : <Search size={18} strokeWidth={1.5} />}
-          </button>
+            {search && (
+              <button
+                className="nc-search-clear"
+                onClick={() => { setSearch(''); setResults([]); setSearching(false); }}
+              >
+                <X size={15} strokeWidth={2} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
