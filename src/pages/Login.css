@@ -1,0 +1,90 @@
+/* ── Login-specific styles (extends Register.css) ── */
+
+.login-forgot {
+    font-size: 0.75rem;
+    color: rgba(245, 158, 11, 0.7);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.18s;
+}
+
+.login-forgot:hover {
+    color: #f59e0b;
+}
+
+/* ── Device limit panel ── */
+.login-device-panel {
+    background: rgba(245, 158, 11, 0.05);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.login-device-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fbbf24;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.login-device-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+}
+
+.login-device-name {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #fdf8ee;
+}
+
+.login-device-seen {
+    display: block;
+    font-size: 0.72rem;
+    color: rgba(253, 248, 238, 0.35);
+    margin-top: 2px;
+}
+
+.login-device-remove {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.4rem 0.75rem;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
+    color: #fca5a5;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.18s;
+    flex-shrink: 0;
+}
+
+.login-device-remove:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #fff;
+}
+
+.login-device-remove:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
