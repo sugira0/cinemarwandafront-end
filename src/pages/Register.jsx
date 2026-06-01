@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Film, Mail, Phone, User, ArrowRight, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import Logo from '../components/Logo';
 import { buildPostAuthPath, normalizeRedirectPath } from '../lib/authRedirect';
-import './Auth.css';
+import './Register.css';
 
 export default function Register() {
   const { requestRegisterOtp, verifyRegisterOtp, loginWithGoogle } = useAuth();
@@ -29,6 +29,19 @@ export default function Register() {
 
   const updateForm = (key, value) => setForm((current) => ({ ...current, [key]: value }));
 
+  const handleGoogleSignIn = async () => {
+    setGoogleBusy(true);
+    setError('');
+    try {
+      await loginWithGoogle();
+      navigate(buildPostAuthPath(redirect), { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Google sign-in failed.');
+    } finally {
+      setGoogleBusy(false);
+    }
+  };
+
   const requestCode = async () => {
     const response = await requestRegisterOtp(form);
     setNotice(response.message || 'We sent a one-time password to your email.');
@@ -39,12 +52,10 @@ export default function Register() {
     event.preventDefault();
     setError('');
     setNotice('');
-
     if (!form.email.trim()) {
       setError('Enter the email address where you want to receive your sign-up code.');
       return;
     }
-
     try {
       setLoading(true);
       await requestCode();
@@ -58,7 +69,6 @@ export default function Register() {
   const handleVerifyOtp = async (event) => {
     event.preventDefault();
     setError('');
-
     try {
       setLoading(true);
       await verifyRegisterOtp({ email: form.email, otp });
@@ -72,7 +82,6 @@ export default function Register() {
 
   const handleResendOtp = async () => {
     setError('');
-
     try {
       setResending(true);
       await requestCode();
@@ -84,164 +93,201 @@ export default function Register() {
   };
 
   return (
-    <div className="auth-page">
-      <form
-        key={step}
-        className="auth-form"
-        onSubmit={step === 'details' ? handleRequestOtp : handleVerifyOtp}
-      >
-        <Logo size="sm" as="div" className="auth-logo-wrap" />
-        <span className="auth-step-pill">{step === 'details' ? 'Step 1 of 2' : 'Step 2 of 2'}</span>
-        <h2>{step === 'details' ? 'Create account' : 'Verify your email'}</h2>
-        <p className="auth-sub">
-          {step === 'details'
-            ? 'Join and start watching today'
-            : 'Enter the one-time password we sent to finish creating your account'}
-        </p>
-        <p className="auth-note">
-          {step === 'details'
-            ? 'Your Firebase account will be created after you verify your email code.'
-            : `Use the code sent to ${form.email || 'your email address'}. If it expires, resend it below.`}
-        </p>
-        {error && <p className="error">{error}</p>}
-        {notice && <div className="reset-success"><p>{notice}</p></div>}
+    <div className="reg-page">
 
-        {step === 'details' ? (
-          <>
-            <div className="role-toggle">
-              <button
-                type="button"
-                className="role-pill active"
-                disabled
-              >
-                Viewer
-              </button>
+      {/* ── Left panel — branding ── */}
+      <div className="reg-left">
+        <div className="reg-left-inner">
+          <Logo size="md" as="div" />
+          <div className="reg-left-copy">
+            <h1>Rwanda's home<br />of cinema</h1>
+            <p>Stream the best Rwandan films, series, and documentaries — anytime, anywhere.</p>
+          </div>
+          <ul className="reg-features">
+            {[
+              'Unlimited Rwandan films & series',
+              'Watch on phone, laptop, and TV',
+              'Pay with MTN MoMo or Airtel Money',
+              'Cancel anytime',
+            ].map(f => (
+              <li key={f}>
+                <CheckCircle size={15} strokeWidth={2} />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="reg-left-flag">
+            <span style={{ background: '#20603D' }} />
+            <span style={{ background: '#FAD201' }} />
+            <span style={{ background: '#1F8FD1' }} />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Right panel — form ── */}
+      <div className="reg-right">
+        <div className="reg-form-wrap">
+
+          {/* Step indicator */}
+          <div className="reg-steps">
+            <div className={`reg-step ${step === 'details' ? 'active' : 'done'}`}>
+              <span>1</span>
+              <p>Your details</p>
             </div>
-
-            <div className="input-group">
-              <label>Full Name</label>
-              <input
-                placeholder="Your name"
-                value={form.name}
-                onChange={(event) => updateForm('name', event.target.value)}
-                required
-              />
+            <div className="reg-step-line" />
+            <div className={`reg-step ${step === 'verify' ? 'active' : ''}`}>
+              <span>2</span>
+              <p>Verify email</p>
             </div>
+          </div>
 
-            <div className="input-group">
-              <label>Email</label>
-              <input
-                placeholder="you@example.com"
-                type="email"
-                value={form.email}
-                onChange={(event) => updateForm('email', event.target.value)}
-                required
-              />
-            </div>
+          <h2 className="reg-title">
+            {step === 'details' ? 'Create your account' : 'Check your inbox'}
+          </h2>
+          <p className="reg-sub">
+            {step === 'details'
+              ? 'Join thousands of viewers watching Rwandan stories.'
+              : `We sent a 6-digit code to ${form.email}`}
+          </p>
 
-            <div className="input-group">
-              <label>MTN MoMo / Airtel Number (optional)</label>
-              <input
-                placeholder="+2507XXXXXXXX"
-                value={form.phone}
-                onChange={(event) => updateForm('phone', event.target.value)}
-              />
-            </div>
+          {error && <div className="reg-error">{error}</div>}
+          {notice && <div className="reg-notice">{notice}</div>}
 
-            <div className="input-group">
-              <label>Password</label>
-              <div className="pw-wrap">
-                <input
-                  placeholder="Password"
-                  type={showPw ? 'text' : 'password'}
-                  minLength={6}
-                  value={form.password}
-                  onChange={(event) => updateForm('password', event.target.value)}
-                  required
-                />
-                <button type="button" className="pw-eye" onClick={() => setShowPw(v => !v)} tabIndex={-1}>
-                  {showPw ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
+          <form onSubmit={step === 'details' ? handleRequestOtp : handleVerifyOtp}>
+
+            {step === 'details' ? (
+              <>
+                {/* Name */}
+                <div className="reg-field">
+                  <label>Full Name</label>
+                  <div className="reg-input-wrap">
+                    <User size={15} strokeWidth={1.8} className="reg-input-icon" />
+                    <input
+                      placeholder="Your full name"
+                      value={form.name}
+                      onChange={e => updateForm('name', e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="reg-field">
+                  <label>Email address</label>
+                  <div className="reg-input-wrap">
+                    <Mail size={15} strokeWidth={1.8} className="reg-input-icon" />
+                    <input
+                      type="email"
+                      placeholder="you@example.com"
+                      value={form.email}
+                      onChange={e => updateForm('email', e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="reg-field">
+                  <label>Phone <span className="reg-optional">optional</span></label>
+                  <div className="reg-input-wrap">
+                    <Phone size={15} strokeWidth={1.8} className="reg-input-icon" />
+                    <input
+                      placeholder="+2507XXXXXXXX"
+                      value={form.phone}
+                      onChange={e => updateForm('phone', e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Password */}
+                <div className="reg-field">
+                  <label>Password</label>
+                  <div className="reg-input-wrap">
+                    <div className="reg-input-icon" style={{ fontSize: 14 }}>🔒</div>
+                    <input
+                      type={showPw ? 'text' : 'password'}
+                      placeholder="Min. 6 characters"
+                      minLength={6}
+                      value={form.password}
+                      onChange={e => updateForm('password', e.target.value)}
+                      required
+                    />
+                    <button type="button" className="reg-pw-eye" onClick={() => setShowPw(v => !v)} tabIndex={-1}>
+                      {showPw ? <EyeOff size={15} strokeWidth={1.5} /> : <Eye size={15} strokeWidth={1.5} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Submit */}
+                <button type="submit" className="reg-submit" disabled={loading}>
+                  {loading ? (
+                    <span className="reg-spinner" />
+                  ) : (
+                    <>Send Sign-Up Code <ArrowRight size={16} strokeWidth={2} /></>
+                  )}
                 </button>
-              </div>
-            </div>
 
-            <button type="submit" disabled={loading}>
-              {loading ? 'Sending sign-up code...' : 'Send Sign-Up Code'}
-            </button>
-          </>
-        ) : (
-          <>
-            <div className="auth-summary">
-              <strong>{form.name}</strong>
-              <span>{form.email}</span>
-              {form.phone && <span>{form.phone}</span>}
-            </div>
+                {/* Divider */}
+                <div className="reg-divider"><span>or</span></div>
 
-            <div className="input-group">
-              <label>One-Time Password</label>
-              <input
-                placeholder="Enter the 6-digit code"
-                value={otp}
-                onChange={(event) => setOtp(event.target.value.replace(/\D/g, '').slice(0, 6))}
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                required
-              />
-            </div>
+                {/* Google */}
+                <button type="button" className="reg-google" onClick={handleGoogleSignIn} disabled={googleBusy}>
+                  <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" />
+                    <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" />
+                    <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" />
+                    <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" />
+                  </svg>
+                  {googleBusy ? 'Redirecting...' : 'Continue with Google'}
+                </button>
+              </>
+            ) : (
+              <>
+                {/* Account summary */}
+                <div className="reg-summary">
+                  <div className="reg-summary-avatar">{form.name?.[0]?.toUpperCase() || '?'}</div>
+                  <div>
+                    <strong>{form.name}</strong>
+                    <span>{form.email}</span>
+                  </div>
+                </div>
 
-            <button type="submit" disabled={loading}>
-              {loading ? 'Verifying...' : 'Verify and Create Account'}
-            </button>
+                {/* OTP input */}
+                <div className="reg-field">
+                  <label>6-digit verification code</label>
+                  <input
+                    className="reg-otp-input"
+                    placeholder="• • • • • •"
+                    value={otp}
+                    onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    autoFocus
+                    required
+                  />
+                </div>
 
-            <div className="auth-button-row">
-              <button
-                type="button"
-                className="auth-button-secondary"
-                onClick={() => setStep('details')}
-              >
-                Edit Details
-              </button>
-              <button
-                type="button"
-                className="auth-button-secondary"
-                onClick={handleResendOtp}
-                disabled={resending}
-              >
-                {resending ? 'Resending...' : 'Resend Code'}
-              </button>
-            </div>
-          </>
-        )}
+                <button type="submit" className="reg-submit" disabled={loading}>
+                  {loading ? <span className="reg-spinner" /> : <>Verify & Create Account <ArrowRight size={16} strokeWidth={2} /></>}
+                </button>
 
-        <p className="auth-link">Already have an account? <Link to="/login">Sign in</Link></p>
+                <div className="reg-verify-actions">
+                  <button type="button" className="reg-text-btn" onClick={() => setStep('details')}>
+                    ← Edit details
+                  </button>
+                  <button type="button" className="reg-text-btn" onClick={handleResendOtp} disabled={resending}>
+                    {resending ? 'Sending...' : 'Resend code'}
+                  </button>
+                </div>
+              </>
+            )}
 
-        {step === 'details' && (
-          <>
-            <div className="auth-divider"><span>or</span></div>
-            <div className="auth-google">
-              <button
-                type="button"
-                className="btn-google"
-                onClick={async () => {
-                  setGoogleBusy(true);
-                  setError('');
-                  try { await loginWithGoogle(); }
-                  catch (err) { setError(err.message || 'Google sign-in failed.'); setGoogleBusy(false); }
-                }}
-                disabled={googleBusy}
-              >
-                <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                  <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" />
-                  <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" />
-                  <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" />
-                  <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" />
-                </svg>
-                {googleBusy ? 'Redirecting...' : 'Continue with Google'}
-              </button>
-            </div>
-          </>
-        )}
-      </form>
+            <p className="reg-signin">
+              Already have an account? <Link to="/login">Sign in</Link>
+            </p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
