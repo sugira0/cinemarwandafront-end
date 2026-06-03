@@ -22,7 +22,7 @@ function isDirectVideo(url) {
   return /\.(mp4|webm|ogg|mov|mkv)(\?.*)?$/i.test(url);
 }
 
-export default function VideoPlayer({ source, sourceType = 'external', onPlay, poster = '', className = '' }) {
+export default function VideoPlayer({ source, sourceType = 'external', onPlay, poster = '', className = '', startTime = 0, videoRef }) {
   if (!source) {
     return (
       <div className={`vp-empty ${className}`}>
@@ -35,6 +35,7 @@ export default function VideoPlayer({ source, sourceType = 'external', onPlay, p
   if (sourceType === 'file' || isDirectVideo(source)) {
     return (
       <video
+        ref={videoRef}
         controls
         autoPlay
         playsInline
@@ -43,6 +44,11 @@ export default function VideoPlayer({ source, sourceType = 'external', onPlay, p
         src={source}
         poster={poster || undefined}
         onPlay={onPlay}
+        onLoadedMetadata={(e) => {
+          if (startTime > 0 && e.target) {
+            e.target.currentTime = startTime;
+          }
+        }}
       />
     );
   }
