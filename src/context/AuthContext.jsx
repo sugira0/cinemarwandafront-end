@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { AuthContext } from './auth-context';
 import { getDeviceContext } from '../lib/deviceContext';
-import { auth, googleProvider, signInWithPopup, signOut as firebaseSignOut } from '../lib/firebase';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut as firebaseSignOut } from '../lib/firebase';
+import { GoogleAuthProvider } from 'firebase/auth';
 import { registerWebPush } from '../lib/pushNotifications';
 
 function normalize(user) {
@@ -37,6 +38,40 @@ export function AuthProvider({ children }) {
           setUser(null);
         }
       });
+    // Handle Firebase redirect sign-in result (if any)
+    (async () => {
+      try {
+        if (!auth || !getRedirectResult) return;
+        const result = await getRedirectResult(auth);
+        if (result) {
+          const deviceContext = await getDeviceContext();
+          const googleCredential = GoogleAuthProvider.credentialFromResult(result);
+          const idToken = googleCredential?.idToken || (await result.user.getIdToken());
+          const userInfo = {
+            sub: result.user.uid,
+            email: result.user.email,
+            name: result.user.displayName,
+            picture: result.user.photoURL,
+          };
+
+          if (idToken) {
+            const { data } = await api.post('/auth/google', {
+              credential: idToken,
+              googleUserInfo: userInfo,
+              ...deviceContext,
+            });
+            const freshUser = normalize(data.user);
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
+            localStorage.setItem('user', JSON.stringify(freshUser));
+            setUser(freshUser);
+            registerWebPush().catch(() => {});
+          }
+        }
+      } catch (e) {
+        // ignore redirect errors here; they'll show in UI when user starts sign-in
+      }
+    })();
   }, []);
 
   const login = async (identifier, password) => {
@@ -69,19 +104,56 @@ export function AuthProvider({ children }) {
   };
 
   // ── Google Sign-In via Firebase popup ─────────────────────────────────────
-  const loginWithGoogle = async () => {
-    if (!auth || !googleProvider) {
-      throw new Error('Google Sign-In is not configured. Please check Firebase settings.');
-    }
+  const loginWithGoogle = async ({ credential, googleUserInfo } = {}) => {
     const deviceContext = await getDeviceContext();
 
-    // Open Google popup via Firebase
-    const result = await signInWithPopup(auth, googleProvider);
-    const idToken = await result.user.getIdToken();
+    let idToken = credential;
+    let userInfo = googleUserInfo;
 
-    // Send Firebase ID token to our backend
+    if (!idToken) {
+      if (!auth || !googleProvider) {
+        throw new Error('Google Sign-In is not configured. Please check Firebase settings.');
+      }
+
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const googleCredential = GoogleAuthProvider.credentialFromResult(result);
+        idToken = googleCredential?.idToken || (await result.user.getIdToken());
+        userInfo = userInfo || {
+          sub: result.user.uid,
+          email: result.user.email,
+          name: result.user.displayName,
+          picture: result.user.photoURL,
+        };
+      } catch (err) {
+        // Friendly handling for common problems
+        const msg = String(err?.message || err);
+        if (err?.code === 'auth/popup-blocked' || msg.toLowerCase().includes('popup blocked')) {
+          // Popup blocked — fallback to redirect flow which avoids popups
+          try {
+            await signInWithRedirect(auth, googleProvider);
+            // Redirecting — returned flow will be handled on app load via getRedirectResult
+            return;
+          } catch (redirErr) {
+            throw new Error('Google sign-in redirect failed. Please allow popups or try again.');
+          }
+        }
+
+        if (msg.toLowerCase().includes('api key not valid') || err?.code === 'auth/invalid-api-key') {
+          throw new Error('Firebase API key is invalid. Set a valid `VITE_FIREBASE_API_KEY` in cinemarwandafront-end/.env and restart the dev server.');
+        }
+
+        throw err;
+      }
+    }
+
+    if (!idToken) {
+      throw new Error('Unable to retrieve Google authentication token.');
+    }
+
     const { data } = await api.post('/auth/google', {
       credential: idToken,
+      googleUserInfo: userInfo,
       ...deviceContext,
     });
 

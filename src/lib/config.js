@@ -2,7 +2,7 @@ const configuredOriginRaw = import.meta.env.VITE_API_ORIGIN?.trim().replace(/\/$
 const configuredOrigin = configuredOriginRaw?.replace(/\/api$/i, '');
 
 // In production, fall back to the known backend URL if VITE_API_ORIGIN is not set
-const PRODUCTION_BACKEND = 'https://cinemarwanda-backend.vercel.app';
+const PRODUCTION_BACKEND = 'https://cinemarwanda-backend.onrender.com';
 
 export const API_ORIGIN = import.meta.env.DEV
   ? (configuredOrigin || 'http://localhost:5000')

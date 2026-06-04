@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, getRedirectResult, signInWithRedirect } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey:            import.meta.env.VITE_FIREBASE_API_KEY            || '',
@@ -11,19 +11,27 @@ const firebaseConfig = {
 };
 
 // Only initialize if we have the required config
-let app, auth, googleProvider;
+// Only initialize if we have the required config
+let app = null;
+let auth = null;
+let googleProvider = null;
 
 try {
-  app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  googleProvider = new GoogleAuthProvider();
-  googleProvider.addScope('email');
-  googleProvider.addScope('profile');
+  // If API key is missing, avoid initializing Firebase and keep auth null
+  const apiKey = import.meta.env.VITE_FIREBASE_API_KEY || '';
+  if (apiKey.trim()) {
+    app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    googleProvider = new GoogleAuthProvider();
+    googleProvider.addScope('email');
+    googleProvider.addScope('profile');
+  } else {
+    console.warn('VITE_FIREBASE_API_KEY is not set. Firebase auth disabled.');
+  }
 } catch (err) {
   console.warn('Firebase init failed:', err.message);
-  // Provide stubs so imports don't crash
   auth = null;
   googleProvider = null;
 }
 
-export { auth, googleProvider, signInWithPopup, signOut };
+export { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut };
