@@ -1,196 +1,318 @@
-﻿.vmodal-backdrop {
+﻿/* ══════════════════════════════════════════════
+   CINEMA RWANDA — Premium Watch Screen
+══════════════════════════════════════════════ */
+
+.vmodal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: #000;
   z-index: 1000;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  animation: fadeIn 0.2s ease both;
+  flex-direction: column;
+  animation: vmFadeIn 0.22s ease both;
 }
 
+@keyframes vmFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Full-screen container ── */
 .vmodal-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 1080px;
-  animation: modalPop 0.28s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  height: 100%;
+  position: relative;
 }
 
-@keyframes modalPop {
-  from { opacity: 0; transform: scale(0.93) translateY(24px); }
-  to   { opacity: 1; transform: scale(1)    translateY(0); }
-}
-
+/* ── Top bar ── */
 .vmodal-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
-  padding: 0 0.25rem;
+  padding: 20px 28px 40px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+  pointer-events: none;
+  /* let clicks pass through to video */
+}
+
+.vmodal-header>* {
+  pointer-events: auto;
+}
+
+.vmodal-back {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.18s;
+  padding: 8px 0;
+}
+
+.vmodal-back svg {
+  flex-shrink: 0;
+}
+
+.vmodal-back:hover {
+  color: #fff;
 }
 
 .vmodal-title {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.75);
+  font-family: var(--font-display, serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 50px);
+  max-width: 50%;
+  text-align: center;
+}
+
+.vmodal-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .vmodal-close {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.7);
-  width: 36px; height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; flex-shrink: 0;
-  transition: all 0.2s;
-}
-.vmodal-close:hover {
-  background: rgba(255, 255, 255, 0.18);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Force player to fill the modal */
-.vmodal-player-wrap {
-  width: 100%;
-}
-.vmodal-player-wrap .vp-native {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 40px 100px rgba(0,0,0,0.9);
-  display: block;
-  background: #000;
-}
-.vmodal-player-wrap .vp-iframe-wrap {
-  width: 100%;
-  max-width: 100%;
-  aspect-ratio: 16/9;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 40px 100px rgba(0,0,0,0.9);
-  background: #000;
-}
-.vmodal-player-wrap .vp-iframe-wrap iframe {
-  width: 100%; height: 100%;
-  border: none; display: block;
-}
-.vmodal-player-wrap .vp-empty {
-  max-width: 100%;
-  padding: 4rem;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 0.75rem;
-  color: rgba(255,255,255,0.3);
-}
-
-/* Mobile modal */
-@media (max-width: 768px) {
-  .vmodal-backdrop { padding: 0.5rem; align-items: flex-end; }
-  .vmodal-container { animation-name: modalSlideUp; }
-  @keyframes modalSlideUp {
-    from { opacity: 0; transform: translateY(40px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .vmodal-title { font-size: 0.9rem; }
-}
-
-@media (max-width: 480px) {
-  .vmodal-backdrop {
-    padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  .vmodal-header {
-    align-items: flex-start;
-  }
-
-  .vmodal-title {
-    max-width: calc(100% - 46px);
-    white-space: normal;
-  }
-
-  .vmodal-close {
-    width: 42px;
-    height: 42px;
-    border-radius: 0;
-  }
-
-  .vmodal-player-wrap .vp-empty,
-  .vmodal-checking,
-  .vmodal-blocked {
-    padding: 2rem 1rem;
-  }
-
-  .vmodal-close-btn {
-    width: 100%;
-    min-height: 44px;
-  }
-}
-
-/* Stream check states */
-.vmodal-checking {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 1rem; padding: 4rem 2rem; color: var(--text-muted);
-  font-size: 0.9rem;
-}
-.vmodal-spinner {
-  width: 36px; height: 36px; border-radius: 50%;
-  border: 3px solid rgba(245,158,11,0.15);
-  border-top-color: var(--gold);
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.vmodal-blocked {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 0.75rem; padding: 3rem 2rem; text-align: center;
-}
-.vmodal-blocked h3 { font-family: var(--font-display); font-size: 1.3rem; color: #f59e0b; }
-.vmodal-blocked p  { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; max-width: 320px; }
-.vmodal-close-btn {
-  background: var(--surface); border: 1px solid var(--border);
-  color: var(--text-muted); padding: 10px 24px; border-radius: 8px;
-  font-family: 'Inter', sans-serif; font-size: 0.88rem; cursor: pointer;
-  transition: all 0.2s; margin-top: 0.5rem;
-}
-.vmodal-close-btn:hover { border-color: var(--border-2); color: var(--gold); }
-
-
-
-/* ── Resume prompt ── */
-.vmodal-resume-bar {
-  position: absolute;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: rgba(8,6,0,0.92);
-  border: 1px solid rgba(245,158,11,0.35);
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s;
+  backdrop-filter: blur(8px);
+}
+
+.vmodal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* ── Player area (fills screen) ── */
+.vmodal-player-wrap {
+  flex: 1;
+  position: relative;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vmodal-player-wrap .vp-native {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100vh;
+  display: block;
+  background: #000;
+  object-fit: contain;
+}
+
+.vmodal-player-wrap .vp-iframe-wrap {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+.vmodal-player-wrap .vp-iframe-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.vmodal-player-wrap .vp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 4rem;
+}
+
+/* ── Loading state ── */
+.vmodal-checking {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
+
+.vmodal-spinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid rgba(245, 158, 11, 0.15);
+  border-top-color: #f59e0b;
+  animation: vmSpin 0.8s linear infinite;
+}
+
+@keyframes vmSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.vmodal-checking-logo {
+  font-family: var(--font-display, serif);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 1px;
+}
+
+.vmodal-checking p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Blocked / error state ── */
+.vmodal-blocked {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.vmodal-blocked-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1.5px solid rgba(245, 158, 11, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.vmodal-blocked h3 {
+  font-family: var(--font-display, serif);
+  font-size: 1.4rem;
+  color: #fdf8ee;
+  font-weight: 800;
+}
+
+.vmodal-blocked p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  max-width: 340px;
+}
+
+.vmodal-blocked-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.vmodal-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 24px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.75);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.vmodal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.vmodal-upgrade-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 24px;
+  background: #f59e0b;
+  border: none;
+  color: #000;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-decoration: none;
+}
+
+.vmodal-upgrade-btn:hover {
+  background: #fbbf24;
+  transform: translateY(-1px);
+}
+
+/* ── Resume prompt bar ── */
+.vmodal-resume-bar {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(8, 6, 0, 0.92);
+  border: 1px solid rgba(245, 158, 11, 0.4);
   border-radius: 999px;
-  padding: 10px 18px;
-  backdrop-filter: blur(12px);
+  padding: 10px 16px 10px 20px;
+  backdrop-filter: blur(16px);
   white-space: nowrap;
   animation: fadeUp 0.3s ease both;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
 .vmodal-resume-bar span {
   font-size: 0.88rem;
-  color: rgba(253,248,238,0.8);
+  color: rgba(253, 248, 238, 0.85);
   font-weight: 500;
 }
 
@@ -200,10 +322,11 @@
 }
 
 .vmodal-resume-actions button {
-  padding: 6px 14px;
+  padding: 7px 16px;
   border-radius: 999px;
   font-size: 0.82rem;
   font-weight: 700;
+  font-family: inherit;
   cursor: pointer;
   border: none;
   transition: all 0.18s;
@@ -216,15 +339,78 @@
 
 .vmodal-resume-actions button:first-child:hover {
   background: #fbbf24;
+  transform: scale(1.03);
 }
 
 .vmodal-resume-actions button.secondary {
-  background: rgba(255,255,255,0.1);
-  color: rgba(253,248,238,0.7);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(253, 248, 238, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .vmodal-resume-actions button.secondary:hover {
-  background: rgba(255,255,255,0.18);
+  background: rgba(255, 255, 255, 0.18);
   color: #fff;
+}
+
+/* ── Progress bar (thin, gold) at very bottom ── */
+.vmodal-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  z-index: 20;
+}
+
+.vmodal-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #d97706, #f59e0b);
+  transition: width 0.5s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .vmodal-header {
+    padding: 14px 16px 36px;
+  }
+
+  .vmodal-title {
+    font-size: 0.88rem;
+    max-width: 40%;
+  }
+
+  .vmodal-resume-bar {
+    bottom: 50px;
+    flex-direction: column;
+    border-radius: 16px;
+    padding: 14px 18px;
+    gap: 10px;
+    left: 16px;
+    right: 16px;
+    transform: none;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .vmodal-resume-actions {
+    width: 100%;
+  }
+
+  .vmodal-resume-actions button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .vmodal-close {
+    width: 36px;
+    height: 36px;
+  }
+
+  .vmodal-blocked h3 {
+    font-size: 1.2rem;
+  }
 }

@@ -1,33 +1,35 @@
 import { useEffect, useRef, useState } from 'react';
-import { AlertTriangle, X } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Crown, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { absoluteUrl } from '../lib/config';
 import VideoPlayer from './VideoPlayer';
 import './VideoModal.css';
 
 const deviceId = localStorage.getItem('deviceId') || 'unknown';
-const SAVE_INTERVAL_MS = 10000; // save progress every 10 seconds
+const SAVE_INTERVAL_MS = 10000;
 
 export default function VideoModal({ title, movieId, episodeId = null, poster = '', onClose, onPlay }) {
   const [allowed, setAllowed] = useState(null);
   const [blockMsg, setBlockMsg] = useState('');
+  const [blockCode, setBlockCode] = useState('');
   const [playback, setPlayback] = useState({ kind: null, source: '' });
   const [resumeAt, setResumeAt] = useState(0);
   const [showResume, setShowResume] = useState(false);
+  const [progress, setProgress] = useState(0); // 0-100
   const pingRef = useRef(null);
   const progressRef = useRef(null);
-  const videoRef = useRef(null); // will be passed down to VideoPlayer
+  const videoRef = useRef(null);
 
-  // ── Load playback + saved progress ────────────────────────────────────────
+  // ── Load playback + saved progress ──────────────────────────────────────
   useEffect(() => {
     let mounted = true;
 
     async function loadPlayback() {
       try {
-        // Load stream + saved progress in parallel
         const [streamRes, progressRes] = await Promise.all([
           api.post('/streams/start', { movieId, deviceId, episodeId: episodeId || undefined }),
-          api.get(`/progress/${movieId}`, { params: episodeId ? { episodeId } : {} }).catch(() => ({ data: { position: 0 } })),
+          api.get(`/progress/${movieId}`, { params: episodeId ? { episodeId } : {} }).catch(() => ({ data: { position: 0, percent: 0 } })),
         ]);
 
         if (!mounted) return;
@@ -41,20 +43,19 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
         });
         setAllowed(true);
 
-        // Show resume prompt if user was more than 5% in and more than 30s
         if (savedPosition > 30 && savedPercent < 92) {
           setResumeAt(savedPosition);
           setShowResume(true);
         }
 
-        // Start stream ping
         pingRef.current = setInterval(() => {
           api.post('/streams/ping', { deviceId }).catch(() => { });
         }, 30000);
       } catch (err) {
         if (!mounted) return;
         setAllowed(false);
-        setBlockMsg(err.response?.data?.message || 'Stream limit reached.');
+        setBlockMsg(err.response?.data?.message || 'Unable to start playback.');
+        setBlockCode(err.response?.data?.code || '');
       }
     }
 
@@ -68,22 +69,24 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
     };
   }, [episodeId, movieId]);
 
-  // ── Save progress periodically ────────────────────────────────────────────
+  // ── Progress saving ────────────────────────────────────────────────────
   function startProgressSaving() {
     clearInterval(progressRef.current);
     progressRef.current = setInterval(() => {
       const video = videoRef.current;
       if (!video || video.paused || !video.currentTime) return;
+      const pos = Math.floor(video.currentTime);
+      const dur = Math.floor(video.duration) || 0;
+      if (dur > 0) setProgress(Math.min(100, Math.round((pos / dur) * 100)));
       api.post('/progress', {
         movieId,
         episodeId: episodeId || null,
-        position: Math.floor(video.currentTime),
-        duration: Math.floor(video.duration) || 0,
+        position: pos,
+        duration: dur,
       }).catch(() => { });
     }, SAVE_INTERVAL_MS);
   }
 
-  // Save final position on close
   function saveProgressNow() {
     const video = videoRef.current;
     if (!video || !video.currentTime) return;
@@ -100,7 +103,6 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
     onClose();
   };
 
-  // ── Keyboard escape ───────────────────────────────────────────────────────
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') handleClose(); };
     window.addEventListener('keydown', handler);
@@ -109,7 +111,7 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
       window.removeEventListener('keydown', handler);
       document.body.style.overflow = '';
     };
-  }, [onClose]);
+  }, []);
 
   function formatTime(seconds) {
     const m = Math.floor(seconds / 60);
@@ -118,31 +120,63 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
   }
 
   return (
-    <div className="vmodal-backdrop" onClick={handleClose}>
-      <div className="vmodal-container" onClick={e => e.stopPropagation()}>
+    <div className="vmodal-backdrop">
+      <div className="vmodal-container">
+
+        {/* ── Top bar ── */}
         <div className="vmodal-header">
+          <button className="vmodal-back" onClick={handleClose}>
+            <ArrowLeft size={18} strokeWidth={2} />
+            <span>Back</span>
+          </button>
+
           <span className="vmodal-title">{title}</span>
-          <button className="vmodal-close" onClick={handleClose}><X size={20} strokeWidth={1.5} /></button>
+
+          <div className="vmodal-header-right">
+            <button className="vmodal-close" onClick={handleClose}>
+              <X size={18} strokeWidth={1.8} />
+            </button>
+          </div>
         </div>
 
+        {/* ── Loading ── */}
         {allowed === null && (
           <div className="vmodal-checking">
+            <span className="vmodal-checking-logo">CINEMA Rwanda</span>
             <div className="vmodal-spinner" />
             <p>Loading video...</p>
           </div>
         )}
 
+        {/* ── Blocked ── */}
         {allowed === false && (
           <div className="vmodal-blocked">
-            <AlertTriangle size={36} strokeWidth={1.5} style={{ color: '#f59e0b' }} />
-            <h3>Unable to Start Playback</h3>
+            <div className="vmodal-blocked-icon">
+              {blockCode === 'NO_SUBSCRIPTION'
+                ? <Crown size={32} strokeWidth={1.5} style={{ color: '#f59e0b' }} />
+                : <AlertTriangle size={32} strokeWidth={1.5} style={{ color: '#f59e0b' }} />
+              }
+            </div>
+            <h3>
+              {blockCode === 'NO_SUBSCRIPTION' ? 'Subscription Required' : 'Unable to Play'}
+            </h3>
             <p>{blockMsg}</p>
-            <button className="vmodal-close-btn" onClick={handleClose}>Close</button>
+            <div className="vmodal-blocked-actions">
+              {blockCode === 'NO_SUBSCRIPTION' && (
+                <Link to="/plans" className="vmodal-upgrade-btn" onClick={handleClose}>
+                  <Crown size={15} strokeWidth={2} /> Upgrade Plan
+                </Link>
+              )}
+              <button className="vmodal-close-btn" onClick={handleClose}>
+                <ArrowLeft size={15} strokeWidth={2} /> Go Back
+              </button>
+            </div>
           </div>
         )}
 
+        {/* ── Player ── */}
         {allowed === true && (
-          <div className="vmodal-player-wrap" style={{ position: 'relative' }}>
+          <div className="vmodal-player-wrap">
 
             {/* Resume prompt */}
             {showResume && (
@@ -154,12 +188,12 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
                     setShowResume(false);
                     startProgressSaving();
                   }}>
-                    Resume
+                    ▶ Resume
                   </button>
-                  <button onClick={() => {
+                  <button className="secondary" onClick={() => {
                     setShowResume(false);
                     startProgressSaving();
-                  }} className="secondary">
+                  }}>
                     Start over
                   </button>
                 </div>
@@ -177,8 +211,16 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
                 if (!showResume) startProgressSaving();
               }}
             />
+
+            {/* Gold progress bar at bottom */}
+            {progress > 0 && (
+              <div className="vmodal-progress-bar">
+                <div className="vmodal-progress-fill" style={{ width: `${progress}%` }} />
+              </div>
+            )}
           </div>
         )}
+
       </div>
     </div>
   );
