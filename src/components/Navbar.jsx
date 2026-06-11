@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import { Bookmark, LayoutDashboard, LogOut, LogIn, UserPlus, Menu, X, Users, TrendingUp, Crown } from 'lucide-react';
 import NotificationBell from './NotificationBell';
 import Logo from './Logo';
+import api from '../api/axios';
 import './Navbar.css';
+
+// Prefetch data for a route when the user hovers its nav link
+function prefetch(url) { api.get(url).catch(() => {}); }
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -30,9 +34,9 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <div className="navbar-links desktop-links">
-          <Link to={browseTarget}>Browse</Link>
-          <Link to={actorsTarget}><Users size={15} strokeWidth={1.5} /> Actors</Link>
-          {user && <Link to="/watchlist"><Bookmark size={15} strokeWidth={1.5} /> Watchlist</Link>}
+          <Link to={browseTarget} onMouseEnter={() => prefetch('/movies')}>Browse</Link>
+          <Link to={actorsTarget} onMouseEnter={() => prefetch('/actors')}><Users size={15} strokeWidth={1.5} /> Actors</Link>
+          {user && <Link to="/watchlist" onMouseEnter={() => prefetch('/watchlist')}><Bookmark size={15} strokeWidth={1.5} /> Watchlist</Link>}
           {user && <Link to="/subscription"><Crown size={15} strokeWidth={1.5} /> Subscribe</Link>}
           {user?.role === 'actor' && user?.actorId && (
             <Link to={`/actors/${user.actorId}`}><Users size={15} strokeWidth={1.5} /> My Profile</Link>

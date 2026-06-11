@@ -1,78 +1,143 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../lib/config';
 
-const API_TIMEOUT_MS = 15000;
+// ── Per-endpoint TTLs (ms) ────────────────────────────────────────────────────
+const ENDPOINT_TTL = {
+  '/movies/home': 3 * 60_000,   // home carousel — 3 min
+  '/movies':      3 * 60_000,   // catalog list  — 3 min
+  '/actors':      5 * 60_000,   // actors list   — 5 min
+  '/plans':      10 * 60_000,   // subscription plans — 10 min
+  '/settings':   10 * 60_000,   // app settings  — 10 min
+  default:        60_000,        // everything else — 1 min
+};
 
-// ── Simple in-memory GET cache ────────────────────────────────────────────────
-const _apiCache = new Map();
-const CACHE_TTL_MS = 60 * 1000; // 1 minute for public endpoints
+function getTTL(url = '') {
+  for (const [prefix, ttl] of Object.entries(ENDPOINT_TTL)) {
+    if (prefix !== 'default' && url.startsWith(prefix)) return ttl;
+  }
+  return ENDPOINT_TTL.default;
+}
+
+// ── Stores ────────────────────────────────────────────────────────────────────
+const _cache    = new Map(); // cacheKey → { data, ts }
+const _inflight = new Map(); // cacheKey → Promise  (deduplication)
 
 export function invalidateCache(pattern) {
-  for (const key of _apiCache.keys()) {
-    if (!pattern || key.includes(pattern)) _apiCache.delete(key);
+  for (const key of _cache.keys()) {
+    if (!pattern || key.includes(pattern)) _cache.delete(key);
   }
 }
 
-const api = axios.create({
+// Evict entries older than the longest TTL every 5 min
+setInterval(() => {
+  const maxTTL = Math.max(...Object.values(ENDPOINT_TTL));
+  const now = Date.now();
+  for (const [k, v] of _cache) {
+    if (now - v.ts > maxTTL) _cache.delete(k);
+  }
+}, 5 * 60_000);
+
+// ── Base axios instance (auth headers, device-id, error handling) ─────────────
+const http = axios.create({
   baseURL: API_BASE_URL,
-  timeout: API_TIMEOUT_MS,
+  timeout: 8_000,
+  withCredentials: true,
 });
 
-api.interceptors.request.use(async config => {
-  config.headers = config.headers || {};
-  config.headers.Accept = config.headers.Accept || 'application/json';
+http.interceptors.request.use(config => {
+  config.headers ??= {};
+  config.headers.Accept ??= 'application/json';
 
   const token = localStorage.getItem('token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
 
   const deviceId = localStorage.getItem('deviceId');
-  if (deviceId) {
-    config.params = { ...(config.params || {}), deviceId };
-  }
-
-  // Serve from cache for unauthenticated GET requests
-  if (config.method === 'get' && !token && config.useCache !== false) {
-    const cacheKey = config.url + JSON.stringify(config.params || {});
-    const hit = _apiCache.get(cacheKey);
-    if (hit && Date.now() - hit.ts < CACHE_TTL_MS) {
-      config._cacheHit = hit.data;
-    }
-    config._cacheKey = cacheKey;
-  }
+  if (deviceId) config.params = { ...(config.params ?? {}), deviceId };
 
   return config;
 });
 
-api.interceptors.response.use(
-  response => {
-    // Store in cache for eligible GET responses
-    if (response.config._cacheKey && response.status === 200) {
-      _apiCache.set(response.config._cacheKey, { data: response.data, ts: Date.now() });
-    }
-    return response;
-  },
+http.interceptors.response.use(
+  r => r,
   error => {
-    // Return cached data on network error if available
-    if (error.config?._cacheKey) {
-      const stale = _apiCache.get(error.config._cacheKey);
-      if (stale) {
-        return Promise.resolve({ data: stale.data, status: 200, headers: {}, config: error.config, _fromStaleCache: true });
-      }
-    }
-
     if (error.code === 'ECONNABORTED') {
       error.userMessage = 'The server took too long to respond. Please try again.';
     }
-
-    // Auto-clear session on 401 so user is redirected to login
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       localStorage.removeItem('deviceId');
     }
-
     return Promise.reject(error);
   },
 );
+
+// ── Smart cached GET ──────────────────────────────────────────────────────────
+// Implements: true cache bypass · stale-while-revalidate · request deduplication
+function cachedGet(url, config = {}) {
+  if (config.useCache === false) return http.get(url, config);
+
+  const params  = config.params ?? {};
+  const cacheKey = url + JSON.stringify(params);
+  const ttl      = getTTL(url);
+  const hit      = _cache.get(cacheKey);
+
+  if (hit) {
+    const age = Date.now() - hit.ts;
+
+    if (age < ttl) {
+      // Stale-while-revalidate: if past 70% of TTL, silently refresh in background
+      if (age > ttl * 0.7 && !_inflight.has(cacheKey)) {
+        const bg = http.get(url, config)
+          .then(r => { _cache.set(cacheKey, { data: r.data, ts: Date.now() }); })
+          .catch(() => {})
+          .finally(() => _inflight.delete(cacheKey));
+        _inflight.set(cacheKey, bg);
+      }
+
+      // Return cached data immediately — zero network wait
+      return Promise.resolve({ data: hit.data, status: 200, headers: {}, config });
+    }
+  }
+
+  // Deduplicate: if the same URL is already in-flight, return its promise
+  if (_inflight.has(cacheKey)) return _inflight.get(cacheKey);
+
+  const p = http.get(url, config)
+    .then(r => {
+      _cache.set(cacheKey, { data: r.data, ts: Date.now() });
+      return r;
+    })
+    .catch(err => {
+      // Serve stale data on network failure rather than showing an error
+      const stale = _cache.get(cacheKey);
+      if (stale) return { data: stale.data, status: 200, headers: {}, config };
+      throw err;
+    })
+    .finally(() => _inflight.delete(cacheKey));
+
+  _inflight.set(cacheKey, p);
+  return p;
+}
+
+// ── Public API object — drop-in replacement for the old axios instance ────────
+const api = {
+  get:     (url, config)        => cachedGet(url, config),
+  post:    (url, data, config)  => http.post(url, data, config),
+  put:     (url, data, config)  => http.put(url, data, config),
+  patch:   (url, data, config)  => http.patch(url, data, config),
+  delete:  (url, config)        => http.delete(url, config),
+  request: (config)             => http.request(config),
+  http,
+};
+
+// ── Startup prefetch ──────────────────────────────────────────────────────────
+// Fire at module import time (before any component renders) so cache is hot
+// by the time the first useEffect runs. Total cost: ~3 parallel HTTP requests.
+if (typeof window !== 'undefined') {
+  cachedGet('/movies/home').catch(() => {});
+  cachedGet('/plans').catch(() => {});
+  cachedGet('/settings').catch(() => {});
+}
 
 export default api;

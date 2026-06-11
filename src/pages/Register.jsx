@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff, Film, Mail, Phone, User, ArrowRight, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Film, Mail, Phone, User, ArrowRight, CheckCircle, Lock } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import Logo from '../components/Logo';
 import { buildPostAuthPath, normalizeRedirectPath } from '../lib/authRedirect';
@@ -36,7 +36,24 @@ export default function Register() {
       await loginWithGoogle();
       navigate(buildPostAuthPath(redirect), { replace: true });
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Google sign-in failed.');
+      console.error('Google Sign-In Error:', err);
+
+      // Handle specific Firebase errors with user-friendly messages
+      let errorMessage = 'Google sign-in failed.';
+
+      if (err.message?.includes('redirect uri') || err.message?.includes('OAuth2')) {
+        errorMessage = 'Google Sign-In is not fully configured. Please contact support or try email/password registration.';
+      } else if (err.message?.includes('popup blocked')) {
+        errorMessage = 'Popup was blocked. Please allow popups for this site and try again.';
+      } else if (err.message?.includes('API key')) {
+        errorMessage = 'Firebase configuration error. Please contact support.';
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
     } finally {
       setGoogleBusy(false);
     }
@@ -203,7 +220,7 @@ export default function Register() {
                 <div className="reg-field">
                   <label>Password</label>
                   <div className="reg-input-wrap">
-                    <div className="reg-input-icon" style={{ fontSize: 14 }}>🔒</div>
+                    <Lock size={15} strokeWidth={1.8} className="reg-input-icon" />
                     <input
                       type={showPw ? 'text' : 'password'}
                       placeholder="Min. 6 characters"

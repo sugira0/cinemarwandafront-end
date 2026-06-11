@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   User, Film, Heart, Users, Pencil, Check, X, Upload,
   LayoutDashboard, LogOut, Settings, Bell, Star, MapPin,
-  Calendar, RefreshCw, Instagram, Twitter,
+  Calendar, RefreshCw, Instagram, Twitter, Clapperboard,
 } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import { useNavigate } from 'react-router-dom';
@@ -181,7 +181,7 @@ export default function ActorPortal() {
           {/* ── Overview ── */}
           {tab === 'overview' && (
             <div className="portal-overview">
-              <p className="portal-welcome">Welcome back, <strong>{user?.name?.split(' ')[0]}</strong> 🎬</p>
+              <p className="portal-welcome">Welcome back, <strong>{user?.name?.split(' ')[0]}</strong> <Clapperboard size={18} strokeWidth={1.6} style={{ verticalAlign: 'middle', opacity: 0.7 }} /></p>
 
               {loading ? <p className="portal-loading">Loading...</p> : !actor ? (
                 <div className="portal-no-actor">

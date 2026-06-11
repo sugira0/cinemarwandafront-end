@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { AuthContext } from './auth-context';
 import { getDeviceContext } from '../lib/deviceContext';
-import { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut as firebaseSignOut } from '../lib/firebase';
-import { GoogleAuthProvider } from 'firebase/auth';
+import { auth, signOut as firebaseSignOut } from '../lib/firebase';
+import { API_ORIGIN } from '../lib/config';
 import { registerWebPush } from '../lib/pushNotifications';
 
 function normalize(user) {
@@ -18,60 +18,37 @@ function normalize(user) {
   };
 }
 
+// Skip /auth/me if we already verified within this browser session (5 min TTL).
+// The user object from localStorage is already populated; this just keeps it fresh.
+const ME_VERIFIED_KEY = 'crMeAt';
+const ME_VERIFIED_TTL = 5 * 60 * 1000;
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => normalize(JSON.parse(localStorage.getItem('user'))));
 
   useEffect(() => {
     if (!localStorage.getItem('token')) return;
 
-    api.get('/auth/me')
+    const lastVerified = Number(sessionStorage.getItem(ME_VERIFIED_KEY) || 0);
+    if (Date.now() - lastVerified < ME_VERIFIED_TTL) return;
+
+    // useCache:false — /auth/me is user-specific, must never be served from shared cache
+    api.get('/auth/me', { useCache: false })
       .then((response) => {
+        sessionStorage.setItem(ME_VERIFIED_KEY, String(Date.now()));
         const freshUser = normalize(response.data.user);
         localStorage.setItem('user', JSON.stringify(freshUser));
         setUser(freshUser);
       })
       .catch((err) => {
         if (err.response?.status === 401) {
+          sessionStorage.removeItem(ME_VERIFIED_KEY);
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           localStorage.removeItem('deviceId');
           setUser(null);
         }
       });
-    // Handle Firebase redirect sign-in result (if any)
-    (async () => {
-      try {
-        if (!auth || !getRedirectResult) return;
-        const result = await getRedirectResult(auth);
-        if (result) {
-          const deviceContext = await getDeviceContext();
-          const googleCredential = GoogleAuthProvider.credentialFromResult(result);
-          const idToken = googleCredential?.idToken || (await result.user.getIdToken());
-          const userInfo = {
-            sub: result.user.uid,
-            email: result.user.email,
-            name: result.user.displayName,
-            picture: result.user.photoURL,
-          };
-
-          if (idToken) {
-            const { data } = await api.post('/auth/google', {
-              credential: idToken,
-              googleUserInfo: userInfo,
-              ...deviceContext,
-            });
-            const freshUser = normalize(data.user);
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
-            localStorage.setItem('user', JSON.stringify(freshUser));
-            setUser(freshUser);
-            registerWebPush().catch(() => {});
-          }
-        }
-      } catch (e) {
-        // ignore redirect errors here; they'll show in UI when user starts sign-in
-      }
-    })();
   }, []);
 
   const login = async (identifier, password) => {
@@ -103,67 +80,58 @@ export function AuthProvider({ children }) {
     return data;
   };
 
-  // ── Google Sign-In via Firebase popup ─────────────────────────────────────
+  // ── Google Sign-In via server-side OAuth popup ────────────────────────────
   const loginWithGoogle = async ({ credential, googleUserInfo } = {}) => {
     const deviceContext = await getDeviceContext();
 
-    let idToken = credential;
-    let userInfo = googleUserInfo;
-
-    if (!idToken) {
-      if (!auth || !googleProvider) {
-        throw new Error('Google Sign-In is not configured. Please check Firebase settings.');
-      }
-
-      try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const googleCredential = GoogleAuthProvider.credentialFromResult(result);
-        idToken = googleCredential?.idToken || (await result.user.getIdToken());
-        userInfo = userInfo || {
-          sub: result.user.uid,
-          email: result.user.email,
-          name: result.user.displayName,
-          picture: result.user.photoURL,
-        };
-      } catch (err) {
-        // Friendly handling for common problems
-        const msg = String(err?.message || err);
-        if (err?.code === 'auth/popup-blocked' || msg.toLowerCase().includes('popup blocked')) {
-          // Popup blocked — fallback to redirect flow which avoids popups
-          try {
-            await signInWithRedirect(auth, googleProvider);
-            // Redirecting — returned flow will be handled on app load via getRedirectResult
-            return;
-          } catch (redirErr) {
-            throw new Error('Google sign-in redirect failed. Please allow popups or try again.');
-          }
-        }
-
-        if (msg.toLowerCase().includes('api key not valid') || err?.code === 'auth/invalid-api-key') {
-          throw new Error('Firebase API key is invalid. Set a valid `VITE_FIREBASE_API_KEY` in cinemarwandafront-end/.env and restart the dev server.');
-        }
-
-        throw err;
-      }
+    if (credential || googleUserInfo) {
+      // Mobile path — pass token/userInfo directly
+      const { data } = await api.post('/auth/google', { credential, googleUserInfo, ...deviceContext });
+      const freshUser = normalize(data.user);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
+      localStorage.setItem('user', JSON.stringify(freshUser));
+      setUser(freshUser);
+      registerWebPush().catch(() => {});
+      return data;
     }
 
-    if (!idToken) {
-      throw new Error('Unable to retrieve Google authentication token.');
-    }
-
-    const { data } = await api.post('/auth/google', {
-      credential: idToken,
-      googleUserInfo: userInfo,
-      ...deviceContext,
+    // Web path — open backend-driven OAuth popup
+    const params = new URLSearchParams({
+      deviceId: deviceContext.deviceId || '',
+      deviceName: deviceContext.deviceName || 'Web Browser',
+      origin: window.location.origin,
     });
+    const popup = window.open(
+      `${API_ORIGIN}/api/auth/google/authorize?${params}`,
+      'google-oauth',
+      'width=520,height=620,scrollbars=yes,resizable=yes'
+    );
+    if (!popup) throw new Error('Popup blocked. Please allow popups for this site and try again.');
 
-    const freshUser = normalize(data.user);
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
-    localStorage.setItem('user', JSON.stringify(freshUser));
-    setUser(freshUser);
-    registerWebPush().catch(() => {});
-    return data;
+    return new Promise((resolve, reject) => {
+      const onMessage = (event) => {
+        if (event.origin !== API_ORIGIN) return;
+        cleanup();
+        const { token, deviceId, user: userData, error } = event.data || {};
+        if (error) { reject(new Error(error)); return; }
+        const freshUser = normalize(userData);
+        localStorage.setItem('token', token);
+        localStorage.setItem('deviceId', deviceId || deviceContext.deviceId);
+        localStorage.setItem('user', JSON.stringify(freshUser));
+        setUser(freshUser);
+        registerWebPush().catch(() => {});
+        resolve({ token, deviceId, user: freshUser });
+      };
+      const checkClosed = setInterval(() => {
+        if (popup.closed) { cleanup(); reject(new Error('Sign-in cancelled.')); }
+      }, 500);
+      const cleanup = () => {
+        window.removeEventListener('message', onMessage);
+        clearInterval(checkClosed);
+      };
+      window.addEventListener('message', onMessage);
+    });
   };
 
   const requestRegisterOtp = async ({ name, email, phone, password, role = 'viewer' }) => {
@@ -205,6 +173,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('deviceId');
+    sessionStorage.removeItem(ME_VERIFIED_KEY);
     setUser(null);
   };
 

@@ -84,7 +84,7 @@ export default function ActorProfile() {
       if (editPhoto) fd.append('photo', editPhoto);
       const { data } = await api.put(`/actors/${id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
       setActor(prev => ({ ...prev, ...data, movies: prev.movies }));
-      setEditMsg('✓ Saved');
+      setEditMsg('Saved');
       setEditing(false);
       setEditPhoto(null);
       setTimeout(() => setEditMsg(''), 2000);
@@ -173,7 +173,12 @@ export default function ActorProfile() {
             </div>
           </div>
 
-          {editMsg && <p className="aep-msg">{editMsg}</p>}
+          {editMsg && (
+            <p className="aep-msg" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <Check size={14} strokeWidth={2.5} />
+              {editMsg}
+            </p>
+          )}
           <div className="aep-actions">
             <button className="aep-save" onClick={handleSave} disabled={saving}>
               <Check size={15} /> {saving ? 'Saving...' : 'Save Changes'}

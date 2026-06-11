@@ -179,22 +179,12 @@ function LandingPaymentBadges() {
     <div className="landing-payment-strip">
       <p className="landing-payment-label">Payment methods</p>
       <div className="landing-payment-row">
-        <div className="landing-payment-badge" title="MTN MoMo">
-          <svg className="landing-payment-logo" viewBox="0 0 132 52" preserveAspectRatio="xMidYMid meet">
-            <rect width="132" height="52" rx="4" fill="#FFCC00" />
-            <ellipse cx="66" cy="26" rx="31" ry="14" fill="none" stroke="#000" strokeWidth="2.6" />
-            <text x="66" y="31" textAnchor="middle" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="18" fill="#000">MTN</text>
-          </svg>
+        <div className="landing-payment-badge landing-payment-text-badge mtn" title="MTN MoMo">
+          <span>MTN MoMo</span>
         </div>
 
-        <div className="landing-payment-badge" title="Airtel Money">
-          <svg className="landing-payment-logo" viewBox="0 0 132 52" preserveAspectRatio="xMidYMid meet">
-            <rect width="132" height="52" rx="4" fill="#E40000" />
-            <path d="M22 14 Q29 8 32 16 Q34 23 27 26 Q22 27 22 22" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="24" cy="29" r="2.4" fill="#fff" />
-            <text x="84" y="24" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="15" fill="#fff">airtel</text>
-            <text x="84" y="38" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="400" fontSize="13" fill="rgba(255,255,255,0.9)">money</text>
-          </svg>
+        <div className="landing-payment-badge landing-payment-text-badge airtel" title="Airtel Money">
+          <span>Airtel Money</span>
         </div>
       </div>
     </div>
@@ -333,7 +323,6 @@ export default function Home() {
             </div>
           )}
 
-          <div className="landing-kicker">The home of Rwandan cinema</div>
           <h1 className="landing-hero-title">
             <span className="landing-hero-title-static">Watch</span>
             <span className="landing-hero-title-accent">Rwandan Stories</span>

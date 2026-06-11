@@ -182,8 +182,22 @@ export default function Movies() {
   }, []);
 
   useEffect(() => {
-    if (!search.trim()) return undefined;
+    const q = search.trim().toLowerCase();
+    if (!q) { setResults([]); return undefined; }
 
+    // Filter the already-loaded catalog client-side — instant (0 ms)
+    if (all.length > 0) {
+      setResults(
+        all.filter(m =>
+          m.title?.toLowerCase().includes(q) ||
+          m.description?.toLowerCase().includes(q) ||
+          m.genre?.some(g => g.toLowerCase().includes(q))
+        )
+      );
+      return undefined;
+    }
+
+    // Catalog not yet loaded — fall back to server search with debounce
     const timeoutId = setTimeout(() => {
       api.get('/movies', { params: { search } })
         .then((response) => setResults(response.data))
@@ -191,7 +205,7 @@ export default function Movies() {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [search]);
+  }, [search, all]);
 
   const addWatchlist = async (movieId) => {
     if (!user) {

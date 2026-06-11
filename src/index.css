@@ -3,21 +3,21 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Backgrounds (warm dark — from mobile C.*) ── */
-  --bg:            #080600;
-  --bg-2:          #0e0b02;
-  --bg-3:          #141005;
-  --bg-card:       #1a1508;
-  --bg-elevated:   #201b0a;
+  /* ── Backgrounds (warm dark — deep cinema) ── */
+  --bg:            #060401;
+  --bg-2:          #0b0803;
+  --bg-3:          #110d04;
+  --bg-card:       #160f04;
+  --bg-elevated:   #1c1506;
 
   /* ── Surfaces ── */
   --surface:       rgba(255,255,255,0.05);
   --surface-2:     rgba(255,255,255,0.09);
 
   /* ── Borders (gold-tinted) ── */
-  --border:        rgba(245,158,11,0.15);
-  --border-2:      rgba(245,158,11,0.28);
-  --border-3:      rgba(245,158,11,0.45);
+  --border:        rgba(201,150,42,0.12);
+  --border-2:      rgba(201,150,42,0.24);
+  --border-3:      rgba(201,150,42,0.42);
 
   /* ── Text (warm white) ── */
   --text:          #fdf8ee;
@@ -29,23 +29,23 @@
   --text-muted:    rgba(253,248,238,0.72);
   --text-dim:      rgba(253,248,238,0.46);
 
-  /* ── Brand: Warm Gold ── */
-  --gold:          #f59e0b;
-  --gold-light:    #fbbf24;
-  --gold-dark:     #d97706;
-  --gold-deep:     #b45309;
-  --gold-glow:     rgba(245,158,11,0.22);
-  --gold-subtle:   rgba(245,158,11,0.08);
-  --gold-subtle-2: rgba(245,158,11,0.14);
+  /* ── Brand: Film Amber (aged, not electric) ── */
+  --gold:          #C9962A;
+  --gold-light:    #E8B14B;
+  --gold-dark:     #A87820;
+  --gold-deep:     #7A5515;
+  --gold-glow:     rgba(201,150,42,0.22);
+  --gold-subtle:   rgba(201,150,42,0.07);
+  --gold-subtle-2: rgba(201,150,42,0.13);
 
   /* legacy green aliases → now gold */
-  --green:         #f59e0b;
-  --green-light:   #fbbf24;
-  --green-dark:    #d97706;
-  --green-deeper:  #b45309;
-  --green-glow:    rgba(245,158,11,0.22);
-  --green-subtle:  rgba(245,158,11,0.08);
-  --green-border:  rgba(245,158,11,0.28);
+  --green:         #C9962A;
+  --green-light:   #E8B14B;
+  --green-dark:    #A87820;
+  --green-deeper:  #7A5515;
+  --green-glow:    rgba(201,150,42,0.22);
+  --green-subtle:  rgba(201,150,42,0.07);
+  --green-border:  rgba(201,150,42,0.25);
 
   /* ── True success green ── */
   --success:       #22c55e;
@@ -90,8 +90,8 @@
   --shadow-sm:   0 2px 8px rgba(0,0,0,0.4);
   --shadow-md:   0 8px 32px rgba(0,0,0,0.5);
   --shadow-lg:   0 24px 64px rgba(0,0,0,0.6);
-  --shadow-gold: 0 4px 16px rgba(245,158,11,0.25);
-  --shadow-green: 0 4px 16px rgba(245,158,11,0.25);
+  --shadow-gold: 0 4px 16px rgba(201,150,42,0.28);
+  --shadow-green: 0 4px 16px rgba(201,150,42,0.28);
 }
 
 /* ── Reset ─────────────────────────────────────────────────────────────────── */
@@ -115,10 +115,10 @@ body::before {
   content: '';
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 40% at 50% -8%,  rgba(245,158,11,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 30% at 85% 90%,  rgba(245,158,11,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 25% at 10% 60%,  rgba(180,83,9,0.06)   0%, transparent 60%),
-    linear-gradient(180deg, rgba(245,158,11,0.04), transparent 20%);
+    radial-gradient(ellipse 70% 40% at 50% -8%,  rgba(201,150,42,0.13) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 85% 90%,  rgba(201,150,42,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 25% at 10% 60%,  rgba(120,60,9,0.05)   0%, transparent 60%),
+    linear-gradient(180deg, rgba(201,150,42,0.03), transparent 20%);
 }
 
 a { text-decoration: none; color: inherit; }
@@ -129,8 +129,8 @@ input, select, textarea { min-width: 0; }
 /* ── Scrollbar ──────────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(245,158,11,0.3); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(245,158,11,0.55); }
+::-webkit-scrollbar-thumb { background: rgba(201,150,42,0.28); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,150,42,0.52); }
 
 /* ── Shared layout ──────────────────────────────────────────────────────────── */
 .movies-grid {

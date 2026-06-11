@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Monitor, Trash2, ArrowRight, Film, Star, Users } from 'lucide-react';
+import { Eye, EyeOff, Mail, Monitor, Trash2, ArrowRight, Film, Star, Users, Lock } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import api from '../api/axios';
 import DeviceRemovalVerification from '../components/DeviceRemovalVerification';
@@ -36,7 +36,24 @@ export default function Login() {
     try {
       await loginWithGoogle();
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Google sign-in failed.');
+      console.error('Google Sign-In Error:', err);
+
+      // Handle specific Firebase errors with user-friendly messages
+      let errorMessage = 'Google sign-in failed.';
+
+      if (err.message?.includes('redirect uri') || err.message?.includes('OAuth2')) {
+        errorMessage = 'Google Sign-In is not fully configured. Please contact support or try email/password login.';
+      } else if (err.message?.includes('popup blocked')) {
+        errorMessage = 'Popup was blocked. Please allow popups for this site and try again.';
+      } else if (err.message?.includes('API key')) {
+        errorMessage = 'Firebase configuration error. Please contact support.';
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
       setGoogleBusy(false);
     }
   };
@@ -202,7 +219,7 @@ export default function Login() {
                 <Link to="/forgot-password" className="login-forgot">Forgot password?</Link>
               </div>
               <div className="reg-input-wrap">
-                <div className="reg-input-icon" style={{ fontSize: 14 }}>🔒</div>
+                <Lock size={15} strokeWidth={1.8} className="reg-input-icon" />
                 <input
                   type={showPw ? 'text' : 'password'}
                   placeholder="Your password"

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   Eye, Trash2, Upload, Film, TrendingUp, Pencil, Plus,
   ChevronDown, ChevronUp, X, LayoutDashboard, LogOut,
-  BarChart2, Clapperboard, Settings, Bell, RefreshCw,
+  BarChart2, Clapperboard, Settings, Bell, RefreshCw, Hand,
 } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import { useNavigate } from 'react-router-dom';
@@ -184,7 +184,7 @@ export default function AuthorDashboard() {
           {/* ── Overview ── */}
           {tab === 'overview' && (
             <div className="portal-overview">
-              <p className="portal-welcome">Welcome back, <strong>{user?.name?.split(' ')[0]}</strong> 👋</p>
+              <p className="portal-welcome">Welcome back, <strong>{user?.name?.split(' ')[0]}</strong> <Hand size={18} strokeWidth={1.6} style={{ verticalAlign: 'middle', opacity: 0.7 }} /></p>
 
               <div className="portal-stats-grid">
                 {[

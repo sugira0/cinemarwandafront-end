@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Heart } from 'lucide-react';
 import Logo from './Logo';
 import './Footer.css';
 
@@ -101,7 +102,7 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <p>&copy; {year} CINEMA Rwanda. All rights reserved.</p>
-        <p className="footer-made">Made with <span className="footer-heart">♥</span> in Rwanda</p>
+        <p className="footer-made">Made with <Heart size={13} strokeWidth={0} fill="currentColor" className="footer-heart" aria-hidden="true" /> in Rwanda</p>
       </div>
     </footer>
   );
