@@ -422,59 +422,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="landing-section landing-story-section">
-        <div className="landing-story-card">
-          <div className="landing-story-copy">
-            <p className="landing-section-kicker">Built for discovery</p>
-            <h2>Preview the mood, then step into the full catalog.</h2>
-            <p>
-              Start with featured releases and trending picks, then sign in for actor pages, saved titles,
-              subscriptions, and a richer browsing experience.
-            </p>
-            <div className="landing-story-actions">
-              <Link to={browseTarget} className="landing-story-btn primary">
-                <Play size={16} fill="currentColor" strokeWidth={0} />
-                Start Browsing
-              </Link>
-              <Link to={actorsTarget} className="landing-story-btn secondary">
-                <Users size={16} strokeWidth={1.9} />
-                Meet the Actors
-              </Link>
-            </div>
-          </div>
-
-          <div className="landing-story-panel">
-            <div className="landing-story-panel-head">
-              <span className="landing-panel-chip">Most loved on CINEMA Rwanda</span>
-              <Star size={16} fill="currentColor" strokeWidth={0} />
-            </div>
-            <div className="landing-story-list">
-              {catalog.slice(0, 4).map((movie) => (
-                <button
-                  key={movie._id}
-                  className="landing-story-item"
-                  onClick={() => openMovie(movie._id)}
-                >
-                  <div className="landing-story-poster">
-                    {movie.poster ? <img src={imageUrl(movie.poster, { width: 96, height: 144 })} alt={movie.title} loading="lazy" decoding="async" /> : <span>{movie.title[0]}</span>}
-                  </div>
-                  <div>
-                    <strong>{movie.title}</strong>
-                    <span>{movie.language || 'Kinyarwanda and beyond'}</span>
-                  </div>
-                  <ChevronRight size={16} strokeWidth={1.9} />
-                </button>
-              ))}
-
-              {!catalog.length && (
-                <div className="landing-story-empty">
-                  Fresh releases will appear here as your catalog grows.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className="landing-section landing-faq-section">
         <div className="landing-section-head">
