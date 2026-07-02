@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Film, Home, Compass, Bookmark, Crown, Users, LayoutDashboard,
   TrendingUp, Settings, LogOut, Bell, ChevronLeft, ChevronRight,
-  User, Shield, Star,
+  User, Shield, Star, Music,
 } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import NotificationBell from './NotificationBell';
@@ -25,11 +25,12 @@ export default function AppSidebar() {
 
   // Build nav items based on role
   const navItems = [
-    { to: '/movies',       icon: Home,          label: 'Browse',      always: true },
-    { to: '/actors',       icon: Users,          label: 'Actors',      always: true },
-    { to: '/watchlist',    icon: Bookmark,       label: 'Watchlist',   always: true },
-    { to: '/subscription', icon: Crown,          label: 'Subscribe',   always: true },
-    { to: '/account',      icon: User,           label: 'Account',     always: true },
+    { to: '/movies', icon: Home, label: 'Browse', always: true },
+    { to: '/music', icon: Music, label: 'Music', always: true },
+    { to: '/actors', icon: Users, label: 'Actors', always: true },
+    { to: '/watchlist', icon: Bookmark, label: 'Watchlist', always: true },
+    { to: '/subscription', icon: Crown, label: 'Subscribe', always: true },
+    { to: '/account', icon: User, label: 'Account', always: true },
     // Author/Admin
     ...(user?.role === 'author' || user?.role === 'admin'
       ? [{ to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' }]
@@ -40,9 +41,9 @@ export default function AppSidebar() {
       : []),
     // Admin only
     ...(user?.role === 'admin' ? [
-      { to: '/admin',     icon: Shield,      label: 'Admin Panel' },
-      { to: '/users',     icon: Users,       label: 'Users' },
-      { to: '/analytics', icon: TrendingUp,  label: 'Analytics' },
+      { to: '/admin', icon: Shield, label: 'Admin Panel' },
+      { to: '/users', icon: Users, label: 'Users' },
+      { to: '/analytics', icon: TrendingUp, label: 'Analytics' },
     ] : []),
   ];
 
@@ -51,18 +52,18 @@ export default function AppSidebar() {
       {/* Logo */}
       <div className="app-sidebar-logo">
         {collapsed
-          ? <Link to="/movies" className="app-sidebar-logo-icon" aria-label="CINEMA Rwanda">
-              <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
-                <circle cx="24" cy="24" r="22" stroke="#f59e0b" strokeWidth="2.2" fill="none" opacity="0.25"/>
-                <circle cx="24" cy="24" r="10" stroke="#f59e0b" strokeWidth="2" fill="none"/>
-                <circle cx="24" cy="24" r="3.5" fill="#f59e0b"/>
-                <circle cx="24" cy="6"  r="2.8" fill="#f59e0b" opacity="0.7"/>
-                <circle cx="24" cy="42" r="2.8" fill="#f59e0b" opacity="0.7"/>
-                <circle cx="6"  cy="24" r="2.8" fill="#f59e0b" opacity="0.7"/>
-                <circle cx="42" cy="24" r="2.8" fill="#f59e0b" opacity="0.7"/>
-                <path d="M21 19.5 L21 28.5 L29 24 Z" fill="#f59e0b" opacity="0.9"/>
-              </svg>
-            </Link>
+          ? <Link to="/movies" className="app-sidebar-logo-icon" aria-label="Lumina Cinema">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="24" r="22" stroke="#f59e0b" strokeWidth="2.2" fill="none" opacity="0.25" />
+              <circle cx="24" cy="24" r="10" stroke="#f59e0b" strokeWidth="2" fill="none" />
+              <circle cx="24" cy="24" r="3.5" fill="#f59e0b" />
+              <circle cx="24" cy="6" r="2.8" fill="#f59e0b" opacity="0.7" />
+              <circle cx="24" cy="42" r="2.8" fill="#f59e0b" opacity="0.7" />
+              <circle cx="6" cy="24" r="2.8" fill="#f59e0b" opacity="0.7" />
+              <circle cx="42" cy="24" r="2.8" fill="#f59e0b" opacity="0.7" />
+              <path d="M21 19.5 L21 28.5 L29 24 Z" fill="#f59e0b" opacity="0.9" />
+            </svg>
+          </Link>
           : <Logo size="sm" to="/movies" />
         }
         <button

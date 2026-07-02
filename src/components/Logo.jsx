@@ -1,8 +1,8 @@
 /**
- * CINEMA Rwanda — Brand Logo Component
+ * Lumina Cinema — Brand Logo Component
  *
  * Variants:
- *   full    — icon + "CINEMA Rwanda" text (default)
+ *   full    — icon + "Lumina Cinema" text (default)
  *   icon    — icon only
  *   text    — text only
  *
@@ -37,9 +37,9 @@ function CinemaIcon({ size = 32, className = '' }) {
       <circle cx="24" cy="24" r="3.5" fill="currentColor" />
 
       {/* Film sprocket holes — top, bottom, left, right */}
-      <circle cx="24" cy="6"  r="2.8" fill="currentColor" opacity="0.7" />
+      <circle cx="24" cy="6" r="2.8" fill="currentColor" opacity="0.7" />
       <circle cx="24" cy="42" r="2.8" fill="currentColor" opacity="0.7" />
-      <circle cx="6"  cy="24" r="2.8" fill="currentColor" opacity="0.7" />
+      <circle cx="6" cy="24" r="2.8" fill="currentColor" opacity="0.7" />
       <circle cx="42" cy="24" r="2.8" fill="currentColor" opacity="0.7" />
 
       {/* Diagonal sprocket holes */}
@@ -62,14 +62,14 @@ const SIZE_MAP = {
   sm: { icon: 22, fontSize: '1.1rem', subSize: '0.65rem' },
   md: { icon: 28, fontSize: '1.4rem', subSize: '0.72rem' },
   lg: { icon: 36, fontSize: '1.8rem', subSize: '0.82rem' },
-  xl: { icon: 48, fontSize: '2.4rem', subSize: '1rem'    },
+  xl: { icon: 48, fontSize: '2.4rem', subSize: '1rem' },
 };
 
 export default function Logo({
   variant = 'full',
-  size    = 'md',
-  to      = '/',
-  as      = 'link',   // 'link' | 'div' | 'span'
+  size = 'md',
+  to = '/',
+  as = 'link',   // 'link' | 'div' | 'span'
   className = '',
   subtitle,           // optional subtitle e.g. "Staff Portal"
 }) {
@@ -84,9 +84,9 @@ export default function Logo({
       )}
       {variant !== 'icon' && (
         <span className="cinema-logo__text">
-          <span className="cinema-logo__cinema" style={{ fontSize: s.fontSize }}>CINEMA</span>
+          <span className="cinema-logo__cinema" style={{ fontSize: s.fontSize }}>LUMINA</span>
           {' '}
-          <span className="cinema-logo__rwanda" style={{ fontSize: s.fontSize }}>Rwanda</span>
+          <span className="cinema-logo__rwanda" style={{ fontSize: s.fontSize }}>Cinema</span>
           {subtitle && (
             <span className="cinema-logo__sub" style={{ fontSize: s.subSize }}>{subtitle}</span>
           )}
@@ -95,11 +95,11 @@ export default function Logo({
     </span>
   );
 
-  if (as === 'div')  return <div className="cinema-logo-wrap">{inner}</div>;
+  if (as === 'div') return <div className="cinema-logo-wrap">{inner}</div>;
   if (as === 'span') return inner;
 
   return (
-    <Link to={to} className="cinema-logo-link" aria-label="CINEMA Rwanda — Home">
+    <Link to={to} className="cinema-logo-link" aria-label="Lumina Cinema — Home">
       {inner}
     </Link>
   );

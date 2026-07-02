@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   Eye, Trash2, Upload, Film, TrendingUp, Pencil, Plus,
   ChevronDown, ChevronUp, X, LayoutDashboard, LogOut,
-  BarChart2, Clapperboard, Settings, Bell, RefreshCw, Hand,
+  BarChart2, Clapperboard, Settings, Bell, RefreshCw, Hand, Music,
 } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import { useNavigate } from 'react-router-dom';
@@ -16,12 +16,18 @@ const EMPTY_FORM = {
   title: '', description: '', genre: '', year: '', duration: '',
   language: 'Kinyarwanda', country: 'Rwanda', type: 'movie', videoLink: '', trailerUrl: '', featured: false,
 };
+const EMPTY_SONG_FORM = {
+  title: '', artist: '', album: '', genre: '', year: '',
+  language: 'Kinyarwanda', country: 'Rwanda', audioLink: '', featured: false,
+};
 const EMPTY_EP = { title: '', episode: '', season: '1', duration: '', videoLink: '' };
 
 const NAV = [
   { id: 'overview', icon: LayoutDashboard, label: 'Overview' },
   { id: 'films', icon: Film, label: 'My Films' },
   { id: 'upload', icon: Upload, label: 'Upload Film' },
+  { id: 'music', icon: Music, label: 'My Music' },
+  { id: 'upload-song', icon: Music, label: 'Upload Song' },
   { id: 'analytics', icon: BarChart2, label: 'Analytics' },
   { id: 'settings', icon: Settings, label: 'Settings' },
 ];
@@ -31,8 +37,13 @@ export default function AuthorDashboard() {
   const navigate = useNavigate();
 
   const [movies, setMovies] = useState([]);
+  const [songs, setSongs] = useState([]);
   const [tab, setTab] = useState('overview');
   const [form, setForm] = useState(EMPTY_FORM);
+  const [songForm, setSongForm] = useState(EMPTY_SONG_FORM);
+  const [songFiles, setSongFiles] = useState({ cover: null, audio: null });
+  const [editSongId, setEditSongId] = useState(null);
+  const [songMsg, setSongMsg] = useState('');
   const [files, setFiles] = useState({ poster: null, video: null });
   const [editId, setEditId] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
@@ -52,8 +63,13 @@ export default function AuthorDashboard() {
       .catch(() => setLoading(false));
   };
 
+  const fetchMySongs = () => {
+    api.get('/songs/my').then(r => setSongs(r.data)).catch(() => { });
+  };
+
   useEffect(() => {
     fetchMyMovies();
+    fetchMySongs();
     api.get('/notifications').then(r => {
       setNotifications(r.data.notifications || []);
       setUnread(r.data.unread || 0);
@@ -82,6 +98,38 @@ export default function AuthorDashboard() {
   };
 
   const cancelEdit = () => { setEditId(null); setForm(EMPTY_FORM); };
+
+  const cancelSongEdit = () => { setEditSongId(null); setSongForm(EMPTY_SONG_FORM); setSongFiles({ cover: null, audio: null }); };
+
+  const flashSong = (m) => { setSongMsg(m); setTimeout(() => setSongMsg(''), 3000); };
+
+  const handleSongSubmit = async e => {
+    e.preventDefault();
+    const fd = new FormData();
+    Object.entries(songForm).forEach(([k, v]) => fd.append(k, String(v)));
+    if (songFiles.cover) fd.append('cover', songFiles.cover);
+    if (songFiles.audio) fd.append('audio', songFiles.audio);
+    try {
+      if (editSongId) {
+        await api.put(`/songs/${editSongId}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        flashSong('Song updated successfully.');
+      } else {
+        await api.post('/songs', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        flashSong('Song published successfully.');
+      }
+      cancelSongEdit();
+      fetchMySongs();
+      setTimeout(() => setTab('music'), 1200);
+    } catch (err) {
+      flashSong(err.response?.data?.message || err.message || 'Save failed.');
+    }
+  };
+
+  const deleteSong = async (id) => {
+    if (!window.confirm('Delete this song?')) return;
+    await api.delete(`/songs/${id}`);
+    fetchMySongs();
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -408,6 +456,154 @@ export default function AuthorDashboard() {
                   </button>
                   {editId && (
                     <button type="button" className="portal-btn-outline lg" onClick={() => { cancelEdit(); setTab('films'); }}>
+                      Cancel
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* ── My Music ── */}
+        {tab === 'music' && (
+          <div className="portal-upload">
+            <div className="portal-panel">
+              <div className="portal-panel-head">
+                <h2>My Music</h2>
+                <button className="portal-btn-primary sm" onClick={() => setTab('upload-song')}>
+                  <Plus size={14} /> Upload Song
+                </button>
+              </div>
+              {songs.length === 0 ? (
+                <p className="portal-empty">You haven't uploaded any songs yet.</p>
+              ) : (
+                <div className="portal-song-list">
+                  {songs.map(s => (
+                    <div key={s._id} className="portal-song-row">
+                      <div className="portal-song-cover">
+                        {s.cover
+                          ? <img src={s.cover} alt={s.title} />
+                          : <Music size={18} strokeWidth={1.5} />}
+                      </div>
+                      <div className="portal-song-info">
+                        <span className="portal-song-title">{s.title}</span>
+                        <span className="portal-song-artist">{s.artist}</span>
+                      </div>
+                      <div className="portal-song-meta">
+                        {s.genre?.[0] && <span className="portal-song-tag">{s.genre[0]}</span>}
+                        {s.year && <span className="portal-song-tag">{s.year}</span>}
+                        <span className="portal-song-plays"><Eye size={12} /> {s.plays || 0}</span>
+                      </div>
+                      <div className="portal-song-actions">
+                        <button className="portal-icon-btn" onClick={() => {
+                          setEditSongId(s._id);
+                          setSongForm({
+                            title: s.title || '', artist: s.artist || '', album: s.album || '',
+                            genre: s.genre?.join(', ') || '', year: s.year || '',
+                            language: s.language || 'Kinyarwanda', country: s.country || 'Rwanda',
+                            audioLink: s.audioLink || '', featured: s.featured || false,
+                          });
+                          setSongFiles({ cover: null, audio: null });
+                          setTab('upload-song');
+                        }}>
+                          <Pencil size={14} strokeWidth={1.5} />
+                        </button>
+                        <button className="portal-icon-btn danger" onClick={() => deleteSong(s._id)}>
+                          <Trash2 size={14} strokeWidth={1.5} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── Upload Song ── */}
+        {tab === 'upload-song' && (
+          <div className="portal-upload">
+            <div className="portal-panel">
+              <div className="portal-panel-head">
+                <h2>{editSongId ? 'Edit Song' : 'Upload New Song'}</h2>
+                <Music size={18} strokeWidth={1.5} style={{ color: 'var(--text-3)' }} />
+              </div>
+              <form className="portal-upload-form" onSubmit={handleSongSubmit}>
+                {songMsg && <p className="portal-upload-msg">{songMsg}</p>}
+
+                <div className="portal-form-group">
+                  <label>Song Title *</label>
+                  <input placeholder="Song title" value={songForm.title} onChange={e => setSongForm({ ...songForm, title: e.target.value })} required />
+                </div>
+                <div className="portal-form-group">
+                  <label>Artist Name *</label>
+                  <input placeholder="Artist or band name" value={songForm.artist} onChange={e => setSongForm({ ...songForm, artist: e.target.value })} required />
+                </div>
+                <div className="portal-form-group">
+                  <label>Album</label>
+                  <input placeholder="Album name (optional)" value={songForm.album} onChange={e => setSongForm({ ...songForm, album: e.target.value })} />
+                </div>
+                <div className="portal-form-group">
+                  <label>Genres</label>
+                  <input placeholder="Afrobeat, Gospel, Hip-hop, ..." value={songForm.genre} onChange={e => setSongForm({ ...songForm, genre: e.target.value })} />
+                </div>
+
+                <div className="portal-form-row">
+                  <div className="portal-form-group">
+                    <label>Year</label>
+                    <select value={songForm.year} onChange={e => setSongForm({ ...songForm, year: e.target.value })}>
+                      <option value="">Select year</option>
+                      {Array.from({ length: 75 }, (_, i) => new Date().getFullYear() - i).map(y => (
+                        <option key={y} value={y}>{y}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="portal-form-group">
+                    <label>Language</label>
+                    <select value={songForm.language} onChange={e => setSongForm({ ...songForm, language: e.target.value })}>
+                      {AFRICAN_LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
+                    </select>
+                  </div>
+                  <div className="portal-form-group">
+                    <label>Country of Origin</label>
+                    <select value={songForm.country} onChange={e => setSongForm({ ...songForm, country: e.target.value })}>
+                      {AFRICAN_COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                <label className="portal-check-label">
+                  <input type="checkbox" checked={songForm.featured} onChange={e => setSongForm({ ...songForm, featured: e.target.checked })} />
+                  Feature on music homepage
+                </label>
+
+                <div className="portal-form-group" style={{ marginTop: '1rem' }}>
+                  <label>Cover Image</label>
+                  <label className="portal-file-label">
+                    Choose file
+                    <input type="file" accept="image/*" onChange={e => setSongFiles({ ...songFiles, cover: e.target.files[0] })} />
+                  </label>
+                  <FilePreview file={songFiles.cover} type="image" onClear={() => setSongFiles({ ...songFiles, cover: null })} />
+                </div>
+
+                <div className="portal-form-group">
+                  <label>Audio File</label>
+                  <label className="portal-file-label">
+                    Choose file
+                    <input type="file" accept="audio/*" onChange={e => setSongFiles({ ...songFiles, audio: e.target.files[0] })} />
+                  </label>
+                  <FilePreview file={songFiles.audio} type="audio" onClear={() => setSongFiles({ ...songFiles, audio: null })} />
+                  <div className="portal-or-divider"><span>or paste a link</span></div>
+                  <input placeholder="Audio URL (direct .mp3, SoundCloud, etc.)" value={songForm.audioLink} onChange={e => setSongForm({ ...songForm, audioLink: e.target.value })} />
+                </div>
+
+                <div className="portal-form-actions">
+                  <button type="submit" className="portal-btn-primary lg">
+                    <Upload size={15} /> {editSongId ? 'Save Changes' : 'Publish Song'}
+                  </button>
+                  {editSongId && (
+                    <button type="button" className="portal-btn-outline lg" onClick={() => { cancelSongEdit(); setTab('music'); }}>
                       Cancel
                     </button>
                   )}

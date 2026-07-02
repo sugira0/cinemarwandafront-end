@@ -52,7 +52,7 @@ export default function Subscription() {
     <div className="sub-page">
       <div className="sub-header">
         <h1>Subscription</h1>
-        <p>Unlock the full CINEMA Rwanda experience</p>
+        <p>Unlock the full Lumina Cinema experience</p>
       </div>
 
       {isActive && (

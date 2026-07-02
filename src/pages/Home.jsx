@@ -10,9 +10,9 @@ import './Home.css';
 
 const FAQ_ITEMS = [
   {
-    question: 'What is CINEMA Rwanda?',
+    question: 'What is Lumina Cinema?',
     answer:
-      'CINEMA Rwanda is a streaming home for Rwandan movies, series, documentaries, and rising local storytellers. It helps viewers discover films rooted in our language, culture, and lived experience.',
+      'Lumina Cinema is a streaming home for Rwandan movies, series, documentaries, and rising local storytellers. It helps viewers discover films rooted in our language, culture, and lived experience.',
   },
   {
     question: 'How much does it cost?',
@@ -37,7 +37,7 @@ const FAQ_ITEMS = [
   {
     question: 'Do I need an account to browse?',
     answer:
-      'Yes. Anyone can preview CINEMA Rwanda, but signing in opens the full catalog, actor pages, watchlist, and protected movie detail pages.',
+      'Yes. Anyone can preview Lumina Cinema, but signing in opens the full catalog, actor pages, watchlist, and protected movie detail pages.',
   },
 ];
 

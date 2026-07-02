@@ -7,7 +7,7 @@ export default function About() {
       <div className="static-hero">
         <div className="static-hero-badge">About Us</div>
         <h1>The Home of Rwandan Cinema</h1>
-        <p>CINEMA Rwanda is a streaming platform dedicated to showcasing the best of Rwandan film — from drama and action to documentary and comedy.</p>
+        <p>Lumina Cinema is a streaming platform dedicated to showcasing the best of Rwandan film — from drama and action to documentary and comedy.</p>
       </div>
 
       <div className="static-stats">

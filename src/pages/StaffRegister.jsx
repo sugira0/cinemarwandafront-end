@@ -70,7 +70,7 @@ export default function StaffRegister() {
             <Clapperboard size={24} strokeWidth={1.5} />
           </div>
           <div>
-            <span className="staff-auth-logo-title">CINEMA Rwanda</span>
+            <span className="staff-auth-logo-title">Lumina Cinema</span>
             <span className="staff-auth-logo-sub">Staff Portal</span>
           </div>
         </div>

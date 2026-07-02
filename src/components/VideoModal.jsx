@@ -142,7 +142,7 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
         {/* ── Loading ── */}
         {allowed === null && (
           <div className="vmodal-checking">
-            <span className="vmodal-checking-logo">CINEMA Rwanda</span>
+            <span className="vmodal-checking-logo">Lumina Cinema</span>
             <div className="vmodal-spinner" />
             <p>Loading video...</p>
           </div>

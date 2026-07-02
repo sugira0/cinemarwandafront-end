@@ -101,7 +101,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; {year} CINEMA Rwanda. All rights reserved.</p>
+        <p>&copy; {year} Lumina Cinema. All rights reserved.</p>
         <p className="footer-made">Made with <Heart size={13} strokeWidth={0} fill="currentColor" className="footer-heart" aria-hidden="true" /> in Rwanda</p>
       </div>
     </footer>

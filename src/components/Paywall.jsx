@@ -13,7 +13,7 @@ export default function Paywall({ movieTitle, onClose }) {
           <Lock size={32} strokeWidth={1.5} />
         </div>
         <h2>Subscription Required</h2>
-        <p>Subscribe to watch <strong>{movieTitle}</strong> and more films from CINEMA Rwanda.</p>
+        <p>Subscribe to watch <strong>{movieTitle}</strong> and more films from Lumina Cinema.</p>
 
         <div className="paywall-plans">
           <div className="paywall-plan" onClick={() => navigate('/plans')}>

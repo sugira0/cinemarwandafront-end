@@ -4,26 +4,26 @@ importScripts('https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging-comp
 // These values are injected at build time via the service worker
 // For now we use placeholder — replace with actual values in production
 firebase.initializeApp({
-  apiKey:            self.FIREBASE_API_KEY            || '',
-  authDomain:        self.FIREBASE_AUTH_DOMAIN        || '',
-  projectId:         self.FIREBASE_PROJECT_ID         || 'cinema-rwanda',
-  storageBucket:     self.FIREBASE_STORAGE_BUCKET     || '',
-  messagingSenderId: self.FIREBASE_MESSAGING_SENDER_ID|| '686661040590',
-  appId:             self.FIREBASE_APP_ID             || '',
+  apiKey: self.FIREBASE_API_KEY || '',
+  authDomain: self.FIREBASE_AUTH_DOMAIN || '',
+  projectId: self.FIREBASE_PROJECT_ID || 'cinema-rwanda',
+  storageBucket: self.FIREBASE_STORAGE_BUCKET || '',
+  messagingSenderId: self.FIREBASE_MESSAGING_SENDER_ID || '686661040590',
+  appId: self.FIREBASE_APP_ID || '',
 });
 
 const messaging = firebase.messaging();
 
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
-  const { title = 'CINEMA Rwanda', body = '' } = payload.notification || {};
+  const { title = 'Lumina Cinema', body = '' } = payload.notification || {};
   const link = payload.data?.link || '/';
 
   self.registration.showNotification(title, {
     body,
-    icon:  '/icon.png',
+    icon: '/icon.png',
     badge: '/badge.png',
-    data:  { link },
+    data: { link },
     actions: [{ action: 'open', title: 'Open App' }],
   });
 });

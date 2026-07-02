@@ -37,7 +37,7 @@ export default function LoginModal({ onClose, onSuccess }) {
       <div className="lmodal-card" onClick={(event) => event.stopPropagation()}>
         <button className="lmodal-close" onClick={onClose}><X size={18} strokeWidth={1.5} /></button>
 
-        <div className="lmodal-logo"><Film size={20} strokeWidth={1.5} /> CINEMA Rwanda</div>
+        <div className="lmodal-logo"><Film size={20} strokeWidth={1.5} /> Lumina Cinema</div>
 
         <div className="lmodal-tabs">
           <button className={tab === 'login' ? 'active' : ''} onClick={() => { setTab('login'); setError(''); }}>
