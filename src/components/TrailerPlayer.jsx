@@ -100,6 +100,7 @@ export default function TrailerPlayer({ trailerUrl, poster }) {
           autoPlay
           muted
           playsInline
+          preload="metadata"
           onCanPlay={() => setVisible(true)}
           onEnded={() => setEnded(true)}
         />

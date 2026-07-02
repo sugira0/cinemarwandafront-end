@@ -526,3 +526,24 @@
     text-align: center;
   }
 }
+
+/* ── Load More Button ── */
+.nc-load-more {
+  background: transparent;
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  color: var(--gold, #f59e0b);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.7rem 2.5rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.nc-load-more:hover {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.7);
+  transform: translateY(-1px);
+}

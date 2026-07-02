@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Play, ImageOff } from 'lucide-react';
-import { imageUrl } from '../lib/config';
+import { imageUrl, imageSrcSet } from '../lib/config';
 import './MovieCard.css';
 
 export default function MovieCard({ movie, style }) {
@@ -8,7 +8,16 @@ export default function MovieCard({ movie, style }) {
     <Link to={`/movies/${movie._id}`} className="movie-card" style={style}>
       <div className="movie-poster">
         {movie.poster
-          ? <img src={imageUrl(movie.poster, { width: 320, height: 480 })} alt={movie.title} loading="lazy" decoding="async" />
+          ? <img
+            src={imageUrl(movie.poster, { width: 320, height: 480 })}
+            srcSet={imageSrcSet(movie.poster, 320, 320 / 480)}
+            sizes="(max-width: 480px) 45vw, (max-width: 768px) 30vw, 190px"
+            alt={movie.title}
+            loading="lazy"
+            decoding="async"
+            width={320}
+            height={480}
+          />
           : <div className="no-poster"><ImageOff size={30} strokeWidth={1} /><span>No Poster</span></div>
         }
         {movie.type === 'series' && <span className="type-badge">Series</span>}

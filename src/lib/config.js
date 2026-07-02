@@ -50,3 +50,16 @@ export function imageUrl(filename, options = {}) {
 
   return url.replace('/upload/', `/upload/${transforms}/`);
 }
+
+// ── Responsive srcSet for Cloudinary images ───────────────────────────────────
+// Generates 2x and 3x variants automatically for sharp displays
+export function imageSrcSet(filename, baseWidth, aspectRatio = null) {
+  if (!filename) return '';
+  const widths = [baseWidth, baseWidth * 2].filter(w => w <= 2000);
+  return widths
+    .map(w => {
+      const h = aspectRatio ? Math.round(w / aspectRatio) : null;
+      return `${imageUrl(filename, { width: w, height: h })} ${w}w`;
+    })
+    .join(', ');
+}

@@ -171,6 +171,7 @@ export default function Movies() {
   const [results, setResults] = useState([]);
   const [wlMsg, setWlMsg] = useState('');
   const [showLogin, setShowLogin] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(24); // pagination
 
   useEffect(() => {
     api.get('/movies')
@@ -225,8 +226,10 @@ export default function Movies() {
 
   const byGenre = (genre) => all.filter((movie) => movie.genre?.includes(genre)).slice(0, 20);
   const series = all.filter((movie) => movie.type === 'series').slice(0, 20);
-  const movies = all.filter((movie) => movie.type !== 'series').slice(0, 24);
+  const movies = all.filter((movie) => movie.type !== 'series').slice(0, visibleCount);
   const recent = [...all].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 12);
+  const totalMovies = all.filter((movie) => movie.type !== 'series').length;
+  const hasMore = visibleCount < totalMovies;
 
   return (
     <div className="nc-browse">
@@ -282,6 +285,16 @@ export default function Movies() {
           <Row title="Movies" movies={movies} onWatchlist={addWatchlist} />
           {series.length > 0 && <Row title="Series" movies={series} onWatchlist={addWatchlist} />}
           {GENRES.map((genre) => <Row key={genre} title={genre} movies={byGenre(genre)} onWatchlist={addWatchlist} />)}
+          {hasMore && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '1.5rem 0 2rem' }}>
+              <button
+                className="nc-load-more"
+                onClick={() => setVisibleCount(c => c + 24)}
+              >
+                Load More Films
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
