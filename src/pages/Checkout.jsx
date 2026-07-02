@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Loader, Smartphone } from 'lucide-react';
+import { ArrowLeft, Check, Loader, Smartphone, CheckCircle, XCircle } from 'lucide-react';
 import api from '../api/axios';
 import { useAuth } from '../context/auth-context';
 import './Checkout.css';
@@ -45,6 +45,33 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [pollStatus, setPollStatus] = useState('pending'); // pending | completed | failed
+  const pollRef = useRef(null);
+
+  // Poll MTN payment status every 5 seconds after initiation
+  useEffect(() => {
+    if (step !== 4 || !result?.momoRequested || !result?.payment?._id) return;
+    if (pollStatus !== 'pending') return;
+
+    const paymentId = result.payment._id;
+
+    pollRef.current = setInterval(async () => {
+      try {
+        const { data } = await api.get(`/payments/mtn/status/${paymentId}`, { useCache: false });
+        if (data.status === 'completed') {
+          setPollStatus('completed');
+          clearInterval(pollRef.current);
+        } else if (data.status === 'failed') {
+          setPollStatus('failed');
+          clearInterval(pollRef.current);
+        }
+      } catch {
+        // keep polling silently
+      }
+    }, 5000);
+
+    return () => clearInterval(pollRef.current);
+  }, [step, result, pollStatus]);
 
   const selectedMethod = METHODS.find((entry) => entry.id === method);
   const paymentPhone = hasAccountPhone ? accountPhone : phone;
@@ -194,35 +221,75 @@ export default function Checkout() {
 
         {step === 4 && result && (
           <div className="checkout-done">
-            <div className="done-icon">
-              <Smartphone size={32} strokeWidth={1.5} style={{ color: selectedMethod?.color }} />
-            </div>
-            <h3>Check your phone!</h3>
 
-            <p>A payment prompt has been sent to <strong>{paymentPhone}</strong>.</p>
-            <div className="ussd-code">
-              <span className="ussd-label">USSD Code</span>
-              <code>{result.ussd}</code>
-              <p className="ussd-note">Dial this manually if you do not receive the payment prompt automatically.</p>
-            </div>
+            {/* ── Confirmed ── */}
+            {pollStatus === 'completed' && (
+              <>
+                <div className="done-icon success">
+                  <CheckCircle size={40} strokeWidth={1.5} style={{ color: '#22c55e' }} />
+                </div>
+                <h3 style={{ color: '#22c55e' }}>Payment confirmed!</h3>
+                <p>Your <strong>{plan.label}</strong> subscription is now active. Enjoy Lumina Cinema!</p>
+                <button className="checkout-pay-btn green" onClick={() => navigate('/movies')} style={{ marginTop: '1.5rem' }}>
+                  Start Watching
+                </button>
+              </>
+            )}
 
-            <div className="done-ref">
-              Reference: <strong>{result.reference}</strong>
-            </div>
+            {/* ── Failed ── */}
+            {pollStatus === 'failed' && (
+              <>
+                <div className="done-icon">
+                  <XCircle size={40} strokeWidth={1.5} style={{ color: '#ef4444' }} />
+                </div>
+                <h3 style={{ color: '#ef4444' }}>Payment failed</h3>
+                <p>The payment was declined or timed out. Please try again.</p>
+                <button className="checkout-pay-btn" style={{ background: '#ef4444', color: '#fff', marginTop: '1.5rem' }} onClick={() => { setStep(1); setResult(null); setPollStatus('pending'); }}>
+                  Try Again
+                </button>
+              </>
+            )}
 
-            <div className="done-steps">
-              <div className="done-step active"><Check size={14} strokeWidth={2.5} /> Payment initiated</div>
-              <div className="done-step"><span className="step-dot" /> Admin confirms payment</div>
-              <div className="done-step"><span className="step-dot" /> Subscription activates automatically</div>
-              <div className="done-step"><span className="step-dot" /> You receive a notification</div>
-            </div>
+            {/* ── Pending ── */}
+            {pollStatus === 'pending' && (
+              <>
+                <div className="done-icon">
+                  <Smartphone size={32} strokeWidth={1.5} style={{ color: selectedMethod?.color }} />
+                </div>
+                <h3>Check your phone!</h3>
+                <p>A payment prompt has been sent to <strong>{paymentPhone}</strong>.<br />Approve it on your phone to activate your subscription.</p>
 
-            <button className="checkout-pay-btn green" onClick={() => navigate('/movies')}>
-              Browse Movies
-            </button>
-            <button className="checkout-back-link" onClick={() => navigate('/account')}>
-              View my account
-            </button>
+                {/* Only show USSD if MTN push was NOT sent */}
+                {!result.momoRequested && result.ussd && (
+                  <div className="ussd-code">
+                    <span className="ussd-label">USSD Code</span>
+                    <code>{result.ussd}</code>
+                    <p className="ussd-note">Dial this manually if you do not receive the payment prompt automatically.</p>
+                  </div>
+                )}
+
+                <div className="done-ref">
+                  Reference: <strong>{result.reference}</strong>
+                </div>
+
+                <div className="done-steps">
+                  <div className="done-step active"><Check size={14} strokeWidth={2.5} /> Payment initiated</div>
+                  <div className="done-step pending-step">
+                    <Loader size={13} className="spin" style={{ color: selectedMethod?.color }} />
+                    Waiting for your approval on phone...
+                  </div>
+                  <div className="done-step"><span className="step-dot" /> Subscription activates automatically</div>
+                  <div className="done-step"><span className="step-dot" /> You receive a notification</div>
+                </div>
+
+                <button className="checkout-pay-btn green" onClick={() => navigate('/movies')}>
+                  Browse Movies
+                </button>
+                <button className="checkout-back-link" onClick={() => navigate('/account')}>
+                  View my account
+                </button>
+              </>
+            )}
           </div>
         )}
 
