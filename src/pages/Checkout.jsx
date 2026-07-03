@@ -6,9 +6,12 @@ import { useAuth } from '../context/auth-context';
 import './Checkout.css';
 
 const PLANS = {
-  basic: { label: 'Basic', price: 2000, color: '#94a3b8' },
-  standard: { label: 'Standard', price: 5000, color: '#22c55e' },
-  premium: { label: 'Premium', price: 10000, color: '#f59e0b' },
+  basic: { label: 'Basic', price: 2000, color: '#94a3b8', period: '/mo' },
+  standard: { label: 'Standard', price: 5000, color: '#22c55e', period: '/mo' },
+  premium: { label: 'Premium', price: 10000, color: '#f59e0b', period: '/mo' },
+  weekly: { label: 'Weekly', price: 2000, color: '#38bdf8', period: '/week' },
+  episodes7: { label: '7 Episodes Pack', price: 500, color: '#a78bfa', period: '/pack' },
+  ppv: { label: 'Single Episode', price: 100, color: '#64748b', period: '/title' },
 };
 
 const METHODS = [
@@ -120,7 +123,7 @@ export default function Checkout() {
         <div className="checkout-plan" style={{ borderColor: `${plan.color}44` }}>
           <span className="cp-label">{plan.label} Plan</span>
           <span className="cp-price" style={{ color: plan.color }}>
-            {plan.price.toLocaleString()} RWF/mo
+            {plan.price.toLocaleString()} RWF{plan.period || '/mo'}
           </span>
         </div>
 
