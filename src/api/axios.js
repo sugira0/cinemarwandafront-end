@@ -135,11 +135,10 @@ const api = {
 
 // ── Startup prefetch ──────────────────────────────────────────────────────────
 // Fire at module import time (before any component renders) so cache is hot
-// by the time the first useEffect runs. Total cost: ~3 parallel HTTP requests.
+// by the time the first useEffect runs.
 if (typeof window !== 'undefined') {
   cachedGet('/movies/home').catch(() => { });
-  cachedGet('/plans').catch(() => { });
-  cachedGet('/settings').catch(() => { });
+  cachedGet('/plans/public').catch(() => { });  // public plans endpoint only
 }
 
 export default api;
