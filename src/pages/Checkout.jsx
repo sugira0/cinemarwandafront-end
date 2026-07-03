@@ -21,7 +21,7 @@ const METHODS = [
     color: '#FFCC00',
     textColor: '#000',
     placeholder: '07X XXX XXXX',
-    hint: 'The mobile-money request will use the phone number saved on your account.',
+    hint: 'Enter your MTN MoMo number to receive the payment prompt.',
   },
   {
     id: 'airtel',
@@ -29,7 +29,7 @@ const METHODS = [
     color: '#E40000',
     textColor: '#fff',
     placeholder: '073 XXX XXXX',
-    hint: 'The Airtel Money request will use the phone number saved on your account.',
+    hint: 'Enter your Airtel Money number to receive the payment prompt.',
   },
 ];
 
@@ -39,17 +39,19 @@ export default function Checkout() {
   const navigate = useNavigate();
   const planId = location.state?.plan || 'standard';
   const plan = PLANS[planId] || PLANS.standard;
-  const accountPhone = user?.phone || '';
-  const hasAccountPhone = Boolean(accountPhone);
 
   const [step, setStep] = useState(1);
   const [method, setMethod] = useState(null);
-  const [phone, setPhone] = useState(accountPhone);
+  const [phone, setPhone] = useState(user?.phone || ''); // pre-fill but always editable
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
-  const [pollStatus, setPollStatus] = useState('pending'); // pending | completed | failed
+  const [pollStatus, setPollStatus] = useState('pending');
   const pollRef = useRef(null);
+
+  const selectedMethod = METHODS.find((entry) => entry.id === method);
+  const digits = phone.replace(/\D/g, '');
+  const hasValidPhone = digits.length >= 9;
 
   // Poll MTN payment status every 5 seconds after initiation
   useEffect(() => {
@@ -84,19 +86,17 @@ export default function Checkout() {
   const handlePay = async () => {
     setLoading(true);
     setError('');
-
     try {
       const { data } = await api.post('/payments/initiate', {
         plan: planId,
         method,
-        phone: paymentPhone.replace(/\s/g, ''),
+        phone: phone.replace(/\s/g, ''),
       });
       setResult(data);
       setStep(4);
     } catch (err) {
       setError(err.response?.data?.message || 'Payment failed. Try again.');
     }
-
     setLoading(false);
   };
 
@@ -162,21 +162,19 @@ export default function Checkout() {
             </div>
 
             <label className="phone-label">
-              <Smartphone size={15} strokeWidth={1.5} /> Subscription Number
+              <Smartphone size={15} strokeWidth={1.5} /> Mobile Money Number
             </label>
             <input
               className="phone-input"
               placeholder={selectedMethod.placeholder}
-              value={paymentPhone}
+              value={phone}
               onChange={(event) => setPhone(event.target.value)}
               type="tel"
-              autoFocus={!hasAccountPhone}
-              disabled={hasAccountPhone}
+              autoFocus
             />
             <p className="phone-hint">
-              {hasAccountPhone
-                ? 'This is the phone number saved on your account and it will be used for the payment request.'
-                : 'Enter the MTN MoMo or Airtel Money number you want saved on your account for subscription payments.'}
+              Enter the {selectedMethod.label} number you want to pay with.
+              {user?.phone && ` Your account number (${user.phone}) is pre-filled — change it if needed.`}
             </p>
 
             {error && <p className="checkout-error">{error}</p>}
@@ -185,13 +183,8 @@ export default function Checkout() {
               className="checkout-pay-btn"
               style={{ background: selectedMethod.color, color: selectedMethod.textColor }}
               onClick={() => {
-                if (hasValidPhone) {
-                  setError('');
-                  setStep(3);
-                  return;
-                }
-
-                setError('Enter a valid phone number');
+                if (hasValidPhone) { setError(''); setStep(3); return; }
+                setError('Enter a valid phone number (e.g. 0781234567)');
               }}
             >
               Continue
@@ -204,7 +197,7 @@ export default function Checkout() {
             <div className="confirm-row"><span>Plan</span><strong>{plan.label}</strong></div>
             <div className="confirm-row"><span>Amount</span><strong style={{ color: plan.color }}>{plan.price.toLocaleString()} RWF</strong></div>
             <div className="confirm-row"><span>Method</span><strong>{selectedMethod.label}</strong></div>
-            <div className="confirm-row"><span>Phone</span><strong>{paymentPhone}</strong></div>
+            <div className="confirm-row"><span>Phone</span><strong>{phone}</strong></div>
 
             {error && <p className="checkout-error">{error}</p>}
 
@@ -266,7 +259,7 @@ export default function Checkout() {
                     {result.momoError}
                   </div>
                 ) : (
-                  <p>A payment prompt has been sent to <strong>{paymentPhone}</strong>.<br />Approve it on your phone to activate your subscription.</p>
+                  <p>A payment prompt has been sent to <strong>{phone}</strong>.<br />Approve it on your phone to activate your subscription.</p>
                 )}
 
                 <div className="done-ref">
