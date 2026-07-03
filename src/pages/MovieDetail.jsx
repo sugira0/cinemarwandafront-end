@@ -4,7 +4,6 @@ import { Calendar, Clock, Eye, Globe, ImageOff, Play, Plus } from 'lucide-react'
 import api from '../api/axios';
 import Comments from '../components/Comments';
 import LoginModal from '../components/LoginModal';
-import Paywall from '../components/Paywall';
 import VideoModal from '../components/VideoModal';
 import { useAuth } from '../context/auth-context';
 import { mediaUrl } from '../lib/config';
@@ -49,14 +48,6 @@ function EpisodeList({ episodes, onOpenModal }) {
   );
 }
 
-function hasActiveSubscription(user) {
-  if (!user) return false;
-  if (user.role === 'admin' || user.role === 'author') return true;
-
-  const subscription = user.subscription;
-  return Boolean(subscription?.active && subscription?.expiresAt && new Date(subscription.expiresAt) > new Date());
-}
-
 export default function MovieDetail() {
   const { id } = useParams();
   const { user, refreshUser } = useAuth();
@@ -65,7 +56,6 @@ export default function MovieDetail() {
   const [views, setViews] = useState(null);
   const [movieModalId, setMovieModalId] = useState(null);
   const [activeEpisode, setActiveEpisode] = useState(null);
-  const [showPaywall, setShowPaywall] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [pendingPlayback, setPendingPlayback] = useState(null);
   const viewCounted = useRef(false);
@@ -107,21 +97,13 @@ export default function MovieDetail() {
       return;
     }
 
-    if (hasActiveSubscription(user)) {
-      openPlayback(episode);
-      refreshUser().catch(() => {
-        // Keep playback moving even if the silent refresh fails.
-      });
-      return;
-    }
-
-    const freshUser = await refreshUser();
-    if (!hasActiveSubscription(freshUser)) {
-      setShowPaywall(true);
-      return;
-    }
-
+    // The backend is the source of truth for subscriptions, PPV purchases,
+    // and episode credits. Let the player request authorization instead of
+    // blocking every non-subscription entitlement in the UI.
     openPlayback(episode);
+    refreshUser().catch(() => {
+      // Playback authorization is independent from this display-only refresh.
+    });
   };
 
   const toggleWatchlist = async () => {
@@ -180,7 +162,7 @@ export default function MovieDetail() {
               ? (
                 <button className="btn-watch" onClick={() => requestPlayback()}>
                   <Play size={16} fill="black" strokeWidth={0} />
-                  {user && !hasActiveSubscription(user) ? 'Subscribe to Watch' : 'Watch Now'}
+                  Watch Now
                 </button>
               )
               : <span className="btn-coming-soon"><Play size={16} strokeWidth={1.5} /> No Video Yet</span>}
@@ -227,8 +209,6 @@ export default function MovieDetail() {
           onClose={() => setActiveEpisode(null)}
         />
       )}
-
-      {showPaywall && <Paywall movieTitle={movie.title} onClose={() => setShowPaywall(false)} />}
 
       {showLoginModal && (
         <LoginModal

@@ -78,11 +78,6 @@ export default function Checkout() {
     return () => clearInterval(pollRef.current);
   }, [step, result, pollStatus]);
 
-  const selectedMethod = METHODS.find((entry) => entry.id === method);
-  const paymentPhone = hasAccountPhone ? accountPhone : phone;
-  const digits = paymentPhone.replace(/\D/g, '');
-  const hasValidPhone = digits.length >= 9;
-
   const handlePay = async () => {
     setLoading(true);
     setError('');

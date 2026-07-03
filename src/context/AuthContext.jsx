@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { AuthContext } from './auth-context';
 import { getDeviceContext } from '../lib/deviceContext';
-import { auth, signOut as firebaseSignOut } from '../lib/firebase';
-import { API_ORIGIN } from '../lib/config';
 import { registerWebPush } from '../lib/pushNotifications';
 
 function normalize(user) {
@@ -80,58 +78,80 @@ export function AuthProvider({ children }) {
     return data;
   };
 
-  // ── Google Sign-In via server-side OAuth popup ────────────────────────────
+  const persistSession = (data, fallbackDeviceId) => {
+    const freshUser = normalize(data.user);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('deviceId', data.deviceId || fallbackDeviceId);
+    localStorage.setItem('user', JSON.stringify(freshUser));
+    sessionStorage.setItem(ME_VERIFIED_KEY, String(Date.now()));
+    setUser(freshUser);
+    registerWebPush().catch(() => {});
+    return { ...data, user: freshUser };
+  };
+
+  // ── Google Sign-In ────────────────────────────────────────────────────────
   const loginWithGoogle = async ({ credential, googleUserInfo } = {}) => {
     const deviceContext = await getDeviceContext();
 
     if (credential || googleUserInfo) {
       // Mobile path — pass token/userInfo directly
       const { data } = await api.post('/auth/google', { credential, googleUserInfo, ...deviceContext });
-      const freshUser = normalize(data.user);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('deviceId', data.deviceId || deviceContext.deviceId);
-      localStorage.setItem('user', JSON.stringify(freshUser));
-      setUser(freshUser);
-      registerWebPush().catch(() => {});
-      return data;
+      return persistSession(data, deviceContext.deviceId);
     }
 
-    // Web path — open backend-driven OAuth popup
-    const params = new URLSearchParams({
-      deviceId: deviceContext.deviceId || '',
-      deviceName: deviceContext.deviceName || 'Web Browser',
-      origin: window.location.origin,
-    });
-    const popup = window.open(
-      `${API_ORIGIN}/api/auth/google/authorize?${params}`,
-      'google-oauth',
-      'width=520,height=620,scrollbars=yes,resizable=yes'
-    );
-    if (!popup) throw new Error('Popup blocked. Please allow popups for this site and try again.');
+    // Web path — use Google Identity Services directly. This intentionally
+    // avoids Firebase Auth: an expired Firebase web API key must not prevent
+    // Google login when the Google OAuth client itself is correctly configured.
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
+    if (!clientId) throw new Error('Google Sign-In client ID is not configured.');
 
-    return new Promise((resolve, reject) => {
-      const onMessage = (event) => {
-        if (event.origin !== API_ORIGIN) return;
-        cleanup();
-        const { token, deviceId, user: userData, error } = event.data || {};
-        if (error) { reject(new Error(error)); return; }
-        const freshUser = normalize(userData);
-        localStorage.setItem('token', token);
-        localStorage.setItem('deviceId', deviceId || deviceContext.deviceId);
-        localStorage.setItem('user', JSON.stringify(freshUser));
-        setUser(freshUser);
-        registerWebPush().catch(() => {});
-        resolve({ token, deviceId, user: freshUser });
-      };
-      const checkClosed = setInterval(() => {
-        if (popup.closed) { cleanup(); reject(new Error('Sign-in cancelled.')); }
-      }, 500);
-      const cleanup = () => {
-        window.removeEventListener('message', onMessage);
-        clearInterval(checkClosed);
-      };
-      window.addEventListener('message', onMessage);
+    const google = await new Promise((resolve, reject) => {
+      if (window.google?.accounts?.oauth2) { resolve(window.google); return; }
+      const startedAt = Date.now();
+      const timer = window.setInterval(() => {
+        if (window.google?.accounts?.oauth2) {
+          window.clearInterval(timer);
+          resolve(window.google);
+        } else if (Date.now() - startedAt > 8000) {
+          window.clearInterval(timer);
+          reject(new Error('Google Sign-In could not load. Check your connection and try again.'));
+        }
+      }, 100);
     });
+
+    const accessToken = await new Promise((resolve, reject) => {
+      const tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: 'openid email profile',
+        prompt: 'select_account',
+        callback: (response) => {
+          if (response.error) {
+            reject(new Error(response.error_description || response.error));
+            return;
+          }
+          resolve(response.access_token);
+        },
+        error_callback: (error) => reject(new Error(
+          error?.type === 'popup_failed_to_open'
+            ? 'Google popup was blocked. Allow popups and try again.'
+            : 'Google Sign-In was cancelled or could not open.'
+        )),
+      });
+      tokenClient.requestAccessToken();
+    });
+
+    const profileResponse = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    if (!profileResponse.ok) throw new Error('Google profile verification failed. Please try again.');
+    const verifiedGoogleProfile = await profileResponse.json();
+
+    const { data } = await api.post('/auth/google', {
+      credential: accessToken,
+      googleUserInfo: verifiedGoogleProfile,
+      ...deviceContext,
+    });
+    return persistSession(data, deviceContext.deviceId);
   };
 
   const requestRegisterOtp = async ({ name, email, phone, password, role = 'viewer' }) => {
@@ -168,8 +188,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    try { await api.post('/auth/logout'); } catch {}
-    try { await firebaseSignOut(auth); } catch {}
+    try { await api.post('/auth/logout'); } catch { /* local cleanup still signs the user out */ }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('deviceId');

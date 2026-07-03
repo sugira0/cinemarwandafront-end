@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { AlertTriangle, ArrowLeft, Crown, X } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AlertTriangle, ArrowLeft, Crown, Film, Play, RotateCcw, ShieldCheck, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { absoluteUrl } from '../lib/config';
@@ -87,7 +87,7 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
     }, SAVE_INTERVAL_MS);
   }
 
-  function saveProgressNow() {
+  const saveProgressNow = useCallback(() => {
     const video = videoRef.current;
     if (!video || !video.currentTime) return;
     api.post('/progress', {
@@ -96,12 +96,12 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
       position: Math.floor(video.currentTime),
       duration: Math.floor(video.duration) || 0,
     }).catch(() => { });
-  }
+  }, [episodeId, movieId]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     saveProgressNow();
     onClose();
-  };
+  }, [onClose, saveProgressNow]);
 
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') handleClose(); };
@@ -111,7 +111,7 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
       window.removeEventListener('keydown', handler);
       document.body.style.overflow = '';
     };
-  }, []);
+  }, [handleClose]);
 
   function formatTime(seconds) {
     const m = Math.floor(seconds / 60);
@@ -121,16 +121,25 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
 
   return (
     <div className="vmodal-backdrop">
+      <div
+        className="vmodal-ambient"
+        style={poster ? { backgroundImage: `url(${poster})` } : undefined}
+        aria-hidden="true"
+      />
+      <div className="vmodal-grain" aria-hidden="true" />
       <div className="vmodal-container">
 
         {/* ── Top bar ── */}
         <div className="vmodal-header">
           <button className="vmodal-back" onClick={handleClose}>
             <ArrowLeft size={18} strokeWidth={2} />
-            <span>Back</span>
+            <span>Leave theater</span>
           </button>
 
-          <span className="vmodal-title">{title}</span>
+          <div className="vmodal-now-playing">
+            <span>Now watching</span>
+            <strong>{title}</strong>
+          </div>
 
           <div className="vmodal-header-right">
             <button className="vmodal-close" onClick={handleClose}>
@@ -142,9 +151,10 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
         {/* ── Loading ── */}
         {allowed === null && (
           <div className="vmodal-checking">
+            <div className="vmodal-loader-mark"><Film size={28} /></div>
             <span className="vmodal-checking-logo">Lumina Cinema</span>
-            <div className="vmodal-spinner" />
-            <p>Loading video...</p>
+            <div className="vmodal-loader-line"><i /></div>
+            <p>Preparing your screening</p>
           </div>
         )}
 
@@ -158,7 +168,7 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
               }
             </div>
             <h3>
-              {blockCode === 'NO_SUBSCRIPTION' ? 'Subscription Required' : 'Unable to Play'}
+              {blockCode === 'NO_SUBSCRIPTION' ? 'This screening is locked' : 'Screening unavailable'}
             </h3>
             <p>{blockMsg}</p>
             <div className="vmodal-blocked-actions">
@@ -177,40 +187,53 @@ export default function VideoModal({ title, movieId, episodeId = null, poster = 
         {/* ── Player ── */}
         {allowed === true && (
           <div className="vmodal-player-wrap">
+            <div className="vmodal-stage-label"><span>THEATER 01</span><i /><span>LUMINA ORIGINAL</span></div>
 
             {/* Resume prompt */}
             {showResume && (
               <div className="vmodal-resume-bar">
-                <span>Resume from {formatTime(resumeAt)}?</span>
+                <div className="vmodal-resume-copy">
+                  <small>Welcome back</small>
+                  <span>Continue from {formatTime(resumeAt)}</span>
+                </div>
                 <div className="vmodal-resume-actions">
                   <button onClick={() => {
                     if (videoRef.current) videoRef.current.currentTime = resumeAt;
                     setShowResume(false);
                     startProgressSaving();
                   }}>
-                    ▶ Resume
+                    <Play size={14} fill="currentColor" /> Resume
                   </button>
                   <button className="secondary" onClick={() => {
                     setShowResume(false);
                     startProgressSaving();
                   }}>
-                    Start over
+                    <RotateCcw size={14} /> Start over
                   </button>
                 </div>
               </div>
             )}
 
-            <VideoPlayer
-              source={playback.source}
-              sourceType={playback.kind}
-              poster={poster}
-              startTime={showResume ? 0 : resumeAt}
-              videoRef={videoRef}
-              onPlay={() => {
-                if (onPlay) onPlay();
-                if (!showResume) startProgressSaving();
-              }}
-            />
+            <div className="vmodal-screen">
+              <VideoPlayer
+                source={playback.source}
+                sourceType={playback.kind}
+                poster={poster}
+                startTime={showResume ? 0 : resumeAt}
+                videoRef={videoRef}
+                onPlay={() => {
+                  if (onPlay) onPlay();
+                  if (!showResume) startProgressSaving();
+                }}
+              />
+              <div className="vmodal-screen-edge" aria-hidden="true" />
+            </div>
+
+            <div className="vmodal-watch-footer">
+              <div><ShieldCheck size={14} /><span>Protected streaming</span></div>
+              <span className="vmodal-watch-title">{title}</span>
+              <div><span>ESC to exit</span></div>
+            </div>
 
             {/* Gold progress bar at bottom */}
             {progress > 0 && (

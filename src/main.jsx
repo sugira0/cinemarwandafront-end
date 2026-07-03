@@ -8,6 +8,7 @@ import { PlayerProvider } from './context/player-context'
 import ErrorBoundary from './components/ErrorBoundary'
 import App from './App.jsx'
 import './index.css'
+import './SystemTheme.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

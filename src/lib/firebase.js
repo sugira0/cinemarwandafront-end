@@ -23,6 +23,7 @@ try {
     app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
     auth = getAuth(app);
     googleProvider = new GoogleAuthProvider();
+    googleProvider.setCustomParameters({ prompt: 'select_account' });
     googleProvider.addScope('email');
     googleProvider.addScope('profile');
   } else {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ChevronRight, Film, Globe, LogIn, Play, Plus, Star, UserPlus, Users } from 'lucide-react';
+import { ArrowRight, ChevronRight, Film, Globe, LogIn, Play, Plus, UserPlus, Users } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/auth-context';
@@ -116,64 +116,6 @@ function buildUniqueMovies(...groups) {
   return movies;
 }
 
-function splitIntoColumns(items, columnCount) {
-  const columns = Array.from({ length: columnCount }, () => []);
-
-  items.forEach((item, index) => {
-    columns[index % columnCount].push(item);
-  });
-
-  return columns;
-}
-
-function LeadCapture({ onSubmit, buttonLabel, compact = false }) {
-  const [email, setEmail] = useState('');
-
-  return (
-    <form
-      className={`landing-lead-form${compact ? ' compact' : ''}`}
-      onSubmit={(event) => {
-        event.preventDefault();
-        onSubmit(email.trim());
-      }}
-    >
-      <label className="landing-lead-field">
-        <span className="sr-only">Email address</span>
-        <input
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-        />
-      </label>
-      <button type="submit" className="landing-lead-btn">
-        {buttonLabel}
-        <ChevronRight size={20} strokeWidth={2.2} />
-      </button>
-    </form>
-  );
-}
-
-function PosterTile({ movie, priority = false }) {
-  return (
-    <article className="landing-poster-tile">
-      {movie.poster ? (
-        <img
-          src={imageUrl(movie.poster, { width: 240, height: 360 })}
-          alt={movie.title}
-          loading={priority ? 'eager' : 'lazy'}
-          fetchPriority={priority ? 'high' : 'auto'}
-          decoding={priority ? 'sync' : 'async'}
-        />
-      ) : (
-        <div className="landing-poster-fallback">
-          <span>{movie.title}</span>
-        </div>
-      )}
-    </article>
-  );
-}
-
 function LandingPaymentBadges() {
   return (
     <div className="landing-payment-strip">
@@ -198,7 +140,6 @@ export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [latest, setLatest] = useState([]);
   const [recommended, setRecommended] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [activeFaq, setActiveFaq] = useState(0);
 
   useEffect(() => {
@@ -218,9 +159,7 @@ export default function Home() {
         if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') return;
         // The landing page has visual fallbacks, so keep rendering even if the feed fails.
       })
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
+      .finally(() => {});
 
     return () => {
       isMounted = false;
@@ -236,21 +175,11 @@ export default function Home() {
       title: `Rwandan Story ${index + 1}`,
       poster: null,
     }));
-  const posterColumns = splitIntoColumns(posterSeed, 5);
   const heroMovie = featured[0] || recommended[0] || latest[0] || null;
   const trending = recommended.length ? recommended.slice(0, 6) : catalog.slice(0, 6);
   const trendingItems = trending.length
     ? trending
     : posterSeed.slice(0, 6).map((movie, index) => ({ ...movie, _id: `${movie._id}-trending-${index}` }));
-
-  const handleLeadSubmit = (email) => {
-    if (user) {
-      navigate('/movies');
-      return;
-    }
-
-    navigate(email ? `/register?email=${encodeURIComponent(email)}` : '/register');
-  };
 
   const getAuthTarget = (path) => (user ? path : '/login');
 
@@ -264,35 +193,16 @@ export default function Home() {
   };
 
   const browseTarget = getAuthTarget('/movies');
-  const actorsTarget = getAuthTarget('/actors');
-
   return (
     <main className="landing-page">
       <section className="landing-hero">
-        <div className="landing-poster-wall" aria-hidden="true">
-          <div className="landing-poster-grid">
-            {posterColumns.map((column, columnIndex) => (
-              <div
-                key={`column-${columnIndex}`}
-                className="landing-poster-column"
-                style={{ '--column-shift': `${columnIndex % 2 === 0 ? columnIndex * 28 : -columnIndex * 24}px` }}
-              >
-                {column.map((movie, posterIndex) => (
-                  <PosterTile
-                    key={movie._id}
-                    movie={movie}
-                    priority={!loading && columnIndex === 0 && posterIndex < 2}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-          <div className="landing-poster-mask" />
-        </div>
-
         <header className="landing-header">
           <Logo size="md" to="/" />
-
+          <nav className="landing-nav" aria-label="Main navigation">
+            <a href="#films">Films</a>
+            <a href="#experience">Experience</a>
+            <Link to="/plans">Membership</Link>
+          </nav>
           <div className="landing-header-actions">
             {user ? (
               <>
@@ -314,58 +224,42 @@ export default function Home() {
           </div>
         </header>
 
-        <div className="landing-hero-content">
-          {!hasLanguagePreference && (
-            <div className="landing-language-choice" data-i18n-skip="true">
-              <span>Choose language</span>
-              <button type="button" onClick={() => setLanguage('en')}>English</button>
-              <button type="button" onClick={() => setLanguage('rw')}>Kinyarwanda</button>
-            </div>
-          )}
-
-          <h1 className="landing-hero-title">
-            <span className="landing-hero-title-static">Watch</span>
-            <span className="landing-hero-title-accent">Rwandan Stories</span>
-          </h1>
-          <p className="landing-subtitle">
-            Short stories. Big feeling. All from Rwanda.
-          </p>
-
-          <LeadCapture
-            onSubmit={handleLeadSubmit}
-            buttonLabel={user ? 'Browse Catalog' : 'Sign Up to Browse'}
-          />
-
-          <div className="landing-cta-links">
-            <Link to="/plans" className="landing-text-link">See plans</Link>
-            <Link to={browseTarget} className="landing-text-link">Explore catalog</Link>
-          </div>
-
-          <div className="landing-stat-strip">
-            <span>Rwandan stories first</span>
-            <span>MTN MoMo and Airtel Money</span>
-            <span>Watch on phone, laptop, and TV</span>
-          </div>
-
-          {heroMovie && (
-            <button className="landing-featured-pill" onClick={() => openMovie(heroMovie._id)}>
-              <div>
-                <span className="landing-featured-label">Featured tonight</span>
-                <strong>{heroMovie.title}</strong>
+        <div className="landing-hero-layout">
+          <div className="landing-hero-content">
+            {!hasLanguagePreference && (
+              <div className="landing-language-choice" data-i18n-skip="true">
+                <span>Choose language</span>
+                <button type="button" onClick={() => setLanguage('en')}>EN</button>
+                <button type="button" onClick={() => setLanguage('rw')}>RW</button>
               </div>
-              <ChevronRight size={18} strokeWidth={2} />
-            </button>
-          )}
-        </div>
+            )}
+            <p className="landing-kicker"><span /> Cinema, made in Rwanda</p>
+            <h1 className="landing-hero-title">Our stories.<br /><em>Our screen.</em></h1>
+            <p className="landing-subtitle">The new home of bold Rwandan film. Stream original stories, discover rising voices, and see home differently.</p>
+            <div className="landing-hero-actions">
+              <Link to={user ? '/movies' : '/register'} className="landing-primary-cta">
+                <Play size={17} fill="currentColor" /> Start watching
+              </Link>
+              <Link to={browseTarget} className="landing-secondary-cta">Explore films <ArrowRight size={17} /></Link>
+            </div>
+            <div className="landing-hero-note"><strong>From 2,000 RWF</strong><span>No long contracts. Cancel anytime.</span></div>
+          </div>
 
-        <div className="landing-hero-arc" aria-hidden="true" />
+          <button className="landing-hero-feature" onClick={() => openMovie(heroMovie?._id)} aria-label={heroMovie ? `Open ${heroMovie.title}` : 'Browse films'}>
+            {heroMovie?.poster ? <img src={imageUrl(heroMovie.poster, { width: 760, height: 980 })} alt="" /> : <div className="landing-feature-art"><span>RW</span></div>}
+            <div className="landing-feature-shade" />
+            <span className="landing-feature-index">01 / FEATURED</span>
+            <div className="landing-feature-copy"><small>Tonight's selection</small><strong>{heroMovie?.title || 'Stories from the land of a thousand hills'}</strong><span>Watch now <Play size={14} fill="currentColor" /></span></div>
+          </button>
+        </div>
+        <div className="landing-scroll-cue"><span>Scroll to discover</span><i /></div>
       </section>
 
-      <section className="landing-section">
+      <section className="landing-section landing-films" id="films">
         <div className="landing-section-head">
           <div>
-            <p className="landing-section-kicker">Trending now</p>
-            <h2>What viewers are pressing play on</h2>
+            <p className="landing-section-kicker">Now showing</p>
+            <h2>Stories worth<br /><em>staying for.</em></h2>
           </div>
           <Link to={browseTarget} className="landing-inline-link">
             Browse all
@@ -373,35 +267,51 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="landing-trending-rail">
+        <div className="landing-film-grid">
           {trendingItems.map((movie, index) => (
             <button
               key={movie._id}
-              className="landing-rank-card"
+              className="landing-film-card"
               onClick={() => openMovie(movie._id)}
             >
-              <span className="landing-rank-number">{index + 1}</span>
-              <div className="landing-rank-poster">
+              <div className="landing-film-poster">
                 {movie.poster ? (
-                  <img src={imageUrl(movie.poster, { width: 220, height: 330 })} alt={movie.title} loading="lazy" decoding="async" />
+                  <img src={imageUrl(movie.poster, { width: 420, height: 600 })} alt={movie.title} loading="lazy" decoding="async" />
                 ) : (
-                  <div className="landing-rank-fallback">{movie.title}</div>
+                  <div className="landing-rank-fallback"><span>0{index + 1}</span>{movie.title}</div>
                 )}
+                <span className="landing-card-play"><Play size={18} fill="currentColor" /></span>
               </div>
-              <div className="landing-rank-copy">
+              <div className="landing-film-copy">
+                <span>0{index + 1}</span>
                 <strong>{movie.title}</strong>
-                <span>{movie.genre?.slice(0, 2).join(' / ') || 'Featured release'}</span>
+                <small>{movie.genre?.slice(0, 2).join(' · ') || 'Rwandan cinema'}</small>
               </div>
             </button>
           ))}
         </div>
       </section>
 
-      <section className="landing-section">
+      <section className="landing-manifesto" id="experience">
+        <div className="landing-manifesto-mark">“</div>
+        <div className="landing-manifesto-copy">
+          <p className="landing-section-kicker">More than entertainment</p>
+          <h2>When we tell our own stories, <em>we see ourselves differently.</em></h2>
+          <p>Lumina brings the voices, places, humor, and imagination of Rwanda to every screen—beautifully, honestly, and without borders.</p>
+          <Link to="/about">Our story <ArrowRight size={17} /></Link>
+        </div>
+        <div className="landing-manifesto-stats">
+          <div><strong>100%</strong><span>Rwandan focus</span></div>
+          <div><strong>24/7</strong><span>Watch anywhere</span></div>
+          <div><strong>2K</strong><span>RWF to begin</span></div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-experience">
         <div className="landing-section-head">
           <div>
-            <p className="landing-section-kicker">Why join</p>
-            <h2>Streaming shaped around Rwandan stories</h2>
+            <p className="landing-section-kicker">Made around you</p>
+            <h2>Good cinema.<br /><em>No friction.</em></h2>
           </div>
         </div>
 
@@ -453,12 +363,10 @@ export default function Home() {
       </section>
 
       <section className="landing-final-cta">
-        <p>Ready to watch? Enter your email to create or restart your membership.</p>
-        <LeadCapture
-          onSubmit={handleLeadSubmit}
-          buttonLabel={user ? 'Go to Catalog' : 'Create Account'}
-          compact
-        />
+        <p className="landing-section-kicker">Your front-row seat is waiting</p>
+        <h2>Ready when<br /><em>you are.</em></h2>
+        <p>Join Rwanda's home of film today.</p>
+        <Link to={user ? '/movies' : '/register'} className="landing-primary-cta">Start watching <ArrowRight size={18} /></Link>
       </section>
 
       <footer className="landing-footer">
