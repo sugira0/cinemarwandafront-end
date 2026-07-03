@@ -4,11 +4,11 @@ import { API_BASE_URL } from '../lib/config';
 // ── Per-endpoint TTLs (ms) ────────────────────────────────────────────────────
 const ENDPOINT_TTL = {
   '/movies/home': 3 * 60_000,   // home carousel — 3 min
-  '/movies':      3 * 60_000,   // catalog list  — 3 min
-  '/actors':      5 * 60_000,   // actors list   — 5 min
-  '/plans':      10 * 60_000,   // subscription plans — 10 min
-  '/settings':   10 * 60_000,   // app settings  — 10 min
-  default:        60_000,        // everything else — 1 min
+  '/movies': 3 * 60_000,   // catalog list  — 3 min
+  '/actors': 5 * 60_000,   // actors list   — 5 min
+  '/plans': 10 * 60_000,   // subscription plans — 10 min
+  '/settings': 10 * 60_000,   // app settings  — 10 min
+  default: 60_000,        // everything else — 1 min
 };
 
 function getTTL(url = '') {
@@ -19,7 +19,7 @@ function getTTL(url = '') {
 }
 
 // ── Stores ────────────────────────────────────────────────────────────────────
-const _cache    = new Map(); // cacheKey → { data, ts }
+const _cache = new Map(); // cacheKey → { data, ts }
 const _inflight = new Map(); // cacheKey → Promise  (deduplication)
 
 export function invalidateCache(pattern) {
@@ -40,8 +40,10 @@ setInterval(() => {
 // ── Base axios instance (auth headers, device-id, error handling) ─────────────
 const http = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 8_000,
-  withCredentials: true,
+  timeout: 12_000,
+  // withCredentials only needed for cross-origin (dev). In production,
+  // Vercel proxies /api/* to backend so it's same-origin.
+  withCredentials: import.meta.env.DEV,
 });
 
 http.interceptors.request.use(config => {
@@ -77,10 +79,10 @@ http.interceptors.response.use(
 function cachedGet(url, config = {}) {
   if (config.useCache === false) return http.get(url, config);
 
-  const params  = config.params ?? {};
+  const params = config.params ?? {};
   const cacheKey = url + JSON.stringify(params);
-  const ttl      = getTTL(url);
-  const hit      = _cache.get(cacheKey);
+  const ttl = getTTL(url);
+  const hit = _cache.get(cacheKey);
 
   if (hit) {
     const age = Date.now() - hit.ts;
@@ -90,7 +92,7 @@ function cachedGet(url, config = {}) {
       if (age > ttl * 0.7 && !_inflight.has(cacheKey)) {
         const bg = http.get(url, config)
           .then(r => { _cache.set(cacheKey, { data: r.data, ts: Date.now() }); })
-          .catch(() => {})
+          .catch(() => { })
           .finally(() => _inflight.delete(cacheKey));
         _inflight.set(cacheKey, bg);
       }
@@ -122,12 +124,12 @@ function cachedGet(url, config = {}) {
 
 // ── Public API object — drop-in replacement for the old axios instance ────────
 const api = {
-  get:     (url, config)        => cachedGet(url, config),
-  post:    (url, data, config)  => http.post(url, data, config),
-  put:     (url, data, config)  => http.put(url, data, config),
-  patch:   (url, data, config)  => http.patch(url, data, config),
-  delete:  (url, config)        => http.delete(url, config),
-  request: (config)             => http.request(config),
+  get: (url, config) => cachedGet(url, config),
+  post: (url, data, config) => http.post(url, data, config),
+  put: (url, data, config) => http.put(url, data, config),
+  patch: (url, data, config) => http.patch(url, data, config),
+  delete: (url, config) => http.delete(url, config),
+  request: (config) => http.request(config),
   http,
 };
 
@@ -135,9 +137,9 @@ const api = {
 // Fire at module import time (before any component renders) so cache is hot
 // by the time the first useEffect runs. Total cost: ~3 parallel HTTP requests.
 if (typeof window !== 'undefined') {
-  cachedGet('/movies/home').catch(() => {});
-  cachedGet('/plans').catch(() => {});
-  cachedGet('/settings').catch(() => {});
+  cachedGet('/movies/home').catch(() => { });
+  cachedGet('/plans').catch(() => { });
+  cachedGet('/settings').catch(() => { });
 }
 
 export default api;
