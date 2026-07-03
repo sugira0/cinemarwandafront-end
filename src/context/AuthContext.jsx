@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { AuthContext } from './auth-context';
 import { getDeviceContext } from '../lib/deviceContext';
+import { API_ORIGIN } from '../lib/config';
 import { registerWebPush } from '../lib/pushNotifications';
 
 function normalize(user) {
@@ -103,7 +104,51 @@ export function AuthProvider({ children }) {
     // avoids Firebase Auth: an expired Firebase web API key must not prevent
     // Google login when the Google OAuth client itself is correctly configured.
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
-    if (!clientId) throw new Error('Google Sign-In client ID is not configured.');
+    if (!clientId) {
+      // Production-safe fallback: the backend owns the OAuth client secret and
+      // callback. This keeps Google login available even when a hosting build
+      // omits the public VITE_GOOGLE_CLIENT_ID variable.
+      const params = new URLSearchParams({
+        deviceId: deviceContext.deviceId || '',
+        deviceName: deviceContext.deviceName || 'Web Browser',
+        origin: window.location.origin,
+      });
+      const authBase = API_ORIGIN || window.location.origin;
+      const popup = window.open(
+        `${authBase}/api/auth/google/authorize?${params}`,
+        'lumina-google-oauth',
+        'width=520,height=680,scrollbars=yes,resizable=yes',
+      );
+      if (!popup) throw new Error('Google popup was blocked. Allow popups and try again.');
+
+      return new Promise((resolve, reject) => {
+        const timeout = window.setTimeout(() => {
+          cleanup();
+          try { popup.close(); } catch { /* popup may already be closed */ }
+          reject(new Error('Google Sign-In timed out. Please try again.'));
+        }, 120000);
+        const closedCheck = window.setInterval(() => {
+          if (popup.closed) {
+            cleanup();
+            reject(new Error('Google Sign-In was cancelled.'));
+          }
+        }, 500);
+        const cleanup = () => {
+          window.clearTimeout(timeout);
+          window.clearInterval(closedCheck);
+          window.removeEventListener('message', onMessage);
+        };
+        const onMessage = (event) => {
+          if (event.source !== popup) return;
+          const { token, deviceId, user: userData, error } = event.data || {};
+          if (!error && (!token || !userData)) return;
+          cleanup();
+          if (error) { reject(new Error(error)); return; }
+          resolve(persistSession({ token, deviceId, user: userData }, deviceContext.deviceId));
+        };
+        window.addEventListener('message', onMessage);
+      });
+    }
 
     const google = await new Promise((resolve, reject) => {
       if (window.google?.accounts?.oauth2) { resolve(window.google); return; }
