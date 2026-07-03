@@ -260,15 +260,13 @@ export default function Checkout() {
                   <Smartphone size={32} strokeWidth={1.5} style={{ color: selectedMethod?.color }} />
                 </div>
                 <h3>Check your phone!</h3>
-                <p>A payment prompt has been sent to <strong>{paymentPhone}</strong>.<br />Approve it on your phone to activate your subscription.</p>
 
-                {/* Only show USSD if MTN push was NOT sent */}
-                {!result.momoRequested && result.ussd && (
-                  <div className="ussd-code">
-                    <span className="ussd-label">USSD Code</span>
-                    <code>{result.ussd}</code>
-                    <p className="ussd-note">Dial this manually if you do not receive the payment prompt automatically.</p>
+                {result.momoError ? (
+                  <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5', borderRadius: 10, padding: '0.85rem 1rem', fontSize: '0.88rem', width: '100%', textAlign: 'center' }}>
+                    {result.momoError}
                   </div>
+                ) : (
+                  <p>A payment prompt has been sent to <strong>{paymentPhone}</strong>.<br />Approve it on your phone to activate your subscription.</p>
                 )}
 
                 <div className="done-ref">
@@ -277,17 +275,25 @@ export default function Checkout() {
 
                 <div className="done-steps">
                   <div className="done-step active"><Check size={14} strokeWidth={2.5} /> Payment initiated</div>
-                  <div className="done-step pending-step">
-                    <Loader size={13} className="spin" style={{ color: selectedMethod?.color }} />
-                    Waiting for your approval on phone...
-                  </div>
+                  {!result.momoError && (
+                    <div className="done-step pending-step">
+                      <Loader size={13} className="spin" style={{ color: selectedMethod?.color }} />
+                      Waiting for your approval on phone...
+                    </div>
+                  )}
                   <div className="done-step"><span className="step-dot" /> Subscription activates automatically</div>
                   <div className="done-step"><span className="step-dot" /> You receive a notification</div>
                 </div>
 
-                <button className="checkout-pay-btn green" onClick={() => navigate('/movies')}>
-                  Browse Movies
-                </button>
+                {result.momoError ? (
+                  <button className="checkout-pay-btn" style={{ background: '#ef4444', color: '#fff' }} onClick={() => { setStep(1); setResult(null); setPollStatus('pending'); }}>
+                    Try Again
+                  </button>
+                ) : (
+                  <button className="checkout-pay-btn green" onClick={() => navigate('/movies')}>
+                    Browse Movies
+                  </button>
+                )}
                 <button className="checkout-back-link" onClick={() => navigate('/account')}>
                   View my account
                 </button>
