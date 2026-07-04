@@ -103,7 +103,15 @@ export function AuthProvider({ children }) {
     // Web path — use Google Identity Services directly. This intentionally
     // avoids Firebase Auth: an expired Firebase web API key must not prevent
     // Google login when the Google OAuth client itself is correctly configured.
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
+    let clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
+    if (!clientId) {
+      try {
+        const { data } = await api.get('/auth/google/config', { useCache: false });
+        clientId = data?.clientId?.trim();
+      } catch {
+        // The server-owned popup below remains a last-resort fallback.
+      }
+    }
     if (!clientId) {
       // Production-safe fallback: the backend owns the OAuth client secret and
       // callback. This keeps Google login available even when a hosting build
