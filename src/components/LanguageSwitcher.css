@@ -1,33 +1,79 @@
-.language-switcher {
-  position: fixed; right: 18px; bottom: 18px; z-index: 1000;
-  display: flex; align-items: center; gap: 0.75rem;
-  padding: 0.7rem 0.8rem; background: rgba(14,11,2,0.96);
-  border: 1px solid var(--border-2); border-radius: var(--r-xl);
-  box-shadow: 0 14px 36px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,158,11,0.06);
-  backdrop-filter: blur(16px);
-}
-.language-switcher-label {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  color: var(--text-3); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
-}
-.language-switcher-actions { display: inline-flex; align-items: center; gap: 0.35rem; }
-.language-switcher-btn {
-  min-width: 44px; padding: 0.5rem 0.7rem;
-  border: 1px solid var(--border); background: var(--surface);
-  color: var(--text-3); font-size: 0.75rem; font-weight: 700;
-  letter-spacing: 0.08em; border-radius: var(--r-md);
-  transition: all var(--transition); cursor: pointer;
-}
-.language-switcher-btn:hover { border-color: var(--border-2); color: var(--text); }
-.language-switcher-btn.active { background: var(--gold-subtle-2); border-color: var(--gold); color: var(--gold-light); }
+.language-switcher { position: relative; z-index: 1100; flex-shrink: 0; }
 
-@media (max-width: 640px) {
-  .language-switcher { left: 12px; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom,0px)); justify-content: space-between; gap: 0.55rem; padding: 0.55rem 0.6rem; }
-  .language-switcher-label { font-size: 0.72rem; }
-  .language-switcher-btn { min-width: 44px; min-height: 40px; padding: 0.44rem 0.55rem; }
+.language-switcher-trigger {
+  min-height: 42px;
+  padding: 0 12px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(242,238,229,.14);
+  border-radius: 2px;
+  background: rgba(9,11,13,.72);
+  color: rgba(242,238,229,.82);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
+  backdrop-filter: blur(16px);
+  cursor: pointer;
+  transition: border-color .22s ease,background .22s ease,color .22s ease;
 }
-@media (max-width: 380px) {
-  .language-switcher-label span { display: none; }
-  .language-switcher-actions { width: 100%; }
-  .language-switcher-btn { flex: 1; }
+.language-switcher-trigger:hover,.language-switcher.open .language-switcher-trigger { border-color: rgba(143,33,24,.75);background: rgba(143,33,24,.13);color:#fff; }
+.language-flag { width: 25px;height:25px;display:grid;place-items:center;overflow:hidden;border-radius:50%;background:#15191b;font-size:17px;line-height:1;box-shadow:0 0 0 1px rgba(242,238,229,.15); }
+.language-current { font-size:.72rem;font-weight:600;letter-spacing:.01em;white-space:nowrap; }
+.language-short { display:none;font-size:.64rem;font-weight:700;letter-spacing:.08em; }
+.language-chevron { color:rgba(242,238,229,.4);transition:transform .25s ease; }
+.language-switcher.open .language-chevron { transform:rotate(180deg); }
+
+.language-menu {
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  width:230px;
+  padding:8px;
+  border:1px solid rgba(242,238,229,.14);
+  border-radius:3px;
+  background:#111517;
+  color:#f2eee5;
+  box-shadow:16px 20px 0 rgba(143,33,24,.07),0 25px 70px rgba(0,0,0,.62);
+  animation:languageMenuIn .22s cubic-bezier(.2,.8,.2,1) both;
 }
+.language-menu::before { content:'';position:absolute;top:-5px;right:18px;width:9px;height:9px;transform:rotate(45deg);background:#111517;border-left:1px solid rgba(242,238,229,.14);border-top:1px solid rgba(242,238,229,.14); }
+.language-menu-head { padding:10px 11px 12px;display:flex;align-items:end;justify-content:space-between;border-bottom:1px solid rgba(242,238,229,.09); }
+.language-menu-head span { font-family:var(--font-display,'Manrope',sans-serif);font-size:1rem;font-weight:650;letter-spacing:-.025em; }
+.language-menu-head small { color:#8f2118;font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em; }
+.language-option { width:100%;min-height:48px;margin-top:4px;padding:0 10px;display:grid;grid-template-columns:28px 1fr 18px;align-items:center;gap:10px;border:0;border-radius:2px;background:transparent;color:rgba(242,238,229,.65);text-align:left;font-size:.75rem;cursor:pointer;transition:background .2s ease,color .2s ease,transform .2s ease; }
+.language-option:hover { background:rgba(242,238,229,.05);color:#fff;transform:translateX(2px); }
+.language-option.active { background:rgba(143,33,24,.13);color:#fff; }
+.language-option.active svg { color:#b93628; }
+.language-option .language-flag { width:24px;height:24px;font-size:16px; }
+.language-menu-note { margin:7px 4px 1px;padding:10px 7px 4px;border-top:1px solid rgba(242,238,229,.07);color:rgba(242,238,229,.28);font-size:.52rem;text-transform:uppercase;letter-spacing:.09em; }
+
+.app-global-actions { display:flex;align-items:center;gap:12px; }
+.app-global-actions.app-notification-dock::before { inset:-8px;border-radius:4px; }
+
+@keyframes languageMenuIn { from{opacity:0;transform:translateY(-7px) scale(.98)}to{opacity:1;transform:none} }
+
+@media(max-width:1000px){
+  .navbar .language-current,.landing-header .language-current{display:none}
+  .navbar .language-short,.landing-header .language-short{display:inline}
+}
+@media(max-width:700px){
+  .landing-header-actions .language-switcher-trigger{padding-inline:7px;gap:5px}
+  .landing-header-actions .language-current{display:none}
+  .landing-header-actions .language-short{display:inline}
+  .landing-header-actions .language-flag{width:22px;height:22px;font-size:15px}
+  .mobile-menu .language-switcher{width:100%;margin-bottom:8px}
+  .mobile-menu .language-switcher-trigger{width:100%;justify-content:flex-start}
+  .mobile-menu .language-current{display:inline}
+  .mobile-menu .language-short{display:none}
+  .mobile-menu .language-chevron{margin-left:auto}
+  .mobile-menu .language-menu{position:static;width:100%;margin-top:6px;box-shadow:none}
+  .mobile-menu .language-menu::before{display:none}
+}
+@media(max-width:480px){
+  .app-global-actions{right:14px;gap:8px}
+  .app-global-actions .language-current{display:none}
+  .app-global-actions .language-short{display:inline}
+  .app-global-actions .language-switcher-trigger{padding-inline:7px;gap:5px}
+  .app-global-actions .language-menu{position:fixed;top:76px;left:14px;right:14px;width:auto}
+  .app-global-actions .language-menu::before{display:none}
+}
+@media(prefers-reduced-motion:reduce){.language-menu{animation:none}.language-option:hover{transform:none}}

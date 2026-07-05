@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, ChevronRight, Film, Globe, LogIn, Play, Plus, UserPlus, Users } from 'lucide-react';
+import { ArrowRight, ChevronRight, LogIn, Play, Plus, UserPlus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/auth-context';
 import Logo from '../components/Logo';
-import { useI18n } from '../context/I18nContext';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import { imageUrl } from '../lib/config';
 import './Home.css';
 
@@ -38,29 +38,6 @@ const FAQ_ITEMS = [
     question: 'Do I need an account to browse?',
     answer:
       'Yes. Anyone can preview Lumina Cinema, but signing in opens the full catalog, actor pages, watchlist, and protected movie detail pages.',
-  },
-];
-
-const REASON_CARDS = [
-  {
-    icon: Film,
-    title: 'Rooted in Rwanda',
-    body: 'Find posters, voices, and stories that feel close to home, with Rwandan creators placed at the center of the experience.',
-  },
-  {
-    icon: Globe,
-    title: 'Simple to start',
-    body: 'Create an account in minutes, choose a plan when you are ready, and keep your watchlist synced across your devices.',
-  },
-  {
-    icon: Users,
-    title: 'Made for households',
-    body: 'Choose the plan that matches how you watch, from solo viewing to family streaming across more than one screen.',
-  },
-  {
-    icon: Play,
-    title: 'Built for discovery',
-    body: 'Move from trending films to actor pages, genre collections, and featured releases without losing the cinematic mood.',
   },
 ];
 
@@ -135,7 +112,6 @@ function LandingPaymentBadges() {
 
 export default function Home() {
   const { user } = useAuth();
-  const { hasLanguagePreference, setLanguage } = useI18n();
   const navigate = useNavigate();
   const [featured, setFeatured] = useState([]);
   const [latest, setLatest] = useState([]);
@@ -148,7 +124,7 @@ export default function Home() {
 
     window.scrollTo(0, 0);
 
-    api.get('/movies/home', { signal: controller.signal })
+    api.get('/movies/home', { signal: controller.signal, useCache: !import.meta.env.DEV })
       .then((response) => {
         if (!isMounted) return;
         setFeatured(response.data?.featured || []);
@@ -200,10 +176,11 @@ export default function Home() {
           <Logo size="md" to="/" />
           <nav className="landing-nav" aria-label="Main navigation">
             <a href="#films">Films</a>
-            <a href="#experience">Experience</a>
+            <a href="#featured">Featured</a>
             <Link to="/plans">Membership</Link>
           </nav>
           <div className="landing-header-actions">
+            <LanguageSwitcher />
             {user ? (
               <>
                 <Link to="/movies" className="landing-header-btn ghost">Browse</Link>
@@ -226,13 +203,6 @@ export default function Home() {
 
         <div className="landing-hero-layout">
           <div className="landing-hero-content">
-            {!hasLanguagePreference && (
-              <div className="landing-language-choice" data-i18n-skip="true">
-                <span>Choose language</span>
-                <button type="button" onClick={() => setLanguage('en')}>EN</button>
-                <button type="button" onClick={() => setLanguage('rw')}>RW</button>
-              </div>
-            )}
             <p className="landing-kicker"><span /> Cinema, made in Rwanda</p>
             <h1 className="landing-hero-title">Our stories.<br /><em>Our screen.</em></h1>
             <p className="landing-subtitle">The new home of bold Rwandan film. Stream original stories, discover rising voices, and see home differently.</p>
@@ -240,17 +210,36 @@ export default function Home() {
               <Link to={user ? '/movies' : '/register'} className="landing-primary-cta">
                 <Play size={17} fill="currentColor" /> Start watching
               </Link>
-              <Link to={browseTarget} className="landing-secondary-cta">Explore films <ArrowRight size={17} /></Link>
+              <Link to={browseTarget} className="landing-secondary-cta landing-explore-cta">
+                <span className="landing-explore-index">02</span>
+                <span className="landing-explore-copy"><small>Discover</small><strong>Explore films</strong></span>
+                <span className="landing-explore-arrow"><ArrowRight size={17} /></span>
+              </Link>
             </div>
             <div className="landing-hero-note"><strong>From 2,000 RWF</strong><span>No long contracts. Cancel anytime.</span></div>
           </div>
 
-          <button className="landing-hero-feature" onClick={() => openMovie(heroMovie?._id)} aria-label={heroMovie ? `Open ${heroMovie.title}` : 'Browse films'}>
-            {heroMovie?.poster ? <img src={imageUrl(heroMovie.poster, { width: 760, height: 980 })} alt="" /> : <div className="landing-feature-art"><span>RW</span></div>}
-            <div className="landing-feature-shade" />
-            <span className="landing-feature-index">01 / FEATURED</span>
-            <div className="landing-feature-copy"><small>Tonight's selection</small><strong>{heroMovie?.title || 'Stories from the land of a thousand hills'}</strong><span>Watch now <Play size={14} fill="currentColor" /></span></div>
-          </button>
+          <article className="landing-hero-feature" id="featured">
+            <button className="landing-feature-media" onClick={() => openMovie(heroMovie?._id)} aria-label={heroMovie ? `Open ${heroMovie.title}` : 'Browse films'}>
+              {heroMovie?.poster ? <img src={imageUrl(heroMovie.poster, { width: 900, height: 1100 })} alt={heroMovie.title} /> : <div className="landing-feature-art"><span>RW</span></div>}
+              <div className="landing-feature-shade" />
+              <span className="landing-feature-index">Lumina selection · 01</span>
+              <span className="landing-feature-play"><Play size={20} fill="currentColor" /></span>
+            </button>
+            <div className="landing-feature-copy">
+              <div className="landing-feature-heading">
+                <small>Featured presentation</small>
+                <span>{heroMovie?.year || 'Now showing'}</span>
+              </div>
+              <strong>{heroMovie?.title || 'Stories from the land of a thousand hills'}</strong>
+              <p>{heroMovie?.description || 'A hand-picked story from Rwanda, selected for your screen tonight.'}</p>
+              <div className="landing-feature-meta">
+                <span>{heroMovie?.type || 'Film'}</span>
+                <span>{heroMovie?.genre?.slice(0, 2).join(' · ') || 'Rwandan cinema'}</span>
+              </div>
+              <button className="landing-feature-action" onClick={() => openMovie(heroMovie?._id)}>View film <ArrowRight size={15} /></button>
+            </div>
+          </article>
         </div>
         <div className="landing-scroll-cue"><span>Scroll to discover</span><i /></div>
       </section>
@@ -291,47 +280,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      <section className="landing-manifesto" id="experience">
-        <div className="landing-manifesto-mark">“</div>
-        <div className="landing-manifesto-copy">
-          <p className="landing-section-kicker">More than entertainment</p>
-          <h2>When we tell our own stories, <em>we see ourselves differently.</em></h2>
-          <p>Lumina brings the voices, places, humor, and imagination of Rwanda to every screen—beautifully, honestly, and without borders.</p>
-          <Link to="/about">Our story <ArrowRight size={17} /></Link>
-        </div>
-        <div className="landing-manifesto-stats">
-          <div><strong>100%</strong><span>Rwandan focus</span></div>
-          <div><strong>24/7</strong><span>Watch anywhere</span></div>
-          <div><strong>2K</strong><span>RWF to begin</span></div>
-        </div>
-      </section>
-
-      <section className="landing-section landing-experience">
-        <div className="landing-section-head">
-          <div>
-            <p className="landing-section-kicker">Made around you</p>
-            <h2>Good cinema.<br /><em>No friction.</em></h2>
-          </div>
-        </div>
-
-        <div className="landing-reasons-grid">
-          {REASON_CARDS.map((reason) => {
-            const Icon = reason.icon;
-
-            return (
-              <article key={reason.title} className="landing-reason-card">
-                <div className="landing-reason-icon">
-                  <Icon size={22} strokeWidth={1.9} />
-                </div>
-                <h3>{reason.title}</h3>
-                <p>{reason.body}</p>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
 
       <section className="landing-section landing-faq-section">
         <div className="landing-section-head">

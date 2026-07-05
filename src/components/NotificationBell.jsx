@@ -43,7 +43,7 @@ export default function NotificationBell() {
 
   return (
     <div className="notif-wrap" ref={ref}>
-      <button className="notif-bell" onClick={() => setOpen(o => !o)}>
+      <button className={`notif-bell${open ? ' active' : ''}`} onClick={() => setOpen(o => !o)} aria-label="Open notifications" aria-expanded={open}>
         <Bell size={18} strokeWidth={1.5} />
         {data.unread > 0 && <span className="notif-badge">{data.unread > 9 ? '9+' : data.unread}</span>}
       </button>
@@ -51,7 +51,7 @@ export default function NotificationBell() {
       {open && (
         <div className="notif-dropdown">
           <div className="notif-header">
-            <span>Notifications</span>
+            <div><small>Activity center</small><span>Notifications</span></div>
             {data.unread > 0 && (
               <button className="notif-mark-all" onClick={markAllRead}>
                 <Check size={13} /> Mark all read

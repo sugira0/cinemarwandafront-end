@@ -162,6 +162,49 @@
   min-width: 0;
 }
 
+.account-topbar {
+  min-height: 86px;
+  margin-bottom: 1rem;
+  padding: 0 0 18px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid rgba(242,238,229,.12);
+}
+
+.account-topbar > div:first-child > span {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--gold);
+  font-size: .6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+}
+
+.account-topbar h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem,4vw,3.4rem);
+  font-weight: 600;
+  line-height: .88;
+  letter-spacing: -.055em;
+}
+
+.account-topbar-notifications {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.account-topbar-notifications > span {
+  color: var(--text-3);
+  font-size: .64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .11em;
+}
+
 .account-panel {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -562,6 +605,7 @@
 
   .device-item { flex-wrap: wrap; }
   .btn-remove-device { width: 100%; justify-content: center; }
+  .account-topbar-notifications > span { display: none; }
 }
 
 /* ── Danger Zone ── */

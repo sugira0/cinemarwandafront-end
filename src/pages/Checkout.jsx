@@ -34,7 +34,7 @@ const METHODS = [
 ];
 
 export default function Checkout() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const planId = location.state?.plan || 'standard';
@@ -48,35 +48,51 @@ export default function Checkout() {
   const [error, setError] = useState('');
   const [pollStatus, setPollStatus] = useState('pending');
   const pollRef = useRef(null);
+  const checkingRef = useRef(false);
 
   const selectedMethod = METHODS.find((entry) => entry.id === method);
   const digits = phone.replace(/\D/g, '');
   const hasValidPhone = digits.length >= 9;
 
-  // Poll MTN payment status every 5 seconds after initiation
+  // Check immediately, then poll quickly while the provider processes approval.
+  // Access is refreshed from the database before the success screen is shown.
   useEffect(() => {
     if (step !== 4 || !result?.momoRequested || !result?.payment?._id) return;
     if (pollStatus !== 'pending') return;
 
     const paymentId = result.payment._id;
 
-    pollRef.current = setInterval(async () => {
+    let cancelled = false;
+    const checkPayment = async () => {
+      if (checkingRef.current || cancelled) return;
+      checkingRef.current = true;
       try {
-        const { data } = await api.get(`/payments/mtn/status/${paymentId}`, { useCache: false });
+        const { data } = await api.get(`/payments/mtn/status/${paymentId}`, { useCache: false, params: { _fresh: Date.now() } });
         if (data.status === 'completed') {
+          await refreshUser();
+          if (cancelled) return;
           setPollStatus('completed');
           clearInterval(pollRef.current);
         } else if (data.status === 'failed') {
+          if (cancelled) return;
           setPollStatus('failed');
           clearInterval(pollRef.current);
         }
       } catch {
         // keep polling silently
+      } finally {
+        checkingRef.current = false;
       }
-    }, 5000);
+    };
 
-    return () => clearInterval(pollRef.current);
-  }, [step, result, pollStatus]);
+    checkPayment();
+    pollRef.current = setInterval(checkPayment, 1500);
+
+    return () => {
+      cancelled = true;
+      clearInterval(pollRef.current);
+    };
+  }, [step, result, pollStatus, refreshUser]);
 
   const handlePay = async () => {
     setLoading(true);

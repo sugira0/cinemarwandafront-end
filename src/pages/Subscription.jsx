@@ -40,11 +40,15 @@ export default function Subscription() {
   const [selected, setSelected] = useState('standard');
 
   useEffect(() => {
-    api.get('/payments/my').then((response) => {
+    api.get('/payments/my', { useCache: false }).then((response) => {
       setSub(response.data.subscription);
       setPayments(response.data.payments);
     });
   }, []);
+
+  useEffect(() => {
+    if (user?.subscription) setSub(user.subscription);
+  }, [user?.subscription]);
 
   const isActive = Boolean(sub?.active && sub?.expiresAt && new Date(sub.expiresAt) > new Date());
 

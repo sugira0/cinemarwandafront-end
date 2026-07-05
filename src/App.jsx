@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import AppSidebar from './components/AppSidebar';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import MusicPlayer from './components/MusicPlayer';
+import NotificationBell from './components/NotificationBell';
 import PrivateRoute from './components/PrivateRoute';
 import { useAuth } from './context/auth-context';
 import { usePlayer } from './context/player-context';
@@ -114,8 +115,11 @@ export default function App() {
         <div className={`app-shell-content${sidebarCollapsed ? ' sidebar-collapsed' : ''}${playerVisible ? ' player-open' : ''}`}>
           {routes}
         </div>
+        <div className="app-notification-dock app-global-actions">
+          <LanguageSwitcher />
+          <NotificationBell />
+        </div>
         <MusicPlayer />
-        <LanguageSwitcher />
       </div>
     );
   }
@@ -127,7 +131,6 @@ export default function App() {
       {showTopNavbar && <Navbar />}
       {routes}
       {!hideFooter && <Footer />}
-      <LanguageSwitcher />
     </>
   );
 }

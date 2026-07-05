@@ -50,6 +50,54 @@ export function AuthProvider({ children }) {
       });
   }, []);
 
+  // Keep paid access synchronized with the database. This catches manual admin
+  // assignments, provider confirmations, removals, credits, and expiry without
+  // requiring a reload or another login.
+  useEffect(() => {
+    if (!(user?.id || user?._id) || !localStorage.getItem('token')) return undefined;
+    let stopped = false;
+    let checking = false;
+
+    const syncAccess = async () => {
+      if (stopped || checking || document.visibilityState === 'hidden') return;
+      checking = true;
+      try {
+        const { data } = await api.get('/auth/access', { useCache: false, params: { _fresh: Date.now() } });
+        if (stopped) return;
+        setUser((current) => {
+          if (!current) return current;
+          const next = normalize({
+            ...current,
+            subscription: data.subscription,
+            episodeCredits: data.episodeCredits,
+            purchasedTitles: data.purchasedTitles,
+          });
+          const currentAccess = JSON.stringify([current.subscription, current.episodeCredits, current.purchasedTitles]);
+          const nextAccess = JSON.stringify([next.subscription, next.episodeCredits, next.purchasedTitles]);
+          if (currentAccess === nextAccess) return current;
+          localStorage.setItem('user', JSON.stringify(next));
+          window.dispatchEvent(new CustomEvent('lumina:access-updated', { detail: next }));
+          return next;
+        });
+      } catch {
+        // Normal auth handling remains responsible for expired sessions.
+      } finally {
+        checking = false;
+      }
+    };
+
+    syncAccess();
+    const timer = window.setInterval(syncAccess, 2000);
+    window.addEventListener('focus', syncAccess);
+    document.addEventListener('visibilitychange', syncAccess);
+    return () => {
+      stopped = true;
+      window.clearInterval(timer);
+      window.removeEventListener('focus', syncAccess);
+      document.removeEventListener('visibilitychange', syncAccess);
+    };
+  }, [user?.id, user?._id]);
+
   const login = async (identifier, password) => {
     const deviceContext = await getDeviceContext();
     let data;
@@ -230,9 +278,10 @@ export function AuthProvider({ children }) {
 
   const refreshUser = async () => {
     try {
-      const { data } = await api.get('/auth/me');
+      const { data } = await api.get('/auth/me', { useCache: false });
       const freshUser = normalize(data.user);
       localStorage.setItem('user', JSON.stringify(freshUser));
+      sessionStorage.setItem(ME_VERIFIED_KEY, String(Date.now()));
       setUser(freshUser);
       return freshUser;
     } catch {

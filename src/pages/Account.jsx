@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Monitor, Trash2, Shield, LogOut, Lock, Eye, EyeOff, User, CreditCard, Bell } from 'lucide-react';
+import { Monitor, Trash2, Shield, LogOut, Lock, Eye, EyeOff, User, CreditCard } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
 import { useI18n } from '../context/I18nContext';
 import { useNavigate, Link } from 'react-router-dom';
@@ -164,6 +164,12 @@ export default function Account() {
 
       {/* ── Main Content ── */}
       <main className="account-main">
+        <header className="account-topbar">
+          <div>
+            <span>Member workspace</span>
+            <h1>Account</h1>
+          </div>
+        </header>
 
         {/* Profile tab */}
         {activeTab === 'profile' && (

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Bookmark, LayoutDashboard, LogOut, LogIn, UserPlus, Menu, X, Users, TrendingUp, Crown } from 'lucide-react';
 import NotificationBell from './NotificationBell';
 import Logo from './Logo';
+import LanguageSwitcher from './LanguageSwitcher';
 import api from '../api/axios';
 import './Navbar.css';
 
@@ -59,6 +60,7 @@ export default function Navbar() {
               <Link to="/register" className="btn-register"><UserPlus size={14} strokeWidth={2} /> Get Started</Link>
             </>
           )}
+          <LanguageSwitcher />
         </div>
 
         {/* Mobile hamburger */}
@@ -70,6 +72,7 @@ export default function Navbar() {
       {/* Mobile drawer */}
       {menuOpen && (
         <div className="mobile-menu">
+          <LanguageSwitcher />
           <button className="mobile-link" onClick={() => go(browseTarget)}>Browse</button>
           <button className="mobile-link" onClick={() => go(actorsTarget)}>Actors</button>
           {user && <button className="mobile-link" onClick={() => go('/watchlist')}>Watchlist</button>}

@@ -6,7 +6,6 @@ import {
   User, Shield, Star, Music,
 } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
-import NotificationBell from './NotificationBell';
 import Logo from './Logo';
 import './AppSidebar.css';
 
@@ -95,13 +94,8 @@ export default function AppSidebar() {
         })}
       </nav>
 
-      {/* Bottom: notifications + user + logout */}
+      {/* Bottom: user + logout */}
       <div className="app-sidebar-bottom">
-        <div className={`app-sidebar-notif${collapsed ? ' centered' : ''}`}>
-          <NotificationBell />
-          {!collapsed && <span className="app-sidebar-notif-label">Notifications</span>}
-        </div>
-
         <div className={`app-sidebar-user${collapsed ? ' centered' : ''}`}>
           <div className="app-sidebar-avatar">
             {user?.name?.[0]?.toUpperCase()}
