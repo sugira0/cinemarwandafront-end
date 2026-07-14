@@ -26,7 +26,7 @@ export default function AppSidebar() {
   const navItems = [
     { to: '/movies', icon: Home, label: 'Browse', always: true, mobilePrimary: true },
     { to: '/music', icon: Music, label: 'Music', always: true, mobilePrimary: true },
-    { to: '/actors', icon: Users, label: 'Actors', always: true, mobilePrimary: true },
+    { to: '/actors', icon: Users, label: 'Actors', always: true },
     { to: '/watchlist', icon: Bookmark, label: 'Watchlist', always: true, mobilePrimary: true },
     { to: '/subscription', icon: Crown, label: 'Subscribe', always: true },
     { to: '/account', icon: User, label: 'Account', always: true, mobilePrimary: true },
