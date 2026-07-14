@@ -128,7 +128,7 @@ function Card({ movie, onWatchlist }) {
   );
 }
 
-function Row({ title, movies, onWatchlist }) {
+function Row({ title, movies, onWatchlist, className = '' }) {
   const ref = useRef(null);
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(true);
@@ -149,7 +149,7 @@ function Row({ title, movies, onWatchlist }) {
   if (!movies.length) return null;
 
   return (
-    <div className="nc-row">
+    <div className={`nc-row${className ? ` ${className}` : ''}`}>
       <h2 className="nc-row-title">{title}</h2>
       <div className="nc-row-wrap">
         {canLeft && <button className="nc-arrow left" onClick={() => scroll(-1)}><ChevronLeft size={28} /></button>}
@@ -281,10 +281,18 @@ export default function Movies() {
         </div>
       ) : (
         <>
-          <Row title="New Releases" movies={recent} onWatchlist={addWatchlist} />
-          <Row title="Movies" movies={movies} onWatchlist={addWatchlist} />
-          {series.length > 0 && <Row title="Series" movies={series} onWatchlist={addWatchlist} />}
-          {GENRES.map((genre) => <Row key={genre} title={genre} movies={byGenre(genre)} onWatchlist={addWatchlist} />)}
+          <Row title="New Releases" movies={recent} onWatchlist={addWatchlist} className="nc-row-essential" />
+          <Row title="Movies" movies={movies} onWatchlist={addWatchlist} className="nc-row-essential" />
+          {series.length > 0 && <Row title="Series" movies={series} onWatchlist={addWatchlist} className="nc-row-essential" />}
+          {GENRES.map((genre, index) => (
+            <Row
+              key={genre}
+              title={genre}
+              movies={byGenre(genre)}
+              onWatchlist={addWatchlist}
+              className={index < 2 ? 'nc-row-mobile-featured' : 'nc-row-mobile-extra'}
+            />
+          ))}
           {hasMore && (
             <div style={{ display: 'flex', justifyContent: 'center', padding: '1.5rem 0 2rem' }}>
               <button

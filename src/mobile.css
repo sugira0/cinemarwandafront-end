@@ -157,6 +157,104 @@
     border-radius: 14px;
   }
 
+  /* Mobile browse is intentionally curated: core shelves + two genres. */
+  .nc-row-mobile-extra {
+    display: none;
+  }
+
+  .nc-row-track > .nc-card:nth-child(n + 7) {
+    display: none;
+  }
+
+  .nc-row {
+    margin-bottom: 1.1rem;
+  }
+
+  .nc-row-title {
+    margin-bottom: 0.15rem;
+    font-size: 1rem;
+  }
+
+  .nc-row-track {
+    padding-bottom: 1.15rem;
+  }
+
+  .nc-load-more {
+    display: none;
+  }
+
+  /* Landing page: one focused story, four films and three useful FAQs. */
+  .landing-hero {
+    min-height: auto;
+  }
+
+  .landing-hero-layout {
+    padding-bottom: 3.25rem !important;
+  }
+
+  .landing-subtitle {
+    max-width: 34ch;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+
+  .landing-hero-feature {
+    aspect-ratio: 16 / 10;
+    box-shadow: 10px 12px 0 rgba(143, 33, 24, 0.08);
+  }
+
+  .landing-feature-media {
+    min-height: 100%;
+  }
+
+  .landing-feature-media img {
+    object-position: center 28%;
+  }
+
+  .landing-feature-copy {
+    display: none;
+  }
+
+  .landing-film-card:nth-child(n + 5),
+  .landing-faq-item:nth-child(n + 4),
+  .landing-footer-column:nth-child(n + 3) {
+    display: none;
+  }
+
+  .landing-films,
+  .landing-faq-section {
+    padding-block: 3.5rem !important;
+  }
+
+  .landing-section-head {
+    margin-bottom: 1.5rem;
+  }
+
+  .landing-section-head h2 {
+    font-size: clamp(2.15rem, 11vw, 3.15rem);
+    line-height: 0.98;
+  }
+
+  .landing-faq-question {
+    padding-block: 1rem;
+    font-size: 0.92rem;
+  }
+
+  .landing-final-cta {
+    padding-block: 4rem;
+  }
+
+  .landing-footer {
+    padding-top: 2.5rem;
+  }
+
+  .landing-footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.5rem;
+  }
+
   /* Dialogs and dropdowns remain inside the viewport. */
   [class*='modal-content'],
   [class*='modal-card'],
@@ -233,19 +331,45 @@
   }
 
   .landing-hero-actions {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: row;
     width: 100%;
   }
 
   .landing-hero-actions > * {
-    width: 100%;
+    width: auto;
     justify-content: center;
+  }
+
+  .landing-explore-cta {
+    display: none !important;
   }
 
   .landing-hero-feature {
     width: 100%;
     align-self: stretch;
+  }
+
+  .landing-hero-note span {
+    display: none;
+  }
+
+  .landing-film-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    overflow: visible !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .landing-film-card {
+    min-width: 0 !important;
+    width: 100%;
+  }
+
+  .landing-payment-strip {
+    display: none;
   }
 
   .loading,
