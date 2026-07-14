@@ -24,12 +24,12 @@ export default function AppSidebar() {
 
   // Build nav items based on role
   const navItems = [
-    { to: '/movies', icon: Home, label: 'Browse', always: true },
-    { to: '/music', icon: Music, label: 'Music', always: true },
-    { to: '/actors', icon: Users, label: 'Actors', always: true },
-    { to: '/watchlist', icon: Bookmark, label: 'Watchlist', always: true },
+    { to: '/movies', icon: Home, label: 'Browse', always: true, mobilePrimary: true },
+    { to: '/music', icon: Music, label: 'Music', always: true, mobilePrimary: true },
+    { to: '/actors', icon: Users, label: 'Actors', always: true, mobilePrimary: true },
+    { to: '/watchlist', icon: Bookmark, label: 'Watchlist', always: true, mobilePrimary: true },
     { to: '/subscription', icon: Crown, label: 'Subscribe', always: true },
-    { to: '/account', icon: User, label: 'Account', always: true },
+    { to: '/account', icon: User, label: 'Account', always: true, mobilePrimary: true },
     // Author/Admin
     ...(user?.role === 'author' || user?.role === 'admin'
       ? [{ to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' }]
@@ -83,7 +83,7 @@ export default function AppSidebar() {
             <Link
               key={item.to}
               to={item.to}
-              className={`app-sidebar-link${active ? ' active' : ''}`}
+              className={`app-sidebar-link${active ? ' active' : ''}${item.mobilePrimary ? ' mobile-primary' : ''}`}
               title={collapsed ? item.label : undefined}
             >
               <Icon size={18} strokeWidth={active ? 2 : 1.6} />

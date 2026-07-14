@@ -1,0 +1,272 @@
+/* Final mobile layer: consistent spacing, touch targets and safe-area behavior. */
+@media (max-width: 768px) {
+  :root {
+    --mobile-gutter: clamp(1rem, 4vw, 1.35rem);
+    --mobile-nav-h: 68px;
+  }
+
+  html {
+    scroll-padding-top: 72px;
+  }
+
+  body {
+    min-width: 320px;
+    padding-bottom: calc(var(--mobile-nav-h) + env(safe-area-inset-bottom, 0px));
+  }
+
+  button,
+  [role='button'],
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+
+  .app-shell-content {
+    width: 100%;
+    padding-bottom: calc(var(--mobile-nav-h) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* A stable five-destination bottom bar instead of a horizontally scrolling menu. */
+  .app-sidebar {
+    height: calc(var(--mobile-nav-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: rgba(9, 7, 3, 0.94);
+    border-top-color: rgba(201, 150, 42, 0.22);
+    box-shadow: 0 -12px 34px rgba(0, 0, 0, 0.42);
+    backdrop-filter: blur(20px) saturate(135%);
+    -webkit-backdrop-filter: blur(20px) saturate(135%);
+    z-index: 1000;
+  }
+
+  .app-sidebar-nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: 100%;
+    padding: 5px max(8px, env(safe-area-inset-right, 0px)) 4px max(8px, env(safe-area-inset-left, 0px));
+    overflow: visible;
+  }
+
+  .app-sidebar-link:not(.mobile-primary) {
+    display: none;
+  }
+
+  .app-sidebar-link.mobile-primary {
+    position: relative;
+    min-width: 0;
+    min-height: 56px;
+    padding: 7px 2px 5px;
+    gap: 4px;
+    color: var(--text-3);
+    font-size: clamp(0.58rem, 2.5vw, 0.67rem);
+    line-height: 1;
+  }
+
+  .app-sidebar-link.mobile-primary svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .app-sidebar-link.mobile-primary.active {
+    color: var(--gold-light);
+    background: linear-gradient(180deg, rgba(201, 150, 42, 0.16), rgba(201, 150, 42, 0.03));
+  }
+
+  .app-sidebar-link.mobile-primary.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 30%;
+    right: 30%;
+    height: 2px;
+    border-radius: 0 0 4px 4px;
+    background: var(--gold-light);
+    box-shadow: 0 0 12px var(--gold-glow);
+  }
+
+  /* Global page rhythm. */
+  .movies-page,
+  .actors-page,
+  .music-page,
+  .account-page,
+  .sub-page,
+  .checkout-page,
+  .admin-page,
+  .analytics-page,
+  .users-page,
+  .watchlist-page,
+  .static-page {
+    padding-inline: var(--mobile-gutter) !important;
+  }
+
+  .page-title,
+  .nc-browse-title,
+  .actors-header h1,
+  .music-page-title,
+  .account-title,
+  .sub-header h1,
+  .admin-header h1,
+  .analytics-header h1 {
+    text-wrap: balance;
+    line-height: 1.05;
+  }
+
+  .page-subtitle,
+  .description,
+  .static-lead {
+    text-wrap: pretty;
+  }
+
+  /* Carousels feel native and never clip their last card. */
+  .nc-row-track,
+  .landing-film-grid,
+  .actors-grid,
+  .music-row {
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nc-row-track::-webkit-scrollbar,
+  .landing-film-grid::-webkit-scrollbar,
+  .actors-grid::-webkit-scrollbar,
+  .music-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nc-card,
+  .landing-film-card,
+  .actor-card,
+  .song-card {
+    scroll-snap-align: start;
+  }
+
+  .nc-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+    background: linear-gradient(180deg, rgba(6, 4, 1, 0.98) 70%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .nc-search-wrap,
+  .nc-search-wrap.open {
+    border-radius: 14px;
+  }
+
+  /* Dialogs and dropdowns remain inside the viewport. */
+  [class*='modal-content'],
+  [class*='modal-card'],
+  .login-modal,
+  .paywall-card,
+  .drv-card {
+    width: calc(100vw - (2 * var(--mobile-gutter)));
+    max-width: 100%;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .notif-dropdown,
+  .language-menu {
+    max-width: calc(100vw - 1rem);
+  }
+
+  /* Avoid hover-only movement on touch screens. */
+  @media (hover: none) {
+    .movie-card:hover,
+    .nc-card:hover,
+    .actor-card:hover,
+    .song-card:hover,
+    .plan-card:hover {
+      transform: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --mobile-gutter: 1rem;
+  }
+
+  .movies-grid,
+  .nc-grid,
+  .actors-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.8rem !important;
+  }
+
+  .nc-card {
+    width: min(42vw, 164px);
+  }
+
+  .detail-actions,
+  .checkout-actions,
+  .account-actions,
+  .sub-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .detail-actions > *,
+  .checkout-actions > *,
+  .account-actions > *,
+  .sub-actions > * {
+    width: 100%;
+  }
+
+  .landing-header {
+    padding-inline: 1rem;
+  }
+
+  .landing-header-actions {
+    gap: 0.45rem;
+  }
+
+  .landing-header-btn {
+    min-width: 0;
+    padding-inline: 0.75rem;
+  }
+
+  .landing-hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .landing-hero-actions > * {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .landing-hero-feature {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .loading,
+  .empty {
+    padding-inline: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .app-sidebar-link.mobile-primary {
+    font-size: 0.55rem;
+  }
+
+  .app-sidebar-link.mobile-primary svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .movies-grid,
+  .nc-grid,
+  .actors-grid {
+    gap: 0.6rem !important;
+  }
+}
