@@ -139,7 +139,7 @@ export function AuthProvider({ children }) {
   };
 
   // ── Google Sign-In ────────────────────────────────────────────────────────
-  const loginWithGoogle = async ({ credential, googleUserInfo } = {}) => {
+  const loginWithGoogle = async ({ credential, googleUserInfo, redirectTo = '/who-is-watching' } = {}) => {
     const deviceContext = await getDeviceContext();
 
     if (credential || googleUserInfo) {
@@ -160,6 +160,25 @@ export function AuthProvider({ children }) {
         // The server-owned popup below remains a last-resort fallback.
       }
     }
+
+    // Popup OAuth is unreliable on mobile browsers: it may open as a separate
+    // tab, lose window.opener, and close without returning a result. Use the
+    // server-owned full-page redirect flow on phones instead.
+    const useRedirectFlow = window.matchMedia?.('(max-width: 768px)').matches
+      || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    if (useRedirectFlow) {
+      const params = new URLSearchParams({
+        deviceId: deviceContext.deviceId || '',
+        deviceName: deviceContext.deviceName || 'Mobile Browser',
+        origin: window.location.origin,
+        mode: 'redirect',
+        returnTo: redirectTo,
+      });
+      const authBase = API_ORIGIN || window.location.origin;
+      window.location.assign(`${authBase}/api/auth/google/authorize?${params}`);
+      return new Promise(() => {});
+    }
+
     if (!clientId) {
       // Production-safe fallback: the backend owns the OAuth client secret and
       // callback. This keeps Google login available even when a hosting build
@@ -255,6 +274,13 @@ export function AuthProvider({ children }) {
     return persistSession(data, deviceContext.deviceId);
   };
 
+  const completeGoogleRedirect = (data) => {
+    if (!data?.token || !data?.user) {
+      throw new Error('Google Sign-In returned an incomplete session. Please try again.');
+    }
+    return persistSession(data, data.deviceId);
+  };
+
   const requestRegisterOtp = async ({ name, email, phone, password, role = 'viewer' }) => {
     const deviceContext = await getDeviceContext();
     const { data } = await api.post('/auth/register/request-otp', {
@@ -305,6 +331,7 @@ export function AuthProvider({ children }) {
         login,
         logout,
         loginWithGoogle,
+        completeGoogleRedirect,
         refreshUser,
         register,
         requestRegisterOtp,

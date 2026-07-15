@@ -34,7 +34,8 @@ export default function Login() {
     setGoogleBusy(true);
     setError('');
     try {
-      await loginWithGoogle();
+      await loginWithGoogle({ redirectTo: buildPostAuthPath(redirect) });
+      navigate(buildPostAuthPath(redirect), { replace: true });
     } catch (err) {
       console.error('Google Sign-In Error:', err);
 

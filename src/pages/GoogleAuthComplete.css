@@ -1,0 +1,25 @@
+.google-complete-page {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 2rem;
+  padding: 1.25rem;
+  background: radial-gradient(circle at 50% 18%, rgba(201, 150, 42, 0.14), transparent 34%), #080704;
+}
+
+.google-complete-card {
+  width: min(100%, 430px);
+  padding: clamp(2rem, 7vw, 3rem);
+  border: 1px solid rgba(201, 150, 42, 0.2);
+  border-radius: 24px;
+  background: rgba(18, 14, 7, 0.9);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.google-complete-card h1 { margin-top: 1.25rem; font-size: clamp(1.55rem, 6vw, 2rem); }
+.google-complete-card p { margin-top: 0.65rem; color: var(--text-2); line-height: 1.6; }
+.google-complete-card a { display: inline-flex; margin-top: 1.5rem; padding: 0.85rem 1.2rem; border-radius: 999px; background: var(--gold); color: #100b03; font-weight: 800; }
+.google-complete-mark { display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(201, 150, 42, 0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.75s linear infinite; }
+.google-complete-mark.error { display: inline-grid; place-items: center; border: 0; background: rgba(239, 68, 68, 0.14); color: #fca5a5; animation: none; font-weight: 900; }

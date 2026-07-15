@@ -16,6 +16,7 @@ import usePresence from './hooks/usePresence';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import GoogleAuthComplete from './pages/GoogleAuthComplete';
 
 // ── Lazy loaded ──────────────────────────────────────────────────────────────
 const Movies = lazy(() => import('./pages/Movies'));
@@ -52,7 +53,7 @@ function RouteLoading() {
 }
 
 // Pages that never show any chrome (landing, auth, special)
-const NO_CHROME_PATHS = ['/', '/login', '/register', '/staff/login', '/staff/register', '/who-is-watching', '/forgot-password', '/reset-password'];
+const NO_CHROME_PATHS = ['/', '/login', '/register', '/auth/google/complete', '/staff/login', '/staff/register', '/who-is-watching', '/forgot-password', '/reset-password'];
 
 export default function App() {
   const { user } = useAuth();
@@ -79,6 +80,7 @@ export default function App() {
         <Route path="/" element={user ? <Navigate to="/movies" replace /> : <Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/auth/google/complete" element={<GoogleAuthComplete />} />
         <Route path="/staff/login" element={<StaffLogin />} />
         <Route path="/staff/register" element={<StaffRegister />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
